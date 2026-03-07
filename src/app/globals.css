@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+/* ============================================================
+   MARQUEE ANIMATION
+   WHAT: Makes the brand bar scroll smoothly from right to left, infinitely.
+   WHY:  CSS animations are more performant than JavaScript-based scrolling.
+         `translateX(0)` → `translateX(-50%)` moves the strip left by half its
+         width. Because we duplicate the brand list, the loop is seamless.
+   ============================================================ */
+@keyframes marquee {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+/* Pause scrolling when the user hovers over the bar */
+.marquee-wrapper:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
 /* WHAT: Force the site to always use a white background and black text.
    WHY:  Next.js adds a dark-mode media query by default that turns text gray
          when your computer is in dark mode. We remove it here so our

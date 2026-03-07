@@ -299,12 +299,65 @@ export default function HomePage() {
       </section>
 
       {/* ============================================================
+          BRAND MARQUEE BAR
+          WHAT: Animated strip of brand logos — each is clickable and links to inventory.
+          EDIT THIS: Add more brands by dropping SVG files into public/svg car logos/
+                     and adding an entry to the array below.
+          ============================================================ */}
+      <section className="bg-white border-y border-gray-100 py-6 overflow-hidden marquee-wrapper select-none">
+        <div className="flex animate-marquee w-max">
+
+          {/* Render the brand list TWICE — creates the seamless infinite loop */}
+          {[0, 1].map((copy) =>
+            [
+              // EDIT THIS: Each entry = { name shown below logo, src = path to SVG in public/ }
+              { name: "Aston Martin", src: "/svg car logos/aston-martin-alt-svgrepo-com.svg" },
+              { name: "Audi",         src: "/svg car logos/audi-svgrepo-com.svg" },
+              { name: "Bentley",      src: "/svg car logos/bentley-svgrepo-com.svg" },
+              { name: "BMW",          src: "/svg car logos/bmw-svgrepo-com.svg" },
+              { name: "Cadillac",     src: "/svg car logos/cadillac-svgrepo-com.svg" },
+              { name: "Lexus",        src: "/svg car logos/lexus-svgrepo-com.svg" },
+              { name: "Maybach",      src: "/svg car logos/maybach-svgrepo-com.svg" },
+              { name: "Mercedes",     src: "/svg car logos/mercedes-benz-svgrepo-com.svg" },
+              { name: "Porsche",      src: "/svg car logos/porsche-svgrepo-com.svg" },
+              { name: "Rolls-Royce",  src: "/svg car logos/rolls-royce-svgrepo-com.svg" },
+              { name: "Ferrari",      src: "/svg car logos/ferrari-svgrepo-com.svg" },
+              { name: "Lamborghini",  src: "/svg car logos/lamborghini-svgrepo-com.svg" },
+            ].map((brand, i) => (
+              <Link
+                key={`${copy}-${i}`}
+                // WHY: `?brand=BMW` passes the brand as a URL query param.
+                //      The inventory page reads this on load and pre-checks that brand's filter.
+                href={`/inventory?brand=${encodeURIComponent(brand.name)}`}
+                className="group flex flex-col items-center gap-2 px-10 opacity-65 hover:opacity-100 transition-opacity duration-200"
+              >
+                {/* The actual SVG logo file from public/ */}
+                <img
+                  src={brand.src}
+                  alt={brand.name}
+                  className="w-12 h-12 object-contain"
+                  draggable={false}
+                />
+                {/* Brand name underneath */}
+                <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-gray-600 whitespace-nowrap group-hover:text-black transition-colors">
+                  {brand.name}
+                </span>
+              </Link>
+            ))
+          )}
+        </div>
+      </section>
+
+
+
+      {/* ============================================================
           FEATURE GRID — TOP ARRIVALS START
           WHAT: A section showing 3 featured car cards in a grid layout.
           WHY:  `id="inventory"` matches the `href="#inventory"` links in the navbar.
                 When someone clicks "Inventory", the browser scrolls here.
           ============================================================ */}
       <section id="inventory" className="py-24 px-6 bg-gray-50">
+
         <div className="max-w-7xl mx-auto">
 
           {/* --- SECTION HEADER --- */}
