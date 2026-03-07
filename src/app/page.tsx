@@ -13,6 +13,7 @@
 // WHY:  React is the engine that turns our JSX code into real HTML on the screen.
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 /* ============================================================
    DATA — Top Arrivals Cars
@@ -245,11 +246,14 @@ export default function HomePage() {
                   `object-cover` ensures the image fills its container without distortion.
                   The 16:9-ish aspect ratio (`aspect-video`) matches standard photo proportions. */}
         <div className="mt-16 w-full max-w-4xl mx-auto">
-          <img
+          <Image
             // EDIT THIS: Replace this URL with your own car image
             src="https://placehold.co/1200x600/f0f0f0/999999?text=Your+Featured+Car+Here"
             alt="Featured car" // EDIT THIS: Update alt text to describe your actual image
+            width={1200}
+            height={600}
             className="w-full rounded-2xl shadow-2xl object-cover aspect-video"
+            priority // WHY: Hero image is above the fold, so we load it eagerly (no lazy load)
           />
         </div>
 
@@ -348,9 +352,11 @@ export default function HomePage() {
                           `group-hover:scale-105` scales UP by 5% when the card is hovered — a zoom effect.
                           `transition-transform duration-500` makes the zoom smooth and slow (500ms). */}
                 <div className="overflow-hidden">
-                  <img
+                  <Image
                     src={car.image} // WHY: This pulls the `image` property from our featuredCars data above
                     alt={car.name}  // WHY: Always add alt text for accessibility and SEO
+                    width={600}
+                    height={400}
                     className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -395,12 +401,12 @@ export default function HomePage() {
           {/* WHAT: "See Full Inventory" button below the cards.
               WHY:  Gives users a clear next action if they want to see more cars. */}
           <div className="text-center mt-12">
-            <a
+            <Link
               href="/inventory"
               className="inline-block border-2 border-black text-black font-semibold px-8 py-4 rounded-full hover:bg-black hover:text-white transition-all text-sm tracking-wide"
             >
               See Full Inventory
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -418,9 +424,11 @@ export default function HomePage() {
           {/* --- LEFT: Image Placeholder --- */}
           {/* EDIT THIS: Replace this placeholder with a photo of your showroom or team */}
           <div className="rounded-2xl overflow-hidden shadow-lg">
-            <img
+            <Image
               src="https://placehold.co/800x600/1a1a1a/ffffff?text=Our+Showroom"
               alt="UniDrive Showroom"
+              width={800}
+              height={600}
               className="w-full h-full object-cover"
             />
           </div>
@@ -519,7 +527,7 @@ export default function HomePage() {
               <a href="#inventory" className="text-sm text-gray-500 hover:text-black transition-colors">Inventory</a>
               <a href="#about"     className="text-sm text-gray-500 hover:text-black transition-colors">About</a>
               <a href="#contact"   className="text-sm text-gray-500 hover:text-black transition-colors">Contact</a>
-              <a href="#"          className="text-sm text-gray-500 hover:text-black transition-colors">Privacy Policy</a>
+              <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"          className="text-sm text-gray-500 hover:text-black transition-colors">Privacy Policy</a>
             </div>
           </div>
 
