@@ -158,7 +158,7 @@ export const allCars: Car[] = [
   {
     id: 5,
     name: "Aero GT",
-    make: "UniDrive",
+    make: "BMW",
     model: "Aero GT",
     year: 2023,
     price: 42000,
@@ -185,7 +185,7 @@ export const allCars: Car[] = [
   {
     id: 6,
     name: "Crest Wagon",
-    make: "UniDrive",
+    make: "Lexus",
     model: "Crest",
     year: 2024,
     price: 39500,
@@ -212,7 +212,7 @@ export const allCars: Car[] = [
   {
     id: 7,
     name: "Raptor Truck",
-    make: "UniDrive",
+    make: "Porsche",
     model: "Raptor",
     year: 2024,
     price: 58000,
@@ -239,7 +239,7 @@ export const allCars: Car[] = [
   {
     id: 8,
     name: "Nova Sport",
-    make: "UniDrive",
+    make: "Audi",
     model: "Nova Sport",
     year: 2024,
     price: 37800,
@@ -266,7 +266,7 @@ export const allCars: Car[] = [
   {
     id: 9,
     name: "Zenith X",
-    make: "UniDrive",
+    make: "Mercedes",
     model: "Zenith X",
     year: 2023,
     price: 55000,
@@ -293,7 +293,7 @@ export const allCars: Car[] = [
   {
     id: 10,
     name: "Titan EV",
-    make: "UniDrive",
+    make: "Tesla",
     model: "Titan EV",
     year: 2023,
     price: 49500,
@@ -320,7 +320,7 @@ export const allCars: Car[] = [
   {
     id: 11,
     name: "Crest Wagon",
-    make: "UniDrive",
+    make: "BMW",
     model: "Crest",
     year: 2023,
     price: 34500,
@@ -347,7 +347,7 @@ export const allCars: Car[] = [
   {
     id: 12,
     name: "Aero GT RS",
-    make: "UniDrive",
+    make: "Audi",
     model: "Aero GT",
     year: 2024,
     price: 55500,
