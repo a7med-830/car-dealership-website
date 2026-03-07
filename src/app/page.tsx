@@ -425,7 +425,7 @@ export default function HomePage() {
           {/* EDIT THIS: Replace this placeholder with a photo of your showroom or team */}
           <div className="rounded-2xl overflow-hidden shadow-lg">
             <Image
-              src="https://placehold.co/800x600/1a1a1a/ffffff?text=Our+Showroom"
+              src="/Gemini_Generated_Image_erxtuoerxtuoerxt (1).png"
               alt="UniDrive Showroom"
               width={800}
               height={600}
