@@ -12,6 +12,7 @@
 // WHAT: We import the React library. Every file that uses JSX needs this.
 // WHY:  React is the engine that turns our JSX code into real HTML on the screen.
 import React, { useState } from "react";
+import Link from "next/link";
 
 /* ============================================================
    DATA — Top Arrivals Cars
@@ -98,9 +99,9 @@ export default function HomePage() {
                 EDIT THIS: Change "Inventory", "About", or add more links.
                 WHY:  `href="#inventory"` scrolls to the section with id="inventory" on the same page.
                       `hover:opacity-60` makes the link fade slightly when you hover over it — a subtle effect. */}
-            <a href="#inventory" className="text-sm font-medium hover:opacity-60 transition-opacity">
+            <Link href="/inventory" className="text-sm font-medium hover:opacity-60 transition-opacity">
               Inventory
-            </a>
+            </Link>
             <a href="#about" className="text-sm font-medium hover:opacity-60 transition-opacity">
               About
             </a>
@@ -142,9 +143,9 @@ export default function HomePage() {
         {menuOpen && (
           <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-4">
             {/* EDIT THIS: These links match the desktop nav — keep them in sync */}
-            <a href="#inventory" className="text-sm font-medium" onClick={() => setMenuOpen(false)}>
+            <Link href="/inventory" className="text-sm font-medium" onClick={() => setMenuOpen(false)}>
               Inventory
-            </a>
+            </Link>
             <a href="#about" className="text-sm font-medium" onClick={() => setMenuOpen(false)}>
               About
             </a>
@@ -213,14 +214,14 @@ export default function HomePage() {
               EDIT THIS: Change "View Inventory" text or the href link.
               WHY:  Solid black = high visibility = primary action.
                     `px-8 py-4` gives it generous padding so it's easy to tap on mobile. */}
-          <a
-            href="#inventory"
+          <Link
+            href="/inventory"
             id="view-inventory-btn"
             className="bg-black text-white font-semibold px-8 py-4 rounded-full hover:bg-gray-800 transition-colors text-sm tracking-wide"
           >
             {/* EDIT THIS: Change the button text */}
             View Inventory
-          </a>
+          </Link>
 
           {/* WHAT: Secondary CTA — a softer action (less commitment).
               EDIT THIS: Change "Book a Test Drive" text or the href link.
@@ -395,7 +396,7 @@ export default function HomePage() {
               WHY:  Gives users a clear next action if they want to see more cars. */}
           <div className="text-center mt-12">
             <a
-              href="#"
+              href="/inventory"
               className="inline-block border-2 border-black text-black font-semibold px-8 py-4 rounded-full hover:bg-black hover:text-white transition-all text-sm tracking-wide"
             >
               See Full Inventory
