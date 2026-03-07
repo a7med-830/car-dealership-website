@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚗 UniDrive — Car Dealership Website
 
-## Getting Started
+A university project — a modern car dealership website built with **Next.js** and **Tailwind CSS**.
 
-First, run the development server:
+## Pages
 
+| Page | URL | Description |
+|---|---|---|
+| Home | `/` | Landing page with featured cars |
+| Inventory | `/inventory` | Browse & filter all cars |
+| Car Detail | `/inventory/[id]` | Full specs + Book a Test Drive form |
+
+---
+
+## ⚡ Running on a New Computer
+
+### 1. Install Node.js
+Download and install the **LTS** version from **[nodejs.org](https://nodejs.org)**
+
+### 2. Get the project files
+Copy the `car-dealership-website/` folder onto your computer (USB, Google Drive, GitHub, etc.)
+
+> ⚠️ **Do NOT copy** the `node_modules/` folder — it's huge and gets recreated in the next step.
+
+### 3. Install dependencies
+Open a terminal inside the project folder and run:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. Start the dev server
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Open in browser
+Go to **http://localhost:3000**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## ✏️ Editing the Website
 
-To learn more about Next.js, take a look at the following resources:
+| What to edit | Where |
+|---|---|
+| Car inventory data (names, prices, photos, specs) | `src/lib/cars.ts` |
+| Home page | `src/app/page.tsx` |
+| Inventory page (filters, layout) | `src/app/inventory/page.tsx` |
+| Car detail page (specs, form) | `src/app/inventory/[id]/page.tsx` |
+| Global styles | `src/app/globals.css` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Adding your own car photos
+1. Put your image files inside the `public/cars/` folder
+2. Open `src/lib/cars.ts` and update the `images` array for that car:
+```ts
+images: [
+  "/cars/your-car-front.jpg",
+  "/cars/your-car-side.jpg",
+  "/cars/your-car-interior.jpg",
+  "/cars/your-car-rear.jpg",
+],
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🛠️ Commands
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command | What it does |
+|---|---|
+| `npm install` | Install all dependencies (run once on a new computer) |
+| `npm run dev` | Start the development server at localhost:3000 |
+| `npm run build` | Build for production |
+| `npm run start` | Start the production build |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🧱 Tech Stack
+
+- **[Next.js 15](https://nextjs.org)** — React framework with file-based routing
+- **[Tailwind CSS](https://tailwindcss.com)** — Utility-first CSS
+- **[TypeScript](https://www.typescriptlang.org)** — Type-safe JavaScript
+
+---
+
+*⚡ Made for University Project — Student Web Development*
