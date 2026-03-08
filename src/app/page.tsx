@@ -1,7 +1,6 @@
-"use client"; // <--- ضيف السطر ده هنا في أول الملف
+"use client";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-
-// ─── Google Fonts ────────────────────────────────────────────────────────────
 const FontLoader = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
@@ -382,7 +381,7 @@ function Header() {
   }, []);
 
   const navLeft = ["MODELS", "CARS FOR SALE", "CONFIGURATOR"];
-  const navRight = ["NEWS", "FIND A DEALER", "CONTACT"];
+  const navRight = ["INVENTORY", "FIND A DEALER", "CONTACT"];
 
   return (
     <>
@@ -399,11 +398,11 @@ function Header() {
           {/* LEFT NAV */}
           <nav className="desktop-nav" style={{ display: "flex", gap: 36 }}>
             {navLeft.map(item => (
-              <a key={item} href="#" className="nav-link" style={{
+              <Link key={item} href="#" className="nav-link" style={{
                 fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
                 letterSpacing: "0.14em", color: "var(--text-light)",
                 textDecoration: "none", textTransform: "uppercase",
-              }}>{item}</a>
+              }}>{item}</Link>
             ))}
           </nav>
 
@@ -420,11 +419,15 @@ function Header() {
           {/* RIGHT NAV + ICONS */}
           <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: 36 }}>
             {navRight.map(item => (
-              <a key={item} href="#" className="nav-link" style={{
-                fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
-                letterSpacing: "0.14em", color: "var(--text-light)",
-                textDecoration: "none", textTransform: "uppercase",
-              }}>{item}</a>
+              <Link 
+                key={item} 
+                href={item === "INVENTORY" ? "/inventory" : "#"} 
+                className="nav-link" 
+                style={{
+                  fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
+                  letterSpacing: "0.14em", color: "var(--text-light)",
+                  textDecoration: "none", textTransform: "uppercase",
+              }}>{item}</Link>
             ))}
             <div style={{ display: "flex", gap: 16, marginLeft: 8 }}>
               <button style={{ background: "none", border: "none", color: "var(--text-mid)", cursor: "pointer", padding: 4, display: "flex" }}><SearchIcon /></button>
@@ -451,13 +454,18 @@ function Header() {
           position: "absolute", top: 24, right: 24,
           background: "none", border: "none", color: "var(--white)", cursor: "pointer",
         }}><CloseIcon /></button>
+        
         {[...navLeft, ...navRight].map(item => (
-          <a key={item} href="#" style={{
-            display: "block", fontFamily: "var(--font-body)", fontSize: 11,
-            letterSpacing: "0.16em", color: "var(--text-light)", textDecoration: "none",
-            textTransform: "uppercase", marginBottom: 28, borderBottom: "1px solid var(--border)",
-            paddingBottom: 28,
-          }}>{item}</a>
+          <Link 
+            key={item} 
+            href={item === "INVENTORY" ? "/inventory" : "#"} 
+            onClick={() => setMobileOpen(false)}
+            style={{
+              display: "block", fontFamily: "var(--font-body)", fontSize: 11,
+              letterSpacing: "0.16em", color: "var(--text-light)", textDecoration: "none",
+              textTransform: "uppercase", marginBottom: 28, borderBottom: "1px solid var(--border)",
+              paddingBottom: 28,
+          }}>{item}</Link>
         ))}
       </div>
     </>
