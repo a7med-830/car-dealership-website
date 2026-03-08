@@ -11,6 +11,7 @@
 //       useEffect = run code when something changes (like filtering the list).
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { allCars } from "@/lib/cars";
 
 // WHAT: Car data is now imported from the shared file src/lib/cars.ts
@@ -22,6 +23,10 @@ import { allCars } from "@/lib/cars";
    WHAT: The options shown in each filter dropdown/checkbox panel.
    EDIT THIS: Add more body styles, colors, etc. to match your real inventory.
    ============================================================ */
+// WHAT: Derive the list of brands dynamically from the actual car data.
+// WHY:  This way the brand list always matches what's in stock — no need to manually keep it in sync.
+const BRANDS = [...new Set(allCars.map((c) => c.make))].sort();
+
 const BODY_STYLES = ["Sedan", "SUV", "Coupe", "Truck", "Wagon"];
 const COLORS      = ["Black", "White", "Silver", "Blue", "Gray", "Red"];
 const YEARS       = [2025, 2024, 2023];
@@ -152,18 +157,31 @@ export default function InventoryPage() {
 
   // WHAT: All the filter state variables — these track what the user has selected.
   // WHY:  Each piece of state causes a re-render when it changes, updating the results.
-  const [searchText,     setSearchText]     = useState("");                 // The search bar text
-  const [selectedBodies, setSelectedBodies] = useState<string[]>([]);       // Selected body styles
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);       // Selected colors
-  const [selectedYears,  setSelectedYears]  = useState<number[]>([]);       // Selected years
-  const [selectedPrices, setSelectedPrices] = useState<string[]>([]);       // Selected price ranges
-  const [sortBy,         setSortBy]         = useState("price_asc");        // Sort dropdown value
-  const [filteredCars,   setFilteredCars]   = useState(allCars);            // The filtered result list
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);        // Mobile sidebar toggle
+  const [searchText,     setSearchText]     = useState("");
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);       // Selected brands
+  const [selectedBodies, setSelectedBodies] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedYears,  setSelectedYears]  = useState<number[]>([]);
+  const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
+  const [sortBy,         setSortBy]         = useState("price_asc");
+  const [filteredCars,   setFilteredCars]   = useState(allCars);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  // WHAT: Read ?brand= from the URL and pre-check that brand filter on load.
+  // WHY:  When a user clicks a brand logo on the homepage, they land here with
+  //       e.g. ?brand=BMW in the URL. We read it once on mount and activate the filter.
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const brandParam = searchParams.get("brand");
+    if (brandParam) {
+      // Only pre-select if it actually exists in our brand list
+      setSelectedBrands([brandParam]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run once on mount only
 
-  // WHAT: Active filter chips (displayed above results as removable tags).
   // WHY:  Shows the user what filters are currently active, like the Volvo page does.
   const activeFilters = [
+    ...selectedBrands,
     ...selectedBodies,
     ...selectedColors,
     ...selectedYears.map(String),
@@ -179,7 +197,12 @@ export default function InventoryPage() {
   const applyFilters = useCallback(() => {
     let result = [...allCars];
 
-    // 1. Text search — filters by name, model, or trim
+    // 1. Brand filter
+    if (selectedBrands.length > 0) {
+      result = result.filter((c) => selectedBrands.includes(c.make));
+    }
+
+    // 2. Text search — filters by name, model, or trim
     if (searchText.trim()) {
       const q = searchText.toLowerCase();
       result = result.filter(
@@ -190,22 +213,22 @@ export default function InventoryPage() {
       );
     }
 
-    // 2. Body style filter
+    // 3. Body style filter
     if (selectedBodies.length > 0) {
       result = result.filter((c) => selectedBodies.includes(c.body));
     }
 
-    // 3. Color filter
+    // 4. Color filter
     if (selectedColors.length > 0) {
       result = result.filter((c) => selectedColors.includes(c.color));
     }
 
-    // 4. Year filter
+    // 5. Year filter
     if (selectedYears.length > 0) {
       result = result.filter((c) => selectedYears.includes(c.year));
     }
 
-    // 5. Price range filter
+    // 6. Price range filter
     if (selectedPrices.length > 0) {
       result = result.filter((c) =>
         selectedPrices.some((label) => {
@@ -215,7 +238,7 @@ export default function InventoryPage() {
       );
     }
 
-    // 6. Sort the results
+    // 7. Sort
     result.sort((a, b) => {
       if (sortBy === "price_asc")  return a.price - b.price;
       if (sortBy === "price_desc") return b.price - a.price;
@@ -225,7 +248,7 @@ export default function InventoryPage() {
     });
 
     setFilteredCars(result);
-  }, [searchText, selectedBodies, selectedColors, selectedYears, selectedPrices, sortBy]);
+  }, [searchText, selectedBrands, selectedBodies, selectedColors, selectedYears, selectedPrices, sortBy]);
 
   // WHY: useEffect watches for changes in `applyFilters` and calls it automatically.
   //      This means the list updates instantly whenever a filter changes.
@@ -254,14 +277,15 @@ export default function InventoryPage() {
   // Clear all filters
   function clearAll() {
     setSearchText("");
+    setSelectedBrands([]);
     setSelectedBodies([]);
     setSelectedColors([]);
     setSelectedYears([]);
     setSelectedPrices([]);
   }
 
-  // Remove one filter chip
   function removeFilter(label: string) {
+    setSelectedBrands((p) => p.filter((x) => x !== label));
     setSelectedBodies((p) => p.filter((x) => x !== label));
     setSelectedColors((p) => p.filter((x) => x !== label));
     setSelectedYears((p)  => p.filter((x) => String(x) !== label));
@@ -298,6 +322,20 @@ export default function InventoryPage() {
           </button>
         )}
       </div>
+
+      {/* --- BRAND FILTER --- */}
+      {/* WHAT: Shows all unique brands derived from the car data. */}
+      <FilterPanel title="Brand">
+        {BRANDS.map((b) => (
+          <CheckboxOption
+            key={b}
+            label={b}
+            count={countFor("make", b)}
+            checked={selectedBrands.includes(b)}
+            onChange={() => setSelectedBrands(toggle(selectedBrands, b))}
+          />
+        ))}
+      </FilterPanel>
 
       {/* --- BODY STYLE FILTER --- */}
       <FilterPanel title="Body Style">
