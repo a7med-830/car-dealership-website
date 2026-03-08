@@ -1,556 +1,941 @@
-// WHAT: This is the main landing page for the UniDrive car dealership website.
-// WHY:  In Next.js, the file at src/app/page.tsx is automatically shown when someone
-//       visits the root URL ("/"). Think of it as the front door of our website.
+"use client"; // <--- ضيف السطر ده هنا في أول الملف
+import { useState, useEffect, useRef } from "react";
 
-/* ============================================================
-   IMPORTS
-   WHY: We import React so we can write JSX (the HTML-like code you see below).
-        "use client" tells Next.js this component runs in the browser, not just the server.
-   ============================================================ */
-"use client";
+// ─── Google Fonts ────────────────────────────────────────────────────────────
+const FontLoader = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
 
-// WHAT: We import the React library. Every file that uses JSX needs this.
-// WHY:  React is the engine that turns our JSX code into real HTML on the screen.
-import React, { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ============================================================
-   DATA — Top Arrivals Cars
-   WHAT: This is our list of featured cars shown in the "Top Arrivals" grid.
-   EDIT THIS: Change the car names, prices, or image URLs here.
-   WHY:  Storing data in an array makes it easy to add more cars later
-         without copy-pasting the same card HTML over and over.
-   ============================================================ */
-const featuredCars = [
-  {
-    // EDIT THIS: Change "Aero GT" to your car model name
-    name: "Aero GT",
-    // EDIT THIS: Change the year
-    year: "2024",
-    // EDIT THIS: Change the price (this is a display string, so format it however you like)
-    price: "$48,990",
-    // EDIT THIS: Replace the URL below with a real photo if you have one.
-    // placehold.co generates a gray box with text — perfect as a placeholder.
-    image: "https://placehold.co/600x400/1a1a1a/ffffff?text=Aero+GT",
-    // EDIT THIS: Change the short description shown on the card
-    badge: "New Arrival",
+    :root {
+      --black: #000000;
+      --dark: #0a0a0a;
+      --dark2: #111111;
+      --dark3: #1a1a1a;
+      --border: #222222;
+      --border2: #2e2e2e;
+      --text-dim: #666666;
+      --text-mid: #999999;
+      --text-light: #cccccc;
+      --white: #ffffff;
+      --gold: #c9a96e;
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Montserrat', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+    /* Loading Screen Animations */
+    .loader-container {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    .loader-container.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader-text {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 5vw, 48px);
+      letter-spacing: 0.3em;
+      color: var(--white);
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+      50% { opacity: 0.4; text-shadow: 0 0 0px rgba(255,255,255,0); }
+    }
+
+    /* Fade-in animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes kenBurns {
+      from { transform: scale(1); }
+      to   { transform: scale(1.06); }
+    }
+    @keyframes lineExpand {
+      from { width: 0; }
+      to   { width: 48px; }
+    }
+
+    .animate-fadeUp  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .animate-fadeIn  { animation: fadeIn 1.2s ease forwards; }
+    .animate-slideLeft { animation: slideLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .opacity-0 { opacity: 0; }
+
+    /* Hero slider */
+    .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s cubic-bezier(0.4,0,0.2,1); }
+    .hero-slide.active { opacity: 1; }
+    .hero-slide.active .hero-img { animation: kenBurns 10s ease forwards; }
+    .hero-img { width: 100%; height: 100%; object-fit: cover; transform-origin: center center; }
+
+    /* Card hover */
+    .card-img-wrap { overflow: hidden; }
+    .card-img-wrap img { transition: transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .card-root:hover .card-img-wrap img { transform: scale(1.05); }
+    .card-root:hover .card-overlay { opacity: 1; }
+    .card-overlay { opacity: 0; transition: opacity 0.4s ease; }
+
+    /* Split hover */
+    .split-panel { overflow: hidden; }
+    .split-panel img { transition: transform 1s cubic-bezier(0.16,1,0.3,1), filter 0.6s ease; }
+    .split-panel:hover img { transform: scale(1.04); filter: brightness(0.65); }
+    .split-panel .split-label { transition: letter-spacing 0.4s ease, color 0.4s ease; }
+    .split-panel:hover .split-label { letter-spacing: 0.25em; color: var(--white); }
+
+    /* Nav link underline */
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--white);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Button styles */
+    .btn-outline {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.35);
+      color: var(--white);
+      letter-spacing: 0.15em;
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 500;
+      padding: 13px 32px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      background: transparent;
+      text-decoration: none;
+    }
+    .btn-outline:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    .btn-solid {
+      display: inline-block;
+      background: var(--white);
+      color: var(--black);
+      letter-spacing: 0.15em;
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 13px 32px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+      border: 1px solid var(--white);
+      text-decoration: none;
+    }
+    .btn-solid:hover {
+      background: transparent;
+      color: var(--white);
+    }
+
+    /* Dropdown */
+    .custom-select {
+      appearance: none;
+      background: var(--dark2);
+      border: 1px solid var(--border2);
+      color: var(--text-mid);
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      padding: 14px 40px 14px 18px;
+      text-transform: uppercase;
+      cursor: pointer;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .custom-select:focus { border-color: var(--text-dim); }
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 16px; top: 50%;
+      transform: translateY(-50%);
+      width: 8px; height: 8px;
+      border-right: 1px solid var(--text-dim);
+      border-bottom: 1px solid var(--text-dim);
+      transform: translateY(-65%) rotate(45deg);
+      pointer-events: none;
+    }
+
+    /* News item */
+    .news-item { border-bottom: 1px solid var(--border); transition: border-color 0.3s; }
+    .news-item:hover { border-color: var(--text-dim); }
+    .news-item:hover .news-title { color: var(--white); }
+    .news-title { transition: color 0.3s ease; color: var(--text-light); }
+
+    /* Footer link */
+    .footer-link { color: var(--text-dim); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; display: block; transition: color 0.3s; margin-bottom: 12px; }
+    .footer-link:hover { color: var(--white); }
+
+    /* Social icon */
+    .social-icon { width: 38px; height: 38px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; transition: border-color 0.3s, background 0.3s; cursor: pointer; }
+    .social-icon:hover { border-color: var(--white); background: var(--white); }
+    .social-icon:hover svg { fill: var(--black); }
+    .social-icon svg { fill: var(--text-dim); transition: fill 0.3s; }
+
+    /* Section title accent */
+    .section-accent {
+      display: inline-block;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      margin-right: 14px;
+      vertical-align: middle;
+      animation: lineExpand 0.8s ease 0.3s forwards;
+    }
+
+    /* Mobile menu */
+    .mobile-menu { transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+    .mobile-menu.open { transform: translateX(0); }
+
+    /* Swiper dots */
+    .hero-dot { width: 28px; height: 2px; background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.3s, width 0.3s; }
+    .hero-dot.active { background: var(--white); width: 48px; }
+
+    /* Carousel custom nav */
+    .carousel-arrow { width: 44px; height: 44px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.3s, background 0.3s; }
+    .carousel-arrow:hover { border-color: var(--white); background: var(--white); }
+    .carousel-arrow:hover svg { stroke: var(--black); }
+    .carousel-arrow svg { stroke: var(--text-dim); transition: stroke 0.3s; }
+
+    /* Intersection observer helper */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.35s; }
+    .reveal-delay-4 { transition-delay: 0.5s; }
+
+    @media (max-width: 768px) {
+      .desktop-nav { display: none; }
+      .mobile-toggle { display: flex; }
+    }
+    @media (min-width: 769px) {
+      .mobile-toggle { display: none; }
+      .mobile-menu-overlay { display: none; }
+    }
+  `}</style>
+);
+
+// ─── useIntersectionObserver hook ────────────────────────────────────────────
+function useReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add("visible"); obs.unobserve(el); } },
+      { threshold: 0.12 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return ref;
+}
+
+
+// ─── HERO DATA ────────────────────────────────────────────────────────────────
+const heroSlides = [
+    {
+    img: "/photo-1514867644123-6385d58d3cd4.jpg",
+    eyebrow: "SIGNATURE",
+    title: "FERRARI\nPUROSANGUE",
+    sub: "SOFT KIT — ATELIER",
+    tag: "FERRARI",
   },
   {
-    name: "Zenith X",
-    year: "2024",
-    price: "$62,500",
-    image: "https://placehold.co/600x400/1a1a1a/ffffff?text=Zenith+X",
-    badge: "Best Seller",
+    img: "/1b68f3d98661e13530dc0bbda4e2cefe.jpg",
+    eyebrow: "NEW ARRIVAL",
+    title: "ULTRA LUXURY\nCULLINAN II",
+    sub: "FULL BODY KIT",
+    tag: "ROLLS-ROYCE",
   },
   {
-    name: "Nova Sport",
-    year: "2023",
-    price: "$35,750",
-    image: "https://placehold.co/600x400/1a1a1a/ffffff?text=Nova+Sport",
-    badge: "Limited",
+    img: "/e58e67f21779b3e8f0d4797fd3557f8a.jpg",
+    eyebrow: "EXCLUSIVE",
+    title: "BRABUS G900\nROCKET",
+    sub: "CARBON EDITION",
+    tag: "G CLASS-MERCEDES",
+  },
+
+  {
+    img: "/photo-1525609004556-c46c7d6cf023.jpg",
+    eyebrow: "LIMITED",
+    title: "LAMBORGHINI\nURUS VENATUS",
+    sub: "WIDEBODY PROGRAM",
+    tag: "LAMBORGHINI",
   },
 ];
 
-/* ============================================================
-   MAIN PAGE COMPONENT
-   WHAT: This is the default export — the actual page React renders.
-   WHY:  In React, a "component" is a function that returns HTML-like JSX.
-         "export default" means this is the main thing this file provides.
-   ============================================================ */
-export default function HomePage() {
-  // WHAT: This tracks whether the mobile menu is open or closed.
-  // WHY:  useState is React's way of remembering values that can change.
-  //       When `menuOpen` changes, React re-renders only what needs to update.
-  const [menuOpen, setMenuOpen] = useState(false);
+// ─── CARS DATA ────────────────────────────────────────────────────────────────
+const cars = [
+  { img: "/bef83415d0cba15db605a5d1294e3771.jpg", title: "CULLINAN — LINEA D'ARABO", tag: "ATELIER" },
+  { img: "/0125a3f4b0b10872781cae7fa97e4009.jpg", title: "G63 AMG — WIDESTAR", tag: "BODY KIT" },
+  { img: "/photo-1621135802920-133df287f89c.jpg", title: "URUS — VENATUS", tag: "WIDEBODY" },
+  { img: "/photo-1580414057403-c5f451f30e1c.jpg", title: "PANAMERA — SPORT TURISMO", tag: "FULL KIT" },
+  { img: "/photo-1571607388263-1044f9ea01dd.jpg", title: "DBX — CARBON EDITION", tag: "ATELIER" },
+];
+
+// ─── NEWS DATA ────────────────────────────────────────────────────────────────
+const news = [
+  {
+    img: "/ff74324e3edafd5db62bfae27ed91351.jpg",
+    date: "FEBRUARY 13, 2026",
+    title: "THE FERRARI PUROSANGUE SOFT KIT",
+    cat: "BODY KITS",
+  },
+  {
+    img: "/7e34ae620a79e76916992147175aa522.jpg",
+    date: "JANUARY 28, 2026",
+    title: "BRABUS ROCKET 900 — EXCLUSIVE WORLD PREMIERE",
+    cat: "NEWS",
+  },
+  {
+    img: "/5be169f1083a8882c16362358b5a6fd6.jpg",
+    date: "JANUARY 09, 2026",
+    title: "CULLINAN SERIES II — LINEA D'ARABO COLLECTION",
+    cat: "ATELIER",
+  },
+];
+
+// ─── SVG ICONS ────────────────────────────────────────────────────────────────
+const SearchIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+  </svg>
+);
+const UserIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+const ChevronLeft = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="m15 18-6-6 6-6"/>
+  </svg>
+);
+const ChevronRight = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="m9 18 6-6-6-6"/>
+  </svg>
+);
+const MenuIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+);
+const CloseIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M18 6 6 18M6 6l12 12"/>
+  </svg>
+);
+
+// ─── HEADER ───────────────────────────────────────────────────────────────────
+function Header() {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", handler);
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  const navLeft = ["MODELS", "CARS FOR SALE", "CONFIGURATOR"];
+  const navRight = ["NEWS", "FIND A DEALER", "CONTACT"];
 
   return (
-    // WHAT: The outermost <div> wraps the entire page.
-    // WHY:  `min-h-screen` makes it at least as tall as the screen.
-    //       `bg-white text-black` sets a white background and black text — our monochrome palette.
-    //       `font-sans` uses the default clean sans-serif font stack.
-    <div className="min-h-screen bg-white text-black font-sans">
+    <>
+      <header style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+        background: scrolled ? "rgba(0,0,0,0.97)" : "transparent",
+        borderBottom: scrolled ? "1px solid #1a1a1a" : "1px solid transparent",
+        backdropFilter: scrolled ? "blur(12px)" : "none",
+        transition: "background 0.5s ease, border-color 0.5s ease, backdrop-filter 0.5s ease",
+        padding: "0 40px",
+      }}>
+        <div style={{ maxWidth: 1440, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
 
-      {/* ============================================================
-          NAVBAR START
-          WHAT: The navigation bar at the top of the page.
-          WHY:  `sticky top-0 z-50` keeps the navbar visible as you scroll down.
-                `border-b border-gray-200` adds a subtle bottom border separator.
-                `backdrop-blur-sm bg-white/90` gives a frosted-glass effect.
-          ============================================================ */}
-      <nav className="sticky top-0 z-50 backdrop-blur-sm bg-white/90 border-b border-gray-200">
-        {/* WHAT: Inner container that limits max width and centers content.
-            WHY:  `max-w-7xl mx-auto` is the standard "centered container" pattern.
-                  `px-6` adds horizontal padding so content doesn't touch the screen edges. */}
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          {/* LEFT NAV */}
+          <nav className="desktop-nav" style={{ display: "flex", gap: 36 }}>
+            {navLeft.map(item => (
+              <a key={item} href="#" className="nav-link" style={{
+                fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
+                letterSpacing: "0.14em", color: "var(--text-light)",
+                textDecoration: "none", textTransform: "uppercase",
+              }}>{item}</a>
+            ))}
+          </nav>
 
-          {/* --- LOGO --- */}
-          {/* WHAT: The brand name / logo on the left side of the navbar.
-              EDIT THIS: Change "UniDrive" to your own brand name.
-              WHY:  `text-2xl font-black tracking-tight` makes it big, bold, and tight — like Tesla's logo. */}
-          <span className="text-2xl font-black tracking-tight">UniDrive</span>
-
-          {/* --- DESKTOP NAV LINKS (hidden on mobile) --- */}
-          {/* WHAT: Navigation links shown on medium screens and larger.
-              WHY:  `hidden md:flex` hides this on small (mobile) screens and shows it on medium+ screens.
-                    This is called "responsive design" — adapting the layout to screen size. */}
-          <div className="hidden md:flex items-center gap-8">
-
-            {/* WHAT: Each <a> is a clickable navigation link.
-                EDIT THIS: Change "Inventory", "About", or add more links.
-                WHY:  `href="#inventory"` scrolls to the section with id="inventory" on the same page.
-                      `hover:opacity-60` makes the link fade slightly when you hover over it — a subtle effect. */}
-            <Link href="/inventory" className="text-sm font-medium hover:opacity-60 transition-opacity">
-              Inventory
-            </Link>
-            <a href="#about" className="text-sm font-medium hover:opacity-60 transition-opacity">
-              About
-            </a>
-
-            {/* WHAT: The "Contact" button with a solid black style — it stands out from plain links.
-                EDIT THIS: Change the text "Contact Us" or the link href.
-                WHY:  `bg-black text-white` inverts colors to make it pop as a call-to-action (CTA).
-                      `rounded-full` gives it a pill shape, which is a modern design trend.
-                      `hover:bg-gray-800` slightly lightens the button on hover for feedback. */}
-            <a
-              href="#contact"
-              className="bg-black text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-gray-800 transition-colors"
-            >
-              Contact Us
-            </a>
+          {/* LOGO */}
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", textAlign: "center" }}>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 18, letterSpacing: "0.22em", color: "var(--white)", fontWeight: 600 }}>
+              UNIDRIVE
+            </div>
+            <div style={{ fontSize: 7, letterSpacing: "0.35em", color: "var(--text-dim)", marginTop: 2, fontWeight: 400 }}>
+              INDIVIDUALIZATION
+            </div>
           </div>
 
-          {/* --- MOBILE HAMBURGER BUTTON (visible only on mobile) --- */}
-          {/* WHAT: A button that appears on small screens to open/close the mobile menu.
-              WHY:  `md:hidden` hides this button on medium and large screens (only shows on mobile).
-                    Clicking it toggles the `menuOpen` state which shows/hides the mobile menu below. */}
-          <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
-            onClick={() => setMenuOpen(!menuOpen)} // WHY: ! flips true→false and false→true
-            aria-label="Toggle menu" // WHY: Accessibility — tells screen readers what this button does
-          >
-            {/* WHAT: Three horizontal bars to create the classic hamburger icon.
-                WHY:  `w-6 h-0.5 bg-black` creates a thin black line (0.5 = 2px tall, 6 = 24px wide). */}
-            <span className="w-6 h-0.5 bg-black block transition-all"></span>
-            <span className="w-6 h-0.5 bg-black block transition-all"></span>
-            <span className="w-6 h-0.5 bg-black block transition-all"></span>
+          {/* RIGHT NAV + ICONS */}
+          <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: 36 }}>
+            {navRight.map(item => (
+              <a key={item} href="#" className="nav-link" style={{
+                fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
+                letterSpacing: "0.14em", color: "var(--text-light)",
+                textDecoration: "none", textTransform: "uppercase",
+              }}>{item}</a>
+            ))}
+            <div style={{ display: "flex", gap: 16, marginLeft: 8 }}>
+              <button style={{ background: "none", border: "none", color: "var(--text-mid)", cursor: "pointer", padding: 4, display: "flex" }}><SearchIcon /></button>
+              <button style={{ background: "none", border: "none", color: "var(--text-mid)", cursor: "pointer", padding: 4, display: "flex" }}><UserIcon /></button>
+            </div>
+          </div>
+
+          {/* MOBILE TOGGLE */}
+          <button className="mobile-toggle" onClick={() => setMobileOpen(true)}
+            style={{ background: "none", border: "none", color: "var(--white)", cursor: "pointer", display: "none", marginLeft: "auto" }}>
+            <MenuIcon />
           </button>
         </div>
+      </header>
 
-        {/* --- MOBILE DROPDOWN MENU --- */}
-        {/* WHAT: The menu that slides open when the hamburger is tapped on mobile.
-            WHY:  `{menuOpen && ...}` is React's way of conditionally rendering something.
-                  If menuOpen is true, show this; if false, hide it completely. */}
-        {menuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-4">
-            {/* EDIT THIS: These links match the desktop nav — keep them in sync */}
-            <Link href="/inventory" className="text-sm font-medium" onClick={() => setMenuOpen(false)}>
-              Inventory
-            </Link>
-            <a href="#about" className="text-sm font-medium" onClick={() => setMenuOpen(false)}>
-              About
-            </a>
-            <a
-              href="#contact"
-              className="bg-black text-white text-sm font-medium px-5 py-2 rounded-full text-center"
-              onClick={() => setMenuOpen(false)}
-            >
-              Contact Us
-            </a>
-          </div>
-        )}
-      </nav>
-      {/* NAVBAR END */}
+      {/* MOBILE MENU */}
+      <div className={`mobile-menu mobile-menu-overlay`} onClick={() => setMobileOpen(false)}
+        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 200, display: mobileOpen ? "block" : "none" }} />
+      <div className={`mobile-menu ${mobileOpen ? "open" : ""}`} style={{
+        position: "fixed", top: 0, right: 0, bottom: 0, width: "280px",
+        background: "var(--dark2)", zIndex: 201, padding: "80px 40px 40px",
+      }}>
+        <button onClick={() => setMobileOpen(false)} style={{
+          position: "absolute", top: 24, right: 24,
+          background: "none", border: "none", color: "var(--white)", cursor: "pointer",
+        }}><CloseIcon /></button>
+        {[...navLeft, ...navRight].map(item => (
+          <a key={item} href="#" style={{
+            display: "block", fontFamily: "var(--font-body)", fontSize: 11,
+            letterSpacing: "0.16em", color: "var(--text-light)", textDecoration: "none",
+            textTransform: "uppercase", marginBottom: 28, borderBottom: "1px solid var(--border)",
+            paddingBottom: 28,
+          }}>{item}</a>
+        ))}
+      </div>
+    </>
+  );
+}
 
-      {/* ============================================================
-          HERO SECTION START
-          WHAT: The first big section the visitor sees — our "showstopper" moment.
-          WHY:  A hero section is the most important part of a landing page.
-                It must immediately communicate what the brand is about.
-          ============================================================ */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 py-24 bg-white overflow-hidden">
+// ─── HERO SLIDER ──────────────────────────────────────────────────────────────
+function HeroSlider() {
+  const [active, setActive] = useState(0);
+  const [prev, setPrev] = useState<number | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-        {/* WHAT: Subtle background decoration — a large faint circle.
-            WHY:  `absolute` pulls it out of normal flow so it doesn't push content around.
-                  `opacity-5` makes it barely visible — just a hint of texture. */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-gray-900 opacity-5 pointer-events-none"></div>
+  const goTo = (idx: number) => {
+    setPrev(active);
+    setActive(idx);
+  };
 
-        {/* --- EYEBROW LABEL --- */}
-        {/* WHAT: A small uppercase label above the main headline.
-            EDIT THIS: Change "Premium Auto Collection" to whatever you like.
-            WHY:  `tracking-[0.3em]` spreads out the letters (letter-spacing) — very Tesla-like. */}
-        <p className="text-xs font-semibold tracking-[0.3em] uppercase text-gray-400 mb-6">
-          Premium Auto Collection
-        </p>
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setActive(a => (a + 1) % heroSlides.length);
+    }, 6000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
 
-        {/* --- MAIN HEADLINE --- */}
-        {/* WHAT: The giant hero headline — the first thing visitors read.
-            EDIT THIS: Change "The Future of Motion." to your own tagline.
-            WHY:  `text-6xl md:text-8xl` means small screens get size-6xl, large screens get 8xl.
-                  `font-black` is the heaviest font weight (900) for maximum impact.
-                  `leading-none` removes extra line spacing so it feels tight and editorial. */}
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-none mb-8 max-w-5xl">
-          {/* EDIT THIS: Change this headline text */}
-          The Future<br />of Motion.
-        </h1>
+  const slide = heroSlides[active];
 
-        {/* --- SUBTITLE --- */}
-        {/* WHAT: A short supporting sentence under the headline.
-            EDIT THIS: Change this description to match your dealership's message.
-            WHY:  `max-w-lg` keeps the text narrow so it's easy to read (not too wide).
-                  `text-gray-500` uses a lighter gray — secondary information should be de-emphasized. */}
-        <p className="text-gray-500 text-lg md:text-xl max-w-lg mb-10 leading-relaxed">
-          {/* EDIT THIS: Change this supporting text */}
-          Discover our curated selection of premium and certified vehicles.
-          Drive the car you deserve.
-        </p>
-
-        {/* --- CTA BUTTONS --- */}
-        {/* WHAT: Two call-to-action buttons side by side.
-            WHY:  Having TWO options (primary + secondary) gives users a choice
-                  and caters to those at different stages — browsing vs. ready to act. */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-
-          {/* WHAT: Primary CTA — the main action we want users to take.
-              EDIT THIS: Change "View Inventory" text or the href link.
-              WHY:  Solid black = high visibility = primary action.
-                    `px-8 py-4` gives it generous padding so it's easy to tap on mobile. */}
-          <Link
-            href="/inventory"
-            id="view-inventory-btn"
-            className="bg-black text-white font-semibold px-8 py-4 rounded-full hover:bg-gray-800 transition-colors text-sm tracking-wide"
-          >
-            {/* EDIT THIS: Change the button text */}
-            View Inventory
-          </Link>
-
-          {/* WHAT: Secondary CTA — a softer action (less commitment).
-              EDIT THIS: Change "Book a Test Drive" text or the href link.
-              WHY:  `border-2 border-black` gives an outlined (ghost) style — visually lighter than the solid button.
-                    `hover:bg-black hover:text-white` makes it fill in on hover — a classic "fill on hover" effect. */}
-          <a
-            href="#contact"
-            id="test-drive-btn"
-            className="border-2 border-black text-black font-semibold px-8 py-4 rounded-full hover:bg-black hover:text-white transition-all text-sm tracking-wide"
-          >
-            {/* EDIT THIS: Change the button text */}
-            Book a Test Drive
-          </a>
+  return (
+    <section style={{ position: "relative", height: "100vh", overflow: "hidden", background: "#000" }}>
+      {heroSlides.map((s, i) => (
+        <div key={i} className={`hero-slide ${i === active ? "active" : ""}`}
+          style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+          <img src={s.img} alt={s.title} className="hero-img"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          {/* Dark gradient overlay */}
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.1) 100%)",
+          }} />
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)",
+          }} />
         </div>
+      ))}
 
-        {/* --- HERO CAR IMAGE PLACEHOLDER --- */}
-        {/* WHAT: A big placeholder image representing the hero/feature car.
-            EDIT THIS: Replace the src URL with a real high-quality car photo.
-            WHY:  `mt-16` adds space above the image.
-                  `rounded-2xl` adds rounded corners — softer, more modern than sharp corners.
-                  `object-cover` ensures the image fills its container without distortion.
-                  The 16:9-ish aspect ratio (`aspect-video`) matches standard photo proportions. */}
-        <div className="mt-16 w-full max-w-4xl mx-auto">
-          <Image
-            // EDIT THIS: Replace this URL with your own car image
-            src="https://placehold.co/1200x600/f0f0f0/999999?text=Your+Featured+Car+Here"
-            alt="Featured car" // EDIT THIS: Update alt text to describe your actual image
-            width={1200}
-            height={600}
-            className="w-full rounded-2xl shadow-2xl object-cover aspect-video"
-            priority // WHY: Hero image is above the fold, so we load it eagerly (no lazy load)
-          />
+      {/* TEXT CONTENT */}
+      <div key={active} style={{
+        position: "absolute", bottom: "18%", left: "7%", maxWidth: 640,
+      }}>
+        <div className="animate-fadeUp opacity-0" style={{ animationDelay: "0.1s",
+          fontFamily: "var(--font-body)", fontSize: 10, letterSpacing: "0.3em",
+          color: "var(--gold)", marginBottom: 18, fontWeight: 500,
+        }}>{slide.eyebrow} — {slide.tag}</div>
+
+        <h1 className="animate-fadeUp opacity-0" style={{ animationDelay: "0.25s",
+          fontFamily: "var(--font-display)", fontSize: "clamp(36px, 6vw, 80px)",
+          fontWeight: 700, lineHeight: 1.05, letterSpacing: "0.04em",
+          color: "var(--white)", whiteSpace: "pre-line", marginBottom: 16,
+        }}>{slide.title}</h1>
+
+        <div className="animate-fadeUp opacity-0" style={{ animationDelay: "0.4s",
+          fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: "0.25em",
+          color: "var(--text-mid)", marginBottom: 40, fontWeight: 400,
+        }}>{slide.sub}</div>
+
+        <div className="animate-fadeUp opacity-0" style={{ animationDelay: "0.55s" }}>
+          <a href="#" className="btn-outline">DISCOVER NOW</a>
         </div>
+      </div>
 
-        {/* WHAT: Small scroll hint at the bottom of the hero.
-            WHY:  Helps users understand there's more content below the fold. */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400">
-          <p className="text-xs tracking-widest uppercase">Scroll</p>
-          {/* WHY: This creates a simple animated bouncing arrow using Tailwind's `animate-bounce` */}
-          <div className="animate-bounce text-gray-300 text-lg">↓</div>
+      {/* DOTS */}
+      <div style={{
+        position: "absolute", bottom: "8%", left: "7%",
+        display: "flex", gap: 8, alignItems: "center",
+      }}>
+        {heroSlides.map((_, i) => (
+          <div key={i} className={`hero-dot ${i === active ? "active" : ""}`}
+            onClick={() => goTo(i)} style={{ cursor: "pointer" }} />
+        ))}
+      </div>
+
+      {/* SLIDE COUNTER */}
+      <div style={{
+        position: "absolute", bottom: "8%", right: "6%",
+        fontFamily: "var(--font-body)", fontSize: 10, letterSpacing: "0.2em",
+        color: "var(--text-dim)",
+      }}>
+        <span style={{ color: "var(--white)", fontSize: 13 }}>0{active + 1}</span>
+        {" / "}0{heroSlides.length}
+      </div>
+
+      {/* SCROLL HINT */}
+      <div style={{
+        position: "absolute", bottom: "8%", left: "50%", transform: "translateX(-50%)",
+        display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
+        fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: "0.25em",
+        color: "var(--text-dim)",
+      }}>
+        <div style={{
+          width: 1, height: 48,
+          background: "linear-gradient(to bottom, transparent, var(--text-dim))",
+        }} />
+        SCROLL
+      </div>
+    </section>
+  );
+}
+
+// ─── FIND YOUR DREAM MODEL ────────────────────────────────────────────────────
+function FindModel() {
+  const ref = useReveal();
+  return (
+    <section style={{ background: "var(--dark2)", padding: "80px 40px" }}>
+      <div ref={ref} className="reveal" style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.3em", color: "var(--gold)", marginBottom: 14 }}>
+          CONFIGURATION
         </div>
-      </section>
-      {/* HERO SECTION END */}
-
-      {/* ============================================================
-          STATS BAR
-          WHAT: A row of quick facts / numbers about the dealership.
-          EDIT THIS: Change the numbers and labels to match your real stats.
-          WHY:  Social proof numbers build trust instantly.
-                `bg-black text-white` flips colors for visual contrast between sections.
-          ============================================================ */}
-      <section className="bg-black text-white py-10 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {/* WHAT: Each of these is a stat block with a big number and a label.
-              EDIT THIS: Change the number and label for each stat.
-              WHY:  `text-4xl font-black` makes numbers big and impactful. */}
-          <div>
-            <p className="text-4xl font-black">500+</p>{/* EDIT THIS: Your car count */}
-            <p className="text-sm text-gray-400 mt-1 tracking-wider">Vehicles in Stock</p>
+        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(22px, 3.5vw, 40px)", letterSpacing: "0.08em", color: "var(--white)", marginBottom: 48, fontWeight: 500 }}>
+          FIND YOUR DREAM MODEL
+        </h2>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", alignItems: "stretch" }}>
+          <div className="select-wrap" style={{ flex: "1 1 220px", minWidth: 180 }}>
+            <select className="custom-select">
+              <option value="">SELECT BRAND</option>
+              <option>ROLLS-ROYCE</option>
+              <option>BENTLEY</option>
+              <option>MERCEDES-BENZ</option>
+              <option>LAMBORGHINI</option>
+              <option>FERRARI</option>
+              <option>PORSCHE</option>
+              <option>ASTON MARTIN</option>
+            </select>
           </div>
-          <div>
-            <p className="text-4xl font-black">12</p>{/* EDIT THIS: Years in business */}
-            <p className="text-sm text-gray-400 mt-1 tracking-wider">Years of Excellence</p>
+          <div className="select-wrap" style={{ flex: "1 1 220px", minWidth: 180 }}>
+            <select className="custom-select">
+              <option value="">SELECT MODEL</option>
+              <option>CULLINAN</option>
+              <option>PHANTOM</option>
+              <option>GHOST</option>
+              <option>URUS</option>
+              <option>HURACÁN</option>
+            </select>
           </div>
-          <div>
-            <p className="text-4xl font-black">4.9★</p>{/* EDIT THIS: Your rating */}
-            <p className="text-sm text-gray-400 mt-1 tracking-wider">Customer Rating</p>
-          </div>
-          <div>
-            <p className="text-4xl font-black">24/7</p>
-            <p className="text-sm text-gray-400 mt-1 tracking-wider">Online Support</p>
-          </div>
+          <button className="btn-solid" style={{ flex: "0 0 auto", alignSelf: "stretch", padding: "0 40px" }}>
+            SEARCH
+          </button>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* ============================================================
-          FEATURE GRID — TOP ARRIVALS START
-          WHAT: A section showing 3 featured car cards in a grid layout.
-          WHY:  `id="inventory"` matches the `href="#inventory"` links in the navbar.
-                When someone clicks "Inventory", the browser scrolls here.
-          ============================================================ */}
-      <section id="inventory" className="py-24 px-6 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
+// ─── LATEST ADDITIONS CAROUSEL ────────────────────────────────────────────────
+function LatestCarousel() {
+  const [offset, setOffset] = useState(0);
+  const [visCount, setVisCount] = useState(3);
+  const ref = useReveal();
 
-          {/* --- SECTION HEADER --- */}
-          <div className="text-center mb-16">
-            {/* WHAT: Same eyebrow/label pattern as the hero section.
-                EDIT THIS: Change "Top Arrivals" to whatever you want to call this section. */}
-            <p className="text-xs font-semibold tracking-[0.3em] uppercase text-gray-400 mb-3">
-              Featured Selection
-            </p>
-            {/* EDIT THIS: Change this section headline */}
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight">
-              Top Arrivals
-            </h2>
-            {/* EDIT THIS: Change this subtitle */}
-            <p className="text-gray-500 mt-4 max-w-md mx-auto">
-              Hand-picked vehicles for the discerning driver. Every car is certified and ready.
-            </p>
+  useEffect(() => {
+    const handle = () => setVisCount(window.innerWidth < 768 ? 1 : window.innerWidth < 1100 ? 2 : 3);
+    handle();
+    window.addEventListener("resize", handle);
+    return () => window.removeEventListener("resize", handle);
+  }, []);
+
+  const maxOffset = Math.max(0, cars.length - visCount);
+
+  return (
+    <section style={{ background: "var(--black)", padding: "100px 40px" }}>
+      {/* Header row */}
+      <div ref={ref} className="reveal" style={{ maxWidth: 1360, margin: "0 auto 56px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}>
+        <div>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.3em", color: "var(--gold)", marginBottom: 12 }}>
+            COLLECTION
           </div>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(20px, 3vw, 36px)", letterSpacing: "0.06em", color: "var(--white)", fontWeight: 500 }}>
+            LATEST ADDITIONS
+          </h2>
+        </div>
+        <a href="#" className="btn-outline" style={{ fontSize: 9 }}>VIEW ALL MODELS</a>
+      </div>
 
-          {/* --- CAR CARDS GRID --- */}
-          {/* WHAT: The grid that holds the 3 car cards.
-              WHY:  `grid-cols-1 md:grid-cols-3` means:
-                    - 1 column on mobile (cards stack vertically)
-                    - 3 columns on medium+ screens (side by side)
-                    `gap-8` adds space between cards. */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-            {/* WHAT: `.map()` loops over our `featuredCars` array and creates a card for each one.
-                WHY:  Instead of copy-pasting the same card 3 times, we write it once and `.map()` repeats it.
-                      `key={car.name}` is required by React to track each item in the list. */}
-            {featuredCars.map((car) => (
-              <div
-                key={car.name}
-                // WHAT: Each card container.
-                // WHY:  `bg-white` gives a clean white card background against the gray section.
-                //       `group` enables "group-hover" on child elements (hover the card → child elements react).
-                //       `hover:-translate-y-1` lifts the card 4px on hover — a subtle "lift" effect.
-                //       `shadow-md hover:shadow-xl` makes the shadow grow on hover — more depth = more lifted feel.
-                //       `transition-all` ensures the hover effects animate smoothly instead of jumping.
-                className="bg-white rounded-2xl overflow-hidden group hover:-translate-y-1 hover:shadow-xl shadow-md transition-all duration-300"
-              >
-                {/* --- CAR IMAGE --- */}
-                {/* WHAT: The car photo at the top of the card.
-                    WHY:  `overflow-hidden` on the outer div ensures the image doesn't overflow rounded corners.
-                          `group-hover:scale-105` scales UP by 5% when the card is hovered — a zoom effect.
-                          `transition-transform duration-500` makes the zoom smooth and slow (500ms). */}
-                <div className="overflow-hidden">
-                  <Image
-                    src={car.image} // WHY: This pulls the `image` property from our featuredCars data above
-                    alt={car.name}  // WHY: Always add alt text for accessibility and SEO
-                    width={600}
-                    height={400}
-                    className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+      {/* Carousel */}
+      <div style={{ maxWidth: 1360, margin: "0 auto", overflow: "hidden" }}>
+        <div style={{
+          display: "flex", gap: 20,
+          transform: `translateX(calc(-${offset} * (100% / ${visCount} + 20px / ${visCount})))`,
+          transition: "transform 0.7s cubic-bezier(0.16,1,0.3,1)",
+        }}>
+          {cars.map((car, i) => (
+            <div key={i} className="card-root" style={{
+              flex: `0 0 calc(${100 / visCount}% - ${20 * (visCount - 1) / visCount}px)`,
+              cursor: "pointer",
+            }}>
+              <div className="card-img-wrap" style={{ position: "relative", aspectRatio: "4/3", overflow: "hidden", marginBottom: 18 }}>
+                <img src={car.img} alt={car.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <div className="card-overlay" style={{
+                  position: "absolute", inset: 0,
+                  background: "rgba(0,0,0,0.4)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <span className="btn-outline" style={{ fontSize: 9, padding: "10px 24px" }}>DISCOVER</span>
                 </div>
-
-                {/* --- CARD CONTENT --- */}
-                <div className="p-6">
-
-                  {/* WHAT: The badge (e.g. "New Arrival", "Best Seller").
-                      WHY:  `inline-block` lets us control the badge size without it stretching to full width.
-                            `bg-gray-100` gives a soft gray pill background. */}
-                  <span className="inline-block bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                    {car.badge} {/* WHY: Reads the `badge` field from our featuredCars data */}
-                  </span>
-
-                  {/* WHAT: Car name + year */}
-                  {/* EDIT THIS: Go to the featuredCars array at the top of this file to edit car names */}
-                  <h3 className="text-xl font-black tracking-tight">{car.name}</h3>
-                  <p className="text-gray-400 text-sm mt-0.5">{car.year}</p>
-
-                  {/* WHAT: Price and "View Details" button side by side.
-                      WHY:  `flex justify-between items-center` is the standard way to put
-                            two things on opposite ends of the same row. */}
-                  <div className="flex justify-between items-center mt-4">
-
-                    {/* WHAT: The car price.
-                        EDIT THIS: Go to the featuredCars array to change prices. */}
-                    <p className="text-2xl font-black">{car.price}</p>
-
-                    {/* WHAT: A small "View Details" button on each card.
-                        WHY:  `hover:bg-black hover:text-white` is a fill-on-hover effect. */}
-                    <button
-                      className="border border-black text-black text-xs font-semibold px-4 py-2 rounded-full hover:bg-black hover:text-white transition-all"
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </div>
+                <div style={{
+                  position: "absolute", top: 14, left: 14,
+                  fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: "0.2em",
+                  color: "var(--black)", background: "var(--white)",
+                  padding: "5px 10px", fontWeight: 600,
+                }}>{car.tag}</div>
               </div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 10, letterSpacing: "0.14em", color: "var(--text-light)", fontWeight: 500 }}>
+                {car.title}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div style={{ maxWidth: 1360, margin: "40px auto 0", display: "flex", justifyContent: "flex-end", gap: 8 }}>
+        <button className="carousel-arrow" onClick={() => setOffset(Math.max(0, offset - 1))}
+          style={{ opacity: offset === 0 ? 0.35 : 1 }}>
+          <ChevronLeft />
+        </button>
+        <button className="carousel-arrow" onClick={() => setOffset(Math.min(maxOffset, offset + 1))}
+          style={{ opacity: offset >= maxOffset ? 0.35 : 1 }}>
+          <ChevronRight />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+// ─── NEWS & EVENTS ────────────────────────────────────────────────────────────
+function NewsSection() {
+  const ref = useReveal();
+  return (
+    <section style={{ background: "var(--dark2)", padding: "100px 40px" }}>
+      <div style={{ maxWidth: 1360, margin: "0 auto" }}>
+        <div ref={ref} className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 52, flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.3em", color: "var(--gold)", marginBottom: 12 }}>PRESS</div>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(20px, 3vw, 36px)", letterSpacing: "0.06em", color: "var(--white)", fontWeight: 500 }}>
+              NEWS & EVENTS
+            </h2>
+          </div>
+          <a href="#" className="btn-outline" style={{ fontSize: 9 }}>SEE ALL</a>
+        </div>
+
+        <div>
+          {news.map((item, i) => (
+            <div key={i} className="news-item" style={{ display: "flex", alignItems: "center", gap: 28, padding: "28px 0", cursor: "pointer" }}>
+              <div style={{ flex: "0 0 120px", height: 80, overflow: "hidden" }}>
+                <img src={item.img} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform 0.6s ease" }} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", gap: 16, marginBottom: 8, flexWrap: "wrap" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.2em", color: "var(--text-dim)", fontWeight: 400 }}>
+                    {item.date}
+                  </span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.2em", color: "var(--gold)", fontWeight: 500 }}>
+                    {item.cat}
+                  </span>
+                </div>
+                <h3 className="news-title" style={{ fontFamily: "var(--font-body)", fontSize: "clamp(12px, 1.5vw, 15px)", fontWeight: 500, letterSpacing: "0.08em" }}>
+                  {item.title}
+                </h3>
+              </div>
+              <div style={{ flex: "0 0 auto" }}>
+                <ChevronRight />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── VISUAL CATEGORIES (SPLIT) ────────────────────────────────────────────────
+function SplitCategories() {
+  return (
+    <section style={{ display: "flex", height: "clamp(360px, 50vw, 640px)" }}>
+      {/* ALL CARS */}
+      <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden" }}>
+        <img src="\photo-1494976388531-d1058494cdd8.jpg"
+          alt="All Cars" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
+          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+          <h3 className="split-label" style={{
+            fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
+            letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
+          }}>ALL CARS</h3>
+          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div style={{ width: 1, background: "var(--black)", flexShrink: 0 }} />
+
+      {/* RIMS */}
+      <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden" }}>
+        <img src="\photo-1558618666-fcd25c85cd64.jpg"
+          alt="Rims" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
+          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+          <h3 className="split-label" style={{
+            fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
+            letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
+          }}>RIMS</h3>
+          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── BRAND STRIP ──────────────────────────────────────────────────────────────
+function BrandStrip() {
+  const brands = ["ROLLS-ROYCE", "BENTLEY", "LAMBORGHINI", "FERRARI", "PORSCHE", "ASTON MARTIN", "MERCEDES-AMG", "BUGATTI"];
+  return (
+    <section style={{ background: "var(--dark3)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "22px 40px", overflow: "hidden" }}>
+      <div style={{ display: "flex", gap: 52, justifyContent: "center", flexWrap: "wrap" }}>
+        {brands.map(b => (
+          <span key={b} style={{
+            fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.2em",
+            color: "var(--text-dim)", fontWeight: 500, cursor: "pointer",
+            transition: "color 0.3s",
+          }}
+            onMouseEnter={e => (e.target as HTMLElement).style.color = "var(--white)"}
+            onMouseLeave={e => (e.target as HTMLElement).style.color = "var(--text-dim)"}
+          >{b}</span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── CTA BANNER ───────────────────────────────────────────────────────────────
+function CTABanner() {
+  const ref = useReveal();
+  return (
+    <section style={{ position: "relative", height: 420, overflow: "hidden" }}>
+      <img src="\photo-1503376780353-7e6692767b70.jpg"
+        alt="CTA" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)" }} />
+      <div ref={ref} className="reveal" style={{
+        position: "absolute", inset: 0, display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: 20, textAlign: "center", padding: "0 20px",
+      }}>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.3em", color: "var(--gold)" }}>
+          BESPOKE EXPERIENCE
+        </div>
+        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(22px, 4vw, 52px)", letterSpacing: "0.06em", color: "var(--white)", fontWeight: 500 }}>
+          CONFIGURE YOUR DREAM
+        </h2>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: "0.08em", color: "var(--text-mid)", maxWidth: 480, lineHeight: 1.9, fontWeight: 300 }}>
+          Every detail crafted to your specification. Begin your personal journey into the world of automotive excellence.
+        </p>
+        <a href="#" className="btn-outline">START CONFIGURATOR</a>
+      </div>
+    </section>
+  );
+}
+
+// ─── FOOTER ───────────────────────────────────────────────────────────────────
+function Footer() {
+  const cols = [
+    { title: "MODELS", links: ["ALL CARS", "BODY KITS", "INTERIOR", "RIMS", "ACCESSORIES"] },
+    { title: "COMPANY", links: ["ABOUT US", "ATELIER", "CONFIGURATOR", "CAREERS", "PRESS"] },
+    { title: "SUPPORT", links: ["FIND A DEALER", "CONTACT", "FAQ", "SHIPPING", "WARRANTY"] },
+    { title: "LEGAL", links: ["IMPRINT", "PRIVACY POLICY", "TERMS OF USE", "COOKIES"] },
+  ];
+
+  const TwitterX = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.737l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+  );
+  const YouTube = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+    </svg>
+  );
+  const Facebook = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+    </svg>
+  );
+  const Instagram = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+    </svg>
+  );
+
+  return (
+    <footer style={{ background: "var(--dark2)", borderTop: "1px solid var(--border)", padding: "72px 40px 40px" }}>
+      <div style={{ maxWidth: 1360, margin: "0 auto" }}>
+        {/* Top: Logo + columns */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 40, marginBottom: 64 }}>
+          {/* Brand */}
+          <div>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 20, letterSpacing: "0.22em", color: "var(--white)", fontWeight: 600, marginBottom: 8 }}>
+              UNIDRIVE
+            </div>
+            <div style={{ fontSize: 8, letterSpacing: "0.3em", color: "var(--text-dim)", marginBottom: 20 }}>INDIVIDUALIZATION</div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-dim)", lineHeight: 1.9, maxWidth: 220, fontWeight: 300, letterSpacing: "0.03em" }}>
+              The world's leading name in automotive individualization and bespoke luxury modification.
+            </p>
+          </div>
+
+          {cols.map(col => (
+            <div key={col.title}>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.22em", color: "var(--white)", fontWeight: 600, marginBottom: 24 }}>
+                {col.title}
+              </div>
+              {col.links.map(link => (
+                <a key={link} href="#" className="footer-link">{link}</a>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div style={{ borderTop: "1px solid var(--border)", paddingTop: 28, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.12em", color: "var(--text-dim)" }}>
+            © 2026 UNIDRIVE. ALL RIGHTS RESERVED.
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            {[<TwitterX key="x" />, <YouTube key="yt" />, <Facebook key="fb" />, <Instagram key="ig" />].map((Icon, i) => (
+              <div key={i} className="social-icon">{Icon}</div>
             ))}
           </div>
-
-          {/* WHAT: "See Full Inventory" button below the cards.
-              WHY:  Gives users a clear next action if they want to see more cars. */}
-          <div className="text-center mt-12">
-            <Link
-              href="/inventory"
-              className="inline-block border-2 border-black text-black font-semibold px-8 py-4 rounded-full hover:bg-black hover:text-white transition-all text-sm tracking-wide"
-            >
-              See Full Inventory
-            </Link>
-          </div>
         </div>
-      </section>
-      {/* FEATURE GRID END */}
+      </div>
+    </footer>
+  );
+}
 
-      {/* ============================================================
-          ABOUT SECTION START
-          WHAT: A brief "about us" section.
-          EDIT THIS: Replace the text with your own dealership background.
-          WHY:  An about section builds brand trust and explains your value.
-          ============================================================ */}
-      <section id="about" className="py-24 px-6 bg-white">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+// ─── ROOT APP ─────────────────────────────────────────────────────────────────
+export default function App() {
+  const [loading, setLoading] = useState(true);
 
-          {/* --- LEFT: Image Placeholder --- */}
-          {/* EDIT THIS: Replace this placeholder with a photo of your showroom or team */}
-          <div className="rounded-2xl overflow-hidden shadow-lg">
-            <Image
-              src="/Gemini_Generated_Image_erxtuoerxtuoerxt (1).png"
-              alt="UniDrive Showroom"
-              width={800}
-              height={600}
-              className="w-full h-full object-cover"
-            />
-          </div>
+  // Timer لإخفاء شاشة التحميل بعد 2.5 ثانية
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
-          {/* --- RIGHT: Text Content --- */}
-          <div>
-            <p className="text-xs font-semibold tracking-[0.3em] uppercase text-gray-400 mb-3">
-              Our Story
-            </p>
-            {/* EDIT THIS: The about section headline */}
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6">
-              Driven by<br />Excellence.
-            </h2>
-            {/* EDIT THIS: Write your own dealership description here */}
-            <p className="text-gray-500 leading-relaxed mb-4">
-              UniDrive was founded with one simple belief: buying a car should be an exciting,
-              transparent experience — not a stressful one. We curate only the finest vehicles
-              and back every sale with our total satisfaction guarantee.
-            </p>
-            <p className="text-gray-500 leading-relaxed">
-              Whether you&lsquo;re looking for a first car or your dream upgrade, our team of
-              certified advisors is here to guide you every step of the way.
-            </p>
-          </div>
-        </div>
-      </section>
-      {/* ABOUT SECTION END */}
+  return (
+    <>
+      <FontLoader />
 
-      {/* ============================================================
-          CONTACT / CTA BANNER START
-          WHAT: A bold full-width black section that prompts users to get in touch.
-          EDIT THIS: Change the headline, subtext, and button labels.
-          WHY:  A contrasting CTA banner breaks the page rhythm and recaptures attention.
-          ============================================================ */}
-      <section id="contact" className="bg-black text-white py-24 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
-          {/* EDIT THIS: Change this CTA headline */}
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6">
-            Ready to Drive?
-          </h2>
-          {/* EDIT THIS: Change this subtext */}
-          <p className="text-gray-400 text-lg mb-10">
-            Book a test drive today or speak with one of our vehicle specialists.
-            No pressure. No hidden fees.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {/* WHAT: White button on the black background — maximum contrast for CTA.
-                EDIT THIS: Change the button text or link */}
-            <a
-              href="tel:+1234567890" // EDIT THIS: Replace with your actual phone number
-              id="call-us-btn"
-              className="bg-white text-black font-semibold px-8 py-4 rounded-full hover:bg-gray-200 transition-colors text-sm tracking-wide"
-            >
-              Call Us Now
-            </a>
-            <a
-              href="mailto:hello@unidrive.com" // EDIT THIS: Replace with your actual email
-              id="email-us-btn"
-              className="border border-white text-white font-semibold px-8 py-4 rounded-full hover:bg-white hover:text-black transition-all text-sm tracking-wide"
-            >
-              Email Us
-            </a>
-          </div>
-        </div>
-      </section>
-      {/* CONTACT CTA BANNER END */}
+      {/* Loading Screen Overlay */}
+      <div className={`loader-container ${!loading ? 'hidden' : ''}`}>
+         <div className="loader-text">UNIDRIVE</div>
+      </div>
 
-      {/* ============================================================
-          FOOTER START
-          WHAT: The bottom section of the page with links and legal info.
-          EDIT THIS: Update the links, social handles, and email address.
-          WHY:  `border-t border-gray-200` adds a subtle top border to separate the footer
-                from the content above it.
-          ============================================================ */}
-      <footer className="bg-white border-t border-gray-200 py-12 px-6">
-        <div className="max-w-7xl mx-auto">
-
-          {/* --- TOP ROW: Logo + Nav Links --- */}
-          {/* WHY: `flex-col md:flex-row` stacks items vertically on mobile, horizontally on desktop */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-8">
-
-            {/* --- FOOTER LOGO / BRAND --- */}
-            <div>
-              {/* EDIT THIS: Change "UniDrive" to your brand name */}
-              <span className="text-2xl font-black tracking-tight">UniDrive</span>
-              {/* EDIT THIS: Update this tagline */}
-              <p className="text-gray-400 text-sm mt-1">Premium Auto Dealership</p>
-            </div>
-
-            {/* --- FOOTER NAV LINKS --- */}
-            {/* WHAT: Quick links in the footer.
-                WHY:  Footer links are important for SEO and usability —
-                      users often look for info (like contact/privacy) in the footer. */}
-            <div className="flex flex-wrap gap-6">
-              {/* EDIT THIS: Update these links and labels */}
-              <a href="#inventory" className="text-sm text-gray-500 hover:text-black transition-colors">Inventory</a>
-              <a href="#about"     className="text-sm text-gray-500 hover:text-black transition-colors">About</a>
-              <a href="#contact"   className="text-sm text-gray-500 hover:text-black transition-colors">Contact</a>
-              <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"          className="text-sm text-gray-500 hover:text-black transition-colors">Privacy Policy</a>
-            </div>
-          </div>
-
-          {/* --- DIVIDER LINE --- */}
-          {/* WHY: `border-t border-gray-100` is a subtle separator between the nav links and copyright */}
-          <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-
-            {/* WHAT: Copyright and university disclaimer.
-                EDIT THIS: Update the year and your name/institution.
-                WHY:  Adding a "Made for University Project" note is honest and often required by professors. */}
-            <p className="text-sm text-gray-400">
-              {/* WHY: new Date().getFullYear() automatically outputs the current year */}
-              &copy; {new Date().getFullYear()} UniDrive. All rights reserved.
-            </p>
-            <p className="text-sm text-gray-400 font-medium">
-              {/* EDIT THIS: Change the university name and student name */}
-              ⚡ Made for University Project — Student Web Development
-            </p>
-          </div>
-        </div>
-      </footer>
-      {/* FOOTER END */}
-
-    </div> // End of main page wrapper
+      {/* Main App Content */}
+      <div style={{ background: "var(--black)", minHeight: "100vh" }}>
+        <Header />
+        <main>
+          <HeroSlider />
+          <BrandStrip />
+          <FindModel />
+          <LatestCarousel />
+          <NewsSection />
+          <SplitCategories />
+          <CTABanner />
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 }
