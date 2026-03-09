@@ -1,4 +1,6 @@
 "use client";
+// استدعاء الداتا الحقيقية
+import { allCars } from "@/lib/carsData";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 const FontLoader = () => (
@@ -273,64 +275,65 @@ function useReveal() {
 }
 
 
-// ─── HERO DATA ────────────────────────────────────────────────────────────────
 const heroSlides = [
-    {
-    img: "/photo-1514867644123-6385d58d3cd4.jpg",
-    eyebrow: "SIGNATURE",
-    title: "FERRARI\nPUROSANGUE",
+  {
+    id: "Mercedes‑Maybach S‑Class ", 
+    img: "/Images-home/6ca3bb49af970e54f445948e1ce21c9d.jpg",
+    title: "Mercedes‑Maybach S‑Class ",
     sub: "SOFT KIT — ATELIER",
-    tag: "FERRARI",
+    tag: "Mercedes‑Maybach", 
   },
   {
-    img: "/1b68f3d98661e13530dc0bbda4e2cefe.jpg",
+    id: "UNIDRIVE-rolls-phantom", 
+    img: "/Images-home/1b68f3d98661e13530dc0bbda4e2cefe.jpg",
     eyebrow: "NEW ARRIVAL",
     title: "ULTRA LUXURY\nCULLINAN II",
     sub: "FULL BODY KIT",
     tag: "ROLLS-ROYCE",
   },
   {
-    img: "/e58e67f21779b3e8f0d4797fd3557f8a.jpg",
+    id: "Porsche Panamera", 
+    img: "/Images-home/3cba9a2c6693afff6d71cfa1f7d8a0f2.jpg",
     eyebrow: "EXCLUSIVE",
-    title: "BRABUS G900\nROCKET",
+    title: "Porsche Panamera",
     sub: "CARBON EDITION",
-    tag: "G CLASS-MERCEDES",
+    tag: "Porsche Panamera",
   },
-
   {
-    img: "/photo-1525609004556-c46c7d6cf023.jpg",
+    id: "BMW 8 Series", 
+    img: "/Images-home/a8569c342b364babc26e498dcf6c0dca.jpg",
     eyebrow: "LIMITED",
-    title: "LAMBORGHINI\nURUS VENATUS",
+    title: "BMW 8 Series",
     sub: "WIDEBODY PROGRAM",
-    tag: "LAMBORGHINI",
+    tag: "BMW",
   },
 ];
 
 // ─── CARS DATA ────────────────────────────────────────────────────────────────
 const cars = [
-  { img: "/bef83415d0cba15db605a5d1294e3771.jpg", title: "CULLINAN — LINEA D'ARABO", tag: "ATELIER" },
-  { img: "/0125a3f4b0b10872781cae7fa97e4009.jpg", title: "G63 AMG — WIDESTAR", tag: "BODY KIT" },
-  { img: "/photo-1621135802920-133df287f89c.jpg", title: "URUS — VENATUS", tag: "WIDEBODY" },
-  { img: "/photo-1580414057403-c5f451f30e1c.jpg", title: "PANAMERA — SPORT TURISMO", tag: "FULL KIT" },
-  { img: "/photo-1571607388263-1044f9ea01dd.jpg", title: "DBX — CARBON EDITION", tag: "ATELIER" },
+  { img: "/Images-home/339a5f9521cd849ed1b2a1ecd705752b.jpg", title: "Cadillac Escalade", tag: "ATELIER" },
+  { img: "/Images-home/819b8c90922e933186acf8184e2d24d1.jpg", title: "Audi A8", tag: "BODY KIT" },
+  { img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LS", tag: "WIDEBODY" },
+  { img: "/Images-home/7bd1840fef8b0744f217289ce3638892.jpg", title: "Maserati Quattroporte", tag: "FULL KIT" },
+  { img: "/Images-home/3e9b06168ed4cb828e16b2a348724f20.jpg", title: "Range Rover", tag: "ATELIER" },
 ];
 
 // ─── NEWS DATA ────────────────────────────────────────────────────────────────
 const news = [
   {
-    img: "/ff74324e3edafd5db62bfae27ed91351.jpg",
+    img: "/Images-home/photo-1514867644123-6385d58d3cd4.jpg",
     date: "FEBRUARY 13, 2026",
     title: "THE FERRARI PUROSANGUE SOFT KIT",
     cat: "BODY KITS",
   },
   {
-    img: "/7e34ae620a79e76916992147175aa522.jpg",
+    img: "/Images-home/7e34ae620a79e76916992147175aa522.jpg",
     date: "JANUARY 28, 2026",
-    title: "BRABUS ROCKET 900 — EXCLUSIVE WORLD PREMIERE",
+    title: "Porsche Taycan Turbo S",
     cat: "NEWS",
   },
   {
-    img: "/5be169f1083a8882c16362358b5a6fd6.jpg",
+    img: "/Images-home/bef83415d0cba15db605a5d1294e3771.jpg",
     date: "JANUARY 09, 2026",
     title: "CULLINAN SERIES II — LINEA D'ARABO COLLECTION",
     cat: "ATELIER",
@@ -533,8 +536,11 @@ function HeroSlider() {
           color: "var(--text-mid)", marginBottom: 40, fontWeight: 400,
         }}>{slide.sub}</div>
 
+        {/* 👇 التعديل هنا: الزرار بقى مربوط بالـ id بتاع العربية 👇 */}
         <div className="animate-fadeUp opacity-0" style={{ animationDelay: "0.55s" }}>
-          <a href="#" className="btn-outline">DISCOVER NOW</a>
+          <Link href={`/cars/${slide.id}`} className="btn-outline">
+            DISCOVER NOW 
+          </Link>
         </div>
       </div>
 
@@ -713,19 +719,23 @@ function NewsSection() {
         <div ref={ref} className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 52, flexWrap: "wrap", gap: 16 }}>
           <div>
             <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.3em", color: "var(--gold)", marginBottom: 12 }}>PRESS</div>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(20px, 3vw, 36px)", letterSpacing: "0.06em", color: "var(--white)", fontWeight: 500 }}>
+            
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(20px, 3vw, 36px)", letterSpacing: "0.06em", color: "#ffffff", fontWeight: 500 }}>
               NEWS & EVENTS
             </h2>
           </div>
-          <a href="#" className="btn-outline" style={{ fontSize: 9 }}>SEE ALL</a>
+          <a href="#" className="btn-outline" style={{ fontSize: 9, color: "#ffffff" }}>SEE ALL</a>
         </div>
 
         <div>
           {news.map((item, i) => (
-            <div key={i} className="news-item" style={{ display: "flex", alignItems: "center", gap: 28, padding: "28px 0", cursor: "pointer" }}>
-              <div style={{ flex: "0 0 120px", height: 80, overflow: "hidden" }}>
+            <div key={i} className="news-item" style={{ display: "flex", alignItems: "center", gap: 28, padding: "28px 0", cursor: "pointer", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+              
+              
+              <div style={{ flex: "0 0 200px", height: 130, overflow: "hidden" }}>
                 <img src={item.img} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform 0.6s ease" }} />
               </div>
+              
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", gap: 16, marginBottom: 8, flexWrap: "wrap" }}>
                   <span style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.2em", color: "var(--text-dim)", fontWeight: 400 }}>
@@ -735,13 +745,18 @@ function NewsSection() {
                     {item.cat}
                   </span>
                 </div>
-                <h3 className="news-title" style={{ fontFamily: "var(--font-body)", fontSize: "clamp(12px, 1.5vw, 15px)", fontWeight: 500, letterSpacing: "0.08em" }}>
+                
+                
+                <h3 className="news-title" style={{ fontFamily: "var(--font-body)", fontSize: "clamp(14px, 1.8vw, 18px)", fontWeight: 500, letterSpacing: "0.08em", color: "#ffffff" }}>
                   {item.title}
                 </h3>
               </div>
-              <div style={{ flex: "0 0 auto" }}>
+              
+          
+              <div style={{ flex: "0 0 auto", color: "#ffffff" }}>
                 <ChevronRight />
               </div>
+              
             </div>
           ))}
         </div>
@@ -749,14 +764,13 @@ function NewsSection() {
     </section>
   );
 }
-
 // ─── VISUAL CATEGORIES (SPLIT) ────────────────────────────────────────────────
 function SplitCategories() {
   return (
     <section style={{ display: "flex", height: "clamp(360px, 50vw, 640px)" }}>
       {/* ALL CARS */}
       <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden" }}>
-        <img src="\photo-1494976388531-d1058494cdd8.jpg"
+        <img src="/Images-home/ff74324e3edafd5db62bfae27ed91351.jpg"
           alt="All Cars" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
@@ -774,7 +788,7 @@ function SplitCategories() {
 
       {/* RIMS */}
       <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden" }}>
-        <img src="\photo-1558618666-fcd25c85cd64.jpg"
+        <img src="/Images-home/photo-1558618666-fcd25c85cd64.jpg"
           alt="Rims" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
@@ -816,7 +830,7 @@ function CTABanner() {
   const ref = useReveal();
   return (
     <section style={{ position: "relative", height: 420, overflow: "hidden" }}>
-      <img src="\photo-1503376780353-7e6692767b70.jpg"
+      <img src="/Images-home/photo-1503376780353-7e6692767b70.jpg"
         alt="CTA" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
       <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)" }} />
       <div ref={ref} className="reveal" style={{

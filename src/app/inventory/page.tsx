@@ -294,7 +294,7 @@ function InventoryContent() {
                   onMouseEnter={e => { const img = (e.currentTarget as HTMLElement).querySelector("img"); if (img) img.style.transform = "scale(1.04)"; }}
                   onMouseLeave={e => { const img = (e.currentTarget as HTMLElement).querySelector("img"); if (img) img.style.transform = "scale(1)"; }}>
 
-                  {/* Title row — ABOVE image, Mansory-style */}
+                  {/* Title row — ABOVE image, UNIDRIVE-style */}
                   <div style={{ padding: "18px 18px 14px", borderBottom: "1px solid var(--border)" }}>
                     <div style={{ fontSize: 8, letterSpacing: "0.22em", color: "var(--mid)", textTransform: "uppercase", marginBottom: 5 }}>{car.make} · {car.year}</div>
                     <h3 style={{ fontFamily: "var(--serif)", fontSize: 17, letterSpacing: "0.06em", fontWeight: 400, color: "var(--white)" }}>{car.name.toUpperCase()}</h3>
