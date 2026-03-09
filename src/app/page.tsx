@@ -592,13 +592,16 @@ function FindModel() {
           <div className="select-wrap" style={{ flex: "1 1 220px", minWidth: 180 }}>
             <select className="custom-select">
               <option value="">SELECT BRAND</option>
+              <option>BMW</option>
+              <option>CADILLAC</option>
+              <option>LEXUS</option>
+              <option>AUDI</option>
+              <option>TESLA</option>
               <option>ROLLS-ROYCE</option>
-              <option>BENTLEY</option>
-              <option>MERCEDES-BENZ</option>
-              <option>LAMBORGHINI</option>
-              <option>FERRARI</option>
-              <option>PORSCHE</option>
               <option>ASTON MARTIN</option>
+              <option>BENTLEY</option>
+              <option>MERCEDES</option>
+              <option>PORSCHE</option>
             </select>
           </div>
           <div className="select-wrap" style={{ flex: "1 1 220px", minWidth: 180 }}>
@@ -789,7 +792,7 @@ function SplitCategories() {
 
 // ─── BRAND STRIP ──────────────────────────────────────────────────────────────
 function BrandStrip() {
-  const brands = ["ROLLS-ROYCE", "BENTLEY", "LAMBORGHINI", "FERRARI", "PORSCHE", "ASTON MARTIN", "MERCEDES-AMG", "BUGATTI"];
+  const brands = ["BMW", "CADILLAC", "LEXUS", "AUDI", "TESLA", "ROLLS-ROYCE", "ASTON MARTIN", "BENTLEY", "MERCEDES", "PORSCHE"];
   return (
     <section style={{ background: "var(--dark3)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "22px 40px", overflow: "hidden" }}>
       <div style={{ display: "flex", gap: 52, justifyContent: "center", flexWrap: "wrap" }}>
