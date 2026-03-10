@@ -53,7 +53,7 @@ export const allCars: Car[] = [
       Transmission: "8-speed Automatic",
       Drivetrain: "RWD",
     },
-    videoUrl: "/top 4 cars/vidoes/R1.mp4",
+    videoUrl: "/top 4 cars/Videos/R1.mp4",
   },
   {
     id: "Porsche Panamera",
