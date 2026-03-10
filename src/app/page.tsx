@@ -258,6 +258,136 @@ const FontLoader = () => (
   `}</style>
 );
 
+// ─── ANIMATED BRAND LOGOS ────────────────────────────────────────────────────
+function AnimatedLogosBar() {
+  const logos = [
+    { name: "Mercedes", file: "mercedes-benz-svgrepo-com.svg" },
+    { name: "Porsche", file: "porsche-svgrepo-com.svg" },
+    { name: "Rolls-Royce", file: "rolls-royce-svgrepo-com.svg" },
+    { name: "Ferrari", file: "ferrari-svgrepo-com.svg" },
+    { name: "Aston Martin", file: "aston-martin-alt-svgrepo-com.svg" },
+    { name: "Audi", file: "audi-svgrepo-com.svg" },
+    { name: "Bentley", file: "bentley-svgrepo-com.svg" },
+    { name: "BMW", file: "bmw-svgrepo-com.svg" },
+    { name: "Cadillac", file: "cadillac-svgrepo-com.svg" },
+    { name: "Lexus", file: "lexus-svgrepo-com.svg" },
+    { name: "Maybach", file: "maybach-svgrepo-com.svg" },
+  ];
+
+  return (
+    <section style={{
+      background: "var(--dark1)",
+      padding: "60px 40px",
+      overflow: "hidden",
+      borderTop: "1px solid var(--border)",
+      borderBottom: "1px solid var(--border)",
+    }}>
+      <style>{`
+        @keyframes scrollLogoBar {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        
+        .logos-container {
+          display: flex;
+          gap: 60px;
+          animation: scrollLogoBar 40s linear infinite;
+        }
+        
+        .logo-item {
+          flex: 0 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 14px;
+          min-width: 140px;
+          opacity: 0.85;
+          transition: opacity 0.3s ease, transform 0.3s ease;
+          cursor: pointer;
+          text-decoration: none;
+          color: inherit;
+        }
+        
+        .logo-item:hover {
+          opacity: 1;
+          transform: translateY(-4px);
+        }
+        
+        .logo-img-wrap {
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .logo-item img {
+          max-width: 100%;
+          max-height: 100%;
+          width: auto;
+          height: auto;
+          display: block;
+          filter: brightness(1.2) saturate(0) invert(0.85);
+          transition: filter 0.3s ease;
+        }
+        
+        .logo-item:hover img {
+          filter: brightness(1.15) saturate(1.2) invert(0.8);
+        }
+        
+        .logo-name {
+          font-family: var(--font-body);
+          font-size: 9px;
+          letter-spacing: 0.15em;
+          color: #b0b0b0;
+          text-transform: uppercase;
+          text-align: center;
+          transition: color 0.3s ease;
+          font-weight: 500;
+        }
+        
+        .logo-item:hover .logo-name {
+          color: #ffffff;
+        }
+      `}</style>
+      
+      <div style={{
+        maxWidth: "100%",
+        overflow: "hidden",
+        position: "relative",
+      }}>
+        <div className="logos-container">
+          {logos.map((logo, i) => (
+            <Link key={i} href={`/inventory?brand=${encodeURIComponent(logo.name)}`} className="logo-item">
+              <div className="logo-img-wrap">
+                <img
+                  src={`/svg car logos/${logo.file}`}
+                  alt={logo.name}
+                  title={logo.name}
+                />
+              </div>
+              <span className="logo-name">{logo.name}</span>
+            </Link>
+          ))}
+          {/* Duplicate for seamless looping */}
+          {logos.map((logo, i) => (
+            <Link key={`dup-${i}`} href={`/inventory?brand=${encodeURIComponent(logo.name)}`} className="logo-item">
+              <div className="logo-img-wrap">
+                <img
+                  src={`/svg car logos/${logo.file}`}
+                  alt={logo.name}
+                  title={logo.name}
+                />
+              </div>
+              <span className="logo-name">{logo.name}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── useIntersectionObserver hook ────────────────────────────────────────────
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -952,7 +1082,7 @@ export default function App() {
         <Header />
         <main>
           <HeroSlider />
-          <BrandStrip />
+          <AnimatedLogosBar />
           <FindModel />
           <LatestCarousel />
           <NewsSection />
