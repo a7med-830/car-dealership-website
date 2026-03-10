@@ -62,7 +62,7 @@ export const allCars: Car[] = [
     make: "Panamera",
     year: 2024,
     price: "187,650 $",
-    description: "The new Porsche Panamera Turbo E-Hybrid defines the luxury sport saloon...",
+    description:"Where high-performance engineering meets the soul of a sports car. The Panamera Turbo E-Hybrid stands as a testament to Porsche's relentless pursuit of perfection. From its sharpened silhouette to the seamless integration of E-Hybrid technology, every detail is a canvas for individualization. Discover the art of driving, redefined by UNIDRIVE.",
     image: "/top 4 cars/images/p/77b4ecacace0e00ca825fe3f710b4fa4.jpg",
     images: [
        "/top 4 cars/images/p/91bae0281fcb601cb6862e52d24f1b92.jpg",
