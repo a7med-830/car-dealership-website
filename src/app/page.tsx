@@ -292,7 +292,7 @@ const heroSlides = [
     tag: "ROLLS-ROYCE",
   },
   {
-    id: "Porsche Panamera", 
+    id: 28, 
     img: "/Images-home/3cba9a2c6693afff6d71cfa1f7d8a0f2.jpg",
     eyebrow: "EXCLUSIVE",
     title: "Porsche Panamera",
