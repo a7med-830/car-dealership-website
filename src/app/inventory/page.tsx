@@ -288,18 +288,11 @@ function InventoryContent() {
               <button onClick={clearAll} className="m-btn">CLEAR ALL FILTERS</button>
             </div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 1, background: "var(--border)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 2, background: "var(--border)" }}>
               {filteredCars.map(car => (
                 <Link key={car.id} href={`/inventory/${car.id}`} style={{ textDecoration: "none", color: "inherit", background: "var(--black)", display: "block", overflow: "hidden" }}
                   onMouseEnter={e => { const img = (e.currentTarget as HTMLElement).querySelector("img"); if (img) img.style.transform = "scale(1.04)"; }}
                   onMouseLeave={e => { const img = (e.currentTarget as HTMLElement).querySelector("img"); if (img) img.style.transform = "scale(1)"; }}>
-
-                  {/* Title row — ABOVE image, UNIDRIVE-style */}
-                  <div style={{ padding: "18px 18px 14px", borderBottom: "1px solid var(--border)" }}>
-                    <div style={{ fontSize: 8, letterSpacing: "0.22em", color: "var(--mid)", textTransform: "uppercase", marginBottom: 5 }}>{car.make} · {car.year}</div>
-                    <h3 style={{ fontFamily: "var(--serif)", fontSize: 17, letterSpacing: "0.06em", fontWeight: 400, color: "var(--white)" }}>{car.name.toUpperCase()}</h3>
-                    <p style={{ fontSize: 9, color: "var(--dim)", letterSpacing: "0.08em", marginTop: 3 }}>{car.trim} · {car.body}</p>
-                  </div>
 
                   {/* Image */}
                   <div style={{ position: "relative", overflow: "hidden", aspectRatio: "16/9" }}>
@@ -311,8 +304,15 @@ function InventoryContent() {
                     </span>
                   </div>
 
+                  {/* Title row */}
+                  <div style={{ padding: "18px 18px 14px", borderBottom: "0px solid var(--border)" }}>
+                    <div style={{ fontSize: 8, letterSpacing: "0.22em", color: "var(--mid)", textTransform: "uppercase", marginBottom: 5 }}>{car.make} · {car.year}</div>
+                    <h3 style={{ fontFamily: "var(--serif)", fontSize: 17, letterSpacing: "0.06em", fontWeight: 400, color: "var(--white)" }}>{car.name.toUpperCase()}</h3>
+                    <p style={{ fontSize: 9, color: "var(--dim)", letterSpacing: "0.08em", marginTop: 3 }}>{car.trim} · {car.body}</p>
+                  </div>
+
                   {/* Price + CTA row */}
-                  <div style={{ padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)" }}>
+                  <div style={{ padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
                       <p style={{ fontFamily: "var(--serif)", fontSize: 18, letterSpacing: "0.04em", color: "var(--white)" }}>${car.price.toLocaleString()}</p>
                       <p style={{ fontSize: 8, color: "var(--dim)", letterSpacing: "0.12em", marginTop: 2 }}>MSRP</p>
