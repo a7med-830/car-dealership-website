@@ -109,11 +109,10 @@ function SubNav({ active }: { active: NavSection }) {
 }
 
 // ─── Component: HeroSection ───────────────────────────────────────────────────
-
 function HeroSection({ car }: { car: Car }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]); // قللنا الـ parallax شوية عشان نحافظ على كادر الفيديو فوق
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
@@ -122,14 +121,16 @@ function HeroSection({ car }: { car: Car }) {
       style={{
         position: "relative",
         height: "100dvh",
-        minHeight: "600px",
+        width: "100%",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        background: "#000", 
       }}
     >
-     <motion.div style={{ position: "absolute", inset: 0, y }}>
+      {/* الفيديو - ممتد من الحافة للحافة */}
+      <motion.div style={{ position: "absolute", inset: 0, y }}>
         <video
           key={car.videoUrl} 
           src={car.videoUrl}
@@ -139,183 +140,62 @@ function HeroSection({ car }: { car: Car }) {
           playsInline
           style={{
             width: "100%",
-            height: "110%",
+            height: "100%",
             objectFit: "cover",
-            objectPosition: "center",
+            display: "block",
           }}
         />
       </motion.div>
 
-      {/* Layered overlays */}
+      {/* شلنا الـ Gradient اللي فوق خالص - خلينا بس ظل خفيف تحت للنص */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background:
-           
-            "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.6) 100%)",
-        }}
-      />
-      {/* Vignette */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
+          zIndex: 1,
         }}
       />
 
-      {/* Thin gold top border */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "2px",
-          background: `linear-gradient(90deg, transparent 0%, ${GOLD} 50%, transparent 100%)`,
-        }}
-      />
+      {/* Content - مرفوع لفوق عشان يفتح مساحة للفيديو */}
       <motion.div
-        style={{ opacity, position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px" }}
+        style={{ 
+          opacity, 
+          position: "relative", 
+          zIndex: 10, 
+          textAlign: "center", 
+          padding: "0 24px",
+          marginTop: "-15vh" // رفعنا الكلام عشان المساحة السوداء اللي فوق تختفي وهمياً
+        }}
         initial="hidden"
         animate="visible"
         variants={stagger}
       >
-        {/* Year badge */}
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "10px",
-            letterSpacing: "0.4em",
-            color: GOLD,
-            marginBottom: "24px",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 600,
-          }}
-        >
+        <motion.p variants={fadeUp} style={{ fontSize: "10px", letterSpacing: "0.4em", color: GOLD, marginBottom: "20px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
           {car.year} — UNIDRIVE EXCLUSIVE
         </motion.p>
 
-        {/* Make */}
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "clamp(13px, 2vw, 16px)",
-            letterSpacing: "0.55em",
-            color: "rgba(255,255,255,0.6)",
-            marginBottom: "12px",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 500,
-          }}
-        >
+        <motion.p variants={fadeUp} style={{ fontSize: "clamp(12px, 2vw, 15px)", letterSpacing: "0.5em", color: "rgba(255,255,255,0.5)", marginBottom: "8px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
           {car.make}
         </motion.p>
 
-        {/* Model name */}
-        <motion.h1
-          variants={fadeUp}
-          style={{
-            fontSize: "clamp(52px, 12vw, 140px)",
-            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
-            fontWeight: 300,
-            letterSpacing: "0.05em",
-            lineHeight: 0.9,
-            color: "#ffffff",
-            marginBottom: "20px",
-            textShadow: "0 0 80px rgba(0,0,0,0.8)",
-          }}
-        >
+        <motion.h1 variants={fadeUp} style={{ fontSize: "clamp(48px, 11vw, 130px)", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, letterSpacing: "0.04em", lineHeight: 0.9, color: "#ffffff", marginBottom: "20px", textShadow: "0 10px 40px rgba(0,0,0,0.4)" }}>
           {car.name}
         </motion.h1>
 
-        {/* Divider line */}
-        <motion.div
-          variants={fadeUp}
-          style={{
-            width: "60px",
-            height: "1px",
-            background: GOLD,
-            margin: "0 auto 20px",
-          }}
-        />
+        <motion.div variants={fadeUp} style={{ width: "50px", height: "1px", background: GOLD, margin: "0 auto 32px" }} />
 
-        {/* Trim */}
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "11px",
-            letterSpacing: "0.35em",
-            color: GOLD_LIGHT,
-            marginBottom: "56px",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 600,
-          }}
-        >
-          {car.trim}
-        </motion.p>
-
-        {/* CTA buttons */}
-        <motion.div
-          variants={fadeUp}
-          style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}
-        >
+        <motion.div variants={fadeUp} style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
           <HeroButton label="DISCOVER" href="#introduction" primary />
           <HeroButton label="PRODUCT OVERVIEW" href="#gallery" />
         </motion.div>
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        style={{
-          position: "absolute",
-          bottom: "40px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "8px",
-          zIndex: 10,
-        }}
-      >
-        <span
-          style={{
-            fontSize: "9px",
-            letterSpacing: "0.3em",
-            color: "rgba(255,255,255,0.35)",
-            fontFamily: "'Cormorant Garamond', serif",
-          }}
-        >
-          SCROLL
-        </span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          style={{
-            width: "1px",
-            height: "32px",
-            background: `linear-gradient(to bottom, ${GOLD}, transparent)`,
-          }}
-        />
       </motion.div>
     </section>
   );
 }
 
-function HeroButton({
-  label,
-  href,
-  primary = false,
-}: {
-  label: string;
-  href: string;
-  primary?: boolean;
-}) {
+// ضيف الكود ده تحت الـ HeroSection عشان الـ Error يختفي
+function HeroButton({ label, href, primary = false }: { label: string; href: string; primary?: boolean }) {
   const [hovered, setHovered] = useState(false);
   return (
     <a
@@ -326,28 +206,20 @@ function HeroButton({
         display: "inline-flex",
         alignItems: "center",
         gap: "10px",
-        padding: "16px 36px",
+        padding: "14px 32px",
         fontSize: "10px",
-        letterSpacing: "0.3em",
+        letterSpacing: "0.25em",
         fontFamily: "'Cormorant Garamond', serif",
         fontWeight: 700,
         textDecoration: "none",
-        transition: "all 0.35s ease",
-        border: `1px solid ${primary ? GOLD : "rgba(255,255,255,0.3)"}`,
-        background: primary
-          ? hovered
-            ? GOLD
-            : "transparent"
-          : hovered
-          ? "rgba(255,255,255,0.08)"
-          : "transparent",
-        color: primary ? (hovered ? "#000" : GOLD) : hovered ? "#fff" : "rgba(255,255,255,0.7)",
+        transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        border: `1px solid ${primary ? GOLD : "rgba(255,255,255,0.25)"}`,
+        background: primary ? (hovered ? GOLD : "transparent") : (hovered ? "rgba(255,255,255,0.08)" : "transparent"),
+        color: primary ? (hovered ? "#000" : GOLD) : (hovered ? "#fff" : "rgba(255,255,255,0.7)"),
       }}
     >
       {label}
-      {primary && (
-        <span style={{ fontSize: "14px", lineHeight: 1 }}>→</span>
-      )}
+      {primary && <span style={{ fontSize: "14px" }}>→</span>}
     </a>
   );
 }

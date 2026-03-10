@@ -1059,8 +1059,6 @@ function Footer() {
 // ─── ROOT APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [loading, setLoading] = useState(true);
-
-  // Timer لإخفاء شاشة التحميل بعد 2.5 ثانية
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
