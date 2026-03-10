@@ -128,7 +128,7 @@ function HeroSection({ car }: { car: Car }) {
     >
      <motion.div style={{ position: "absolute", inset: 0, y }}>
         <video
-          key={car.videoUrl} /* <--- السطر ده هو السر اللي هيجبره يشتغل */
+          key={car.videoUrl} 
           src={car.videoUrl}
           autoPlay
           muted
@@ -144,12 +144,14 @@ function HeroSection({ car }: { car: Car }) {
       </motion.div>
 
       {/* Layered overlays */}
+ {/* Layered overlays - عدل القيم دي */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.90) 100%)",
+            // بدل 0.55 خليها 0.2 .. وبدل 0.90 خليها 0.6 مثلاً
+            "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.6) 100%)",
         }}
       />
       {/* Vignette */}
