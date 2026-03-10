@@ -569,6 +569,8 @@ function IntroductionSection({ car }: { car: Car }) {
 // ─── Component: GallerySection ────────────────────────────────────────────────
 
 function GallerySection({ car }: { car: Car }) {
+  const [galleryPage, setGalleryPage] = useState(0);
+  
   if (!car.images?.length) return null;
 
   // Assign column spans for masonry-like effect
@@ -581,29 +583,109 @@ function GallerySection({ car }: { car: Car }) {
     { colSpan: 1, rowSpan: 1 },
   ];
 
+  const imagesPerPage = 6;
+  const totalImages = car.images.length;
+  const totalPages = Math.ceil(totalImages / imagesPerPage);
+  const startIdx = galleryPage * imagesPerPage;
+  const currentImages = car.images.slice(startIdx, startIdx + imagesPerPage);
+
+  const handlePrevGallery = () => {
+    if (galleryPage > 0) setGalleryPage(galleryPage - 1);
+  };
+
+  const handleNextGallery = () => {
+    if (galleryPage < totalPages - 1) setGalleryPage(galleryPage + 1);
+  };
+
   return (
     <section id="gallery" style={{ background: "#080808", padding: "120px 0" }}>
       <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 48px" }}>
-        {/* Label */}
-        <motion.p
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          style={{
-            fontSize: "9px",
-            letterSpacing: "0.45em",
-            color: GOLD,
-            marginBottom: "64px",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 700,
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-          }}
-        >
-          <span style={{ display: "inline-block", width: "40px", height: "1px", background: GOLD }} />
-          02 — GALLERY
-        </motion.p>
+        {/* Header with navigation */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "64px" }}>
+          <motion.p
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            style={{
+              fontSize: "9px",
+              letterSpacing: "0.45em",
+              color: GOLD,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+            }}
+          >
+            <span style={{ display: "inline-block", width: "40px", height: "1px", background: GOLD }} />
+            02 — GALLERY
+          </motion.p>
+
+          {/* Navigation arrows */}
+          {totalPages > 1 && (
+            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              <button
+                onClick={handlePrevGallery}
+                disabled={galleryPage === 0}
+                style={{
+                  padding: "8px 16px",
+                  background: "none",
+                  border: `1px solid ${galleryPage === 0 ? "rgba(255,255,255,0.1)" : "rgba(201,169,110,0.3)"}`,
+                  cursor: galleryPage === 0 ? "not-allowed" : "pointer",
+                  color: galleryPage === 0 ? "rgba(255,255,255,0.2)" : GOLD,
+                  fontSize: "14px",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (galleryPage > 0) {
+                    (e.target as HTMLButtonElement).style.borderColor = GOLD;
+                    (e.target as HTMLButtonElement).style.background = `rgba(201,169,110,0.05)`;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (galleryPage > 0) {
+                    (e.target as HTMLButtonElement).style.borderColor = "rgba(201,169,110,0.3)";
+                    (e.target as HTMLButtonElement).style.background = "none";
+                  }
+                }}
+              >
+                ‹
+              </button>
+              <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.4)", minWidth: "30px", textAlign: "center" }}>
+                {galleryPage + 1} / {totalPages}
+              </span>
+              <button
+                onClick={handleNextGallery}
+                disabled={galleryPage === totalPages - 1}
+                style={{
+                  padding: "8px 16px",
+                  background: "none",
+                  border: `1px solid ${galleryPage === totalPages - 1 ? "rgba(255,255,255,0.1)" : "rgba(201,169,110,0.3)"}`,
+                  cursor: galleryPage === totalPages - 1 ? "not-allowed" : "pointer",
+                  color: galleryPage === totalPages - 1 ? "rgba(255,255,255,0.2)" : GOLD,
+                  fontSize: "14px",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (galleryPage < totalPages - 1) {
+                    (e.target as HTMLButtonElement).style.borderColor = GOLD;
+                    (e.target as HTMLButtonElement).style.background = `rgba(201,169,110,0.05)`;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (galleryPage < totalPages - 1) {
+                    (e.target as HTMLButtonElement).style.borderColor = "rgba(201,169,110,0.3)";
+                    (e.target as HTMLButtonElement).style.background = "none";
+                  }
+                }}
+              >
+                ›
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Grid */}
         <div
@@ -614,15 +696,15 @@ function GallerySection({ car }: { car: Car }) {
             gap: "8px",
           }}
         >
-          {car.images.slice(0, 6).map((src, i) => {
+          {currentImages.map((src, i) => {
             const l = layout[i] || { colSpan: 1, rowSpan: 1 };
             return (
               <motion.div
-                key={src}
+                key={src + galleryPage}
                 initial={{ opacity: 0, scale: 0.97 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.5, delay: i * 0.05 }}
                 style={{
                   gridColumn: `span ${l.colSpan}`,
                   gridRow: `span ${l.rowSpan}`,
@@ -634,7 +716,7 @@ function GallerySection({ car }: { car: Car }) {
               >
                 <img
                   src={src}
-                  alt={`${car.make} ${car.name} — ${i + 1}`}
+                  alt={`${car.make} ${car.name} — ${startIdx + i + 1}`}
                   loading="lazy"
                   style={{
                     width: "100%",
@@ -668,7 +750,7 @@ function GallerySection({ car }: { car: Car }) {
                     pointerEvents: "none",
                   }}
                 >
-                  {String(i + 1).padStart(2, "0")}
+                  {String(startIdx + i + 1).padStart(2, "0")}
                 </div>
               </motion.div>
             );

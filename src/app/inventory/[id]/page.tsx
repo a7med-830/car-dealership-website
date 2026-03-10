@@ -78,8 +78,44 @@ export default function CarDetailPage() {
   const car    = getCarById(Number(params.id));
 
   const [activeImage, setActiveImage] = useState(car?.images?.[0] ?? "");
+  const [thumbnailIndex, setThumbnailIndex] = useState(0);
   const [form, setForm]               = useState({ name: "", email: "", phone: "", message: "" });
   const [submitted, setSubmitted]     = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [overlayImage, setOverlayImage] = useState("");
+  const [overlayImageIndex, setOverlayImageIndex] = useState(0);
+
+  const THUMBNAILS_PER_PAGE = 4;
+  const totalImages = car?.images?.length ?? 0;
+  const totalPages = Math.ceil(totalImages / THUMBNAILS_PER_PAGE);
+  const currentThumbnails = car?.images?.slice(thumbnailIndex, thumbnailIndex + THUMBNAILS_PER_PAGE) ?? [];
+
+  const handlePrevThumbnails = () => {
+    setThumbnailIndex(Math.max(0, thumbnailIndex - THUMBNAILS_PER_PAGE));
+  };
+
+  const handleNextThumbnails = () => {
+    setThumbnailIndex(Math.min(totalImages - THUMBNAILS_PER_PAGE, thumbnailIndex + THUMBNAILS_PER_PAGE));
+  };
+
+  const handleOverlayPrev = () => {
+    const newIndex = overlayImageIndex === 0 ? totalImages - 1 : overlayImageIndex - 1;
+    setOverlayImageIndex(newIndex);
+    setOverlayImage(car?.images?.[newIndex] ?? "");
+  };
+
+  const handleOverlayNext = () => {
+    const newIndex = overlayImageIndex === totalImages - 1 ? 0 : overlayImageIndex + 1;
+    setOverlayImageIndex(newIndex);
+    setOverlayImage(car?.images?.[newIndex] ?? "");
+  };
+
+  const openOverlay = (image: string) => {
+    const index = car?.images?.indexOf(image) ?? 0;
+    setOverlayImageIndex(index);
+    setOverlayImage(image);
+    setShowOverlay(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -114,11 +150,43 @@ export default function CarDetailPage() {
       <Navbar />
 
       {/* ── HERO IMAGE ────────────────────────────────────────────────────── */}
-      <div style={{ position: "relative", width: "100%", height: "70vh", minHeight: 420, overflow: "hidden" }}>
+      <div style={{ position: "relative", width: "100%", height: "70vh", minHeight: 420, overflow: "hidden", cursor: "pointer" }}
+        onClick={() => openOverlay(activeImage)}>
         <img src={activeImage} alt={car.name}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "opacity 0.3s" }} />
         {/* Dark gradient overlay */}
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.15) 50%, transparent 100%)" }} />
+        {/* Expand button */}
+        <button
+          onClick={(e) => { e.stopPropagation(); openOverlay(activeImage); }}
+          style={{
+            position: "absolute",
+            bottom: 48,
+            right: 48,
+            padding: "12px 20px",
+            fontSize: 11,
+            letterSpacing: "0.12em",
+            background: "rgba(255,255,255,0.1)",
+            border: "1px solid rgba(255,255,255,0.3)",
+            color: "rgba(255,255,255,0.8)",
+            cursor: "pointer",
+            fontFamily: "var(--sans)",
+            backdropFilter: "blur(4px)",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            (e.target as HTMLButtonElement).style.background = "rgba(255,255,255,0.15)";
+            (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,1)";
+            (e.target as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.5)";
+          }}
+          onMouseLeave={(e) => {
+            (e.target as HTMLButtonElement).style.background = "rgba(255,255,255,0.1)";
+            (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.8)";
+            (e.target as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.3)";
+          }}
+        >
+          ⛶ EXPAND
+        </button>
         {/* Hero text */}
         <div style={{ position: "absolute", bottom: 48, left: 48, right: 48 }}>
           <div style={{ fontSize: 8, letterSpacing: "0.28em", color: "var(--mid)", marginBottom: 10 }}>
@@ -136,13 +204,76 @@ export default function CarDetailPage() {
       </div>
 
       {/* ── THUMBNAIL STRIP ───────────────────────────────────────────────── */}
-      <div style={{ display: "flex", gap: 2, background: "var(--dark1)", padding: "2px 0" }}>
-        {car.images.map((img, i) => (
-          <button key={i} onClick={() => setActiveImage(img)}
-            style={{ padding: 0, background: "none", border: "none", cursor: "pointer", flex: "1 1 0", aspectRatio: "16/9", overflow: "hidden", opacity: activeImage === img ? 1 : 0.45, outline: activeImage === img ? "1px solid rgba(255,255,255,0.5)" : "none", outlineOffset: -1, transition: "opacity 0.2s" }}>
-            <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+      <div style={{ display: "flex", alignItems: "center", gap: 0, background: "var(--dark1)", padding: "2px 0", position: "relative" }}>
+        {/* Left Arrow */}
+        {totalImages > THUMBNAILS_PER_PAGE && (
+          <button
+            onClick={handlePrevThumbnails}
+            disabled={thumbnailIndex === 0}
+            style={{
+              padding: "0 16px",
+              background: "none",
+              border: "none",
+              cursor: thumbnailIndex === 0 ? "not-allowed" : "pointer",
+              color: thumbnailIndex === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.6)",
+              fontSize: 20,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+              minHeight: "100px",
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              if (thumbnailIndex > 0) (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.9)";
+            }}
+            onMouseLeave={(e) => {
+              if (thumbnailIndex > 0) (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
+            }}
+          >
+            ‹
           </button>
-        ))}
+        )}
+
+        {/* Thumbnails */}
+        <div style={{ display: "flex", gap: 2, flex: 1, overflow: "hidden" }}>
+          {currentThumbnails.map((img, i) => (
+            <button key={thumbnailIndex + i} onClick={() => setActiveImage(img)}
+              style={{ padding: 0, background: "none", border: "none", cursor: "pointer", flex: "1 1 0", aspectRatio: "16/9", overflow: "hidden", opacity: activeImage === img ? 1 : 0.45, outline: activeImage === img ? "1px solid rgba(255,255,255,0.5)" : "none", outlineOffset: -1, transition: "opacity 0.2s" }}>
+              <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </button>
+          ))}
+        </div>
+
+        {/* Right Arrow */}
+        {totalImages > THUMBNAILS_PER_PAGE && (
+          <button
+            onClick={handleNextThumbnails}
+            disabled={thumbnailIndex + THUMBNAILS_PER_PAGE >= totalImages}
+            style={{
+              padding: "0 16px",
+              background: "none",
+              border: "none",
+              cursor: thumbnailIndex + THUMBNAILS_PER_PAGE >= totalImages ? "not-allowed" : "pointer",
+              color: thumbnailIndex + THUMBNAILS_PER_PAGE >= totalImages ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.6)",
+              fontSize: 20,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+              minHeight: "100px",
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              if (thumbnailIndex + THUMBNAILS_PER_PAGE < totalImages) (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.9)";
+            }}
+            onMouseLeave={(e) => {
+              if (thumbnailIndex + THUMBNAILS_PER_PAGE < totalImages) (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
+            }}
+          >
+            ›
+          </button>
+        )}
       </div>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────────────────── */}
@@ -287,6 +418,154 @@ export default function CarDetailPage() {
           </Link>
         </div>
       </div>
+
+      {/* ── LIGHTBOX OVERLAY ────────────────────────────────────────────── */}
+      {showOverlay && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            backdropFilter: "blur(8px)",
+          }}
+          onClick={() => setShowOverlay(false)}
+        >
+          <div
+            style={{
+              position: "relative",
+              maxWidth: "70vw",
+              maxHeight: "70vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={overlayImage}
+              alt="Expanded view"
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+                display: "block",
+              }}
+            />
+            
+            {/* Left Arrow */}
+            {totalImages > 1 && (
+              <button
+                onClick={handleOverlayPrev}
+                style={{
+                  position: "absolute",
+                  left: "-60px",
+                  background: "none",
+                  border: "none",
+                  color: "rgba(255,255,255,0.6)",
+                  fontSize: 32,
+                  cursor: "pointer",
+                  padding: 0,
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.9)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
+                }}
+              >
+                ‹
+              </button>
+            )}
+
+            {/* Right Arrow */}
+            {totalImages > 1 && (
+              <button
+                onClick={handleOverlayNext}
+                style={{
+                  position: "absolute",
+                  right: "-60px",
+                  background: "none",
+                  border: "none",
+                  color: "rgba(255,255,255,0.6)",
+                  fontSize: 32,
+                  cursor: "pointer",
+                  padding: 0,
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.9)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
+                }}
+              >
+                ›
+              </button>
+            )}
+
+            {/* Image Counter */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "-50px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: 12,
+                color: "rgba(255,255,255,0.6)",
+                letterSpacing: "0.08em",
+                fontFamily: "var(--sans)",
+              }}
+            >
+              {overlayImageIndex + 1} / {totalImages}
+            </div>
+
+            {/* Close button */}
+            <button
+              onClick={() => setShowOverlay(false)}
+              style={{
+                position: "absolute",
+                top: "-50px",
+                right: 0,
+                background: "none",
+                border: "none",
+                color: "rgba(255,255,255,0.7)",
+                fontSize: 28,
+                cursor: "pointer",
+                padding: 0,
+                width: 40,
+                height: 40,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,1)";
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.7)";
+              }}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
