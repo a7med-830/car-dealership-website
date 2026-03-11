@@ -513,7 +513,7 @@ function Header() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const navLeft = ["MODELS", "CARS FOR SALE", "CONFIGURATOR"];
+  const navLeft = ["BRANDS", "CARS FOR SALE", "CONFIGURATOR"];
   const navRight = ["INVENTORY", "FIND A DEALER", "CONTACT"];
 
   return (
@@ -531,7 +531,7 @@ function Header() {
           {/* LEFT NAV */}
           <nav className="desktop-nav" style={{ display: "flex", gap: 36 }}>
             {navLeft.map(item => (
-              <Link key={item} href="#" className="nav-link" style={{
+              <Link key={item} href={ item === "BRANDS" ? "#scroll" : "#" } className="nav-link" style={{
                 fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
                 letterSpacing: "0.14em", color: "var(--text-light)",
                 textDecoration: "none", textTransform: "uppercase",
@@ -696,7 +696,7 @@ function HeroSlider() {
       </div>
 
       {/* SCROLL HINT */}
-      <div style={{
+      <div id = "scroll" style={{
         position: "absolute", bottom: "8%", left: "50%", transform: "translateX(-50%)",
         display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
         fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: "0.25em",
