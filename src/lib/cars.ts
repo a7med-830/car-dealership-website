@@ -42,8 +42,9 @@ export const allCars: Car[] = [
   images: [
     "/bmw/m7/f.jpg",
     "/bmw/m7/s.jpg",
-    "/bmw/m7/i.jpg",
-    "/bmw/m7/r.jpg"
+    "/bmw/m8/f.jpg",
+    "/bmw/m7/r.jpg",
+    "/bmw/m7/i2.jpg",
   ],
   badge: "M Performance",
   trim: "M760i xDrive",
@@ -76,6 +77,7 @@ export const allCars: Car[] = [
   "/bmw/m8/s.jpg",
   "/bmw/m8/i.jpg",
   "/bmw/m8/r.jpg",
+  "/bmw/m8/b.jpg",
   ],
   badge: "Competition",
   trim: "M8 Competition",
