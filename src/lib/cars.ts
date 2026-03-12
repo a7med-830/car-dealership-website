@@ -1076,6 +1076,41 @@ export const allCars: Car[] = [
     description: "The Range Rover Sport combines athletic performance with refined luxury. With its advanced hybrid powertrain, responsive handling, and sportscar-inspired design, it offers dynamic driving without compromising on comfort.",
     features: ["440 hp Hybrid Powertrain", "Quick Shift Transmission", "Dynamic Suspension", "Premium Leather Appointments", "Panoramic Roof", "Meridian Surround Sound", "Rear Seat Entertainment", "Hands-Free Gesture Control"],
   },
+
+  // ── FERRARI ────────────────────────────────────────────────────────────────
+  {
+    id: 37,
+    name: "Purosangue",
+    make: "Ferrari",
+    model: "Purosangue",
+    year: 2024,
+    price: 390000,
+    body: "SUV",
+    color: "Rosso Corsa",
+    mileage: "New",
+    mpg: "11 city / 16 hwy",
+    image: "/Ferrari/Ferrari Purosangue/photo1.jpg",
+    images: [
+      "/Ferrari/Ferrari Purosangue/photo1.jpg",
+      "/Ferrari/Ferrari Purosangue/photo2.jpg",
+      "/Ferrari/Ferrari Purosangue/photo3.jpg",
+      "/Ferrari/Ferrari Purosangue/photo4.jpg",
+      "/Ferrari/Ferrari Purosangue/photo5.jpg",
+      "/Ferrari/Ferrari Purosangue/photo6.jpg",
+      "/Ferrari/Ferrari Purosangue/photo7.jpg",
+      "/Ferrari/Ferrari Purosangue/photo8.jpg",
+      "/Ferrari/Ferrari Purosangue/photo9.jpg",
+      "/Ferrari/Ferrari Purosangue/photo10.jpg",
+    ],
+    badge: "Exclusive",
+    trim: "Base",
+    engine: "6.5L Naturally Aspirated V12 (715 hp)",
+    transmission: "8-Speed Automatic",
+    drivetrain: "All-Wheel Drive",
+    seats: 4,
+    description: "The Ferrari Purosangue is a game-changing luxury SUV that combines the raw power of a V12 supercar with the practicality of an SUV. With 715 hp, a lightweight carbon fiber body, and Ferrari's legendary handling dynamics, it redefines the high-performance SUV segment.",
+    features: ["715 hp V12 Engine", "Carbon Fiber Body", "All-Wheel Drive with Advanced Traction", "Adaptive Suspension", "Premium Leather Interior", "Panoramic Glass Roof", "Brembo High-Performance Brakes", "Advanced Driver Assistance Systems"],
+  },
 ];
 
 // ── Helper: look up a single car by ID ────────────────────────────────────────

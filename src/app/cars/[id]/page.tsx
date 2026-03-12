@@ -67,50 +67,52 @@ function SubNav({ active }: { active: NavSection }) {
           padding: "0 48px",
           display: "flex",
           alignItems: "center",
-          gap: "0",
+          justifyContent: "space-between", 
         }}
       >
-        {NAV_ITEMS.map((item) => (
-          <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            style={{
-              display: "inline-block",
-              padding: "22px 32px",
-              fontSize: "10px",
-              letterSpacing: "0.25em",
-              fontWeight: 600,
-              color: active === item ? GOLD : "rgba(255,255,255,0.45)",
-              borderBottom: active === item ? `2px solid ${GOLD}` : "2px solid transparent",
-              textDecoration: "none",
-              transition: "color 0.3s, border-color 0.3s",
-              fontFamily: "'Cormorant Garamond', 'Didot', serif",
-            }}
-            onMouseEnter={(e) => {
-              if (active !== item) {
-                (e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,0.75)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (active !== item) {
-                (e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,0.45)";
-              }
-            }}
-          >
-            {item}
-          </a>
-        ))}
+        {/* زرار العودة للـ Home */}
+        <Link href="/" style={{
+          fontSize: "18px",
+          letterSpacing: "0.3em",
+          fontWeight: 700,
+          color: GOLD,
+          textDecoration: "none",
+          fontFamily: "'Cormorant Garamond', serif",
+        }}>
+          UNIDRIVE
+        </Link>
+        <div style={{ display: "flex" }}>
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              style={{
+                display: "inline-block",
+                padding: "22px 32px",
+                fontSize: "10px",
+                letterSpacing: "0.25em",
+                fontWeight: 600,
+                color: active === item ? GOLD : "rgba(255,255,255,0.45)",
+                borderBottom: active === item ? `2px solid ${GOLD}` : "2px solid transparent",
+                textDecoration: "none",
+                transition: "color 0.3s, border-color 0.3s",
+                fontFamily: "'Cormorant Garamond', 'Didot', serif",
+              }}
+            >
+              {item}
+            </a>
+          ))}
+        </div>
       </div>
     </nav>
   );
 }
 
 // ─── Component: HeroSection ───────────────────────────────────────────────────
-
 function HeroSection({ car }: { car: Car }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]); // قللنا الـ parallax شوية عشان نحافظ على كادر الفيديو فوق
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
@@ -119,14 +121,16 @@ function HeroSection({ car }: { car: Car }) {
       style={{
         position: "relative",
         height: "100dvh",
-        minHeight: "600px",
+        width: "100%",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        background: "#000", 
       }}
     >
-     <motion.div style={{ position: "absolute", inset: 0, y }}>
+      {/* الفيديو - ممتد من الحافة للحافة */}
+      <motion.div style={{ position: "absolute", inset: 0, y }}>
         <video
           key={car.videoUrl} 
           src={car.videoUrl}
@@ -136,186 +140,62 @@ function HeroSection({ car }: { car: Car }) {
           playsInline
           style={{
             width: "100%",
-            height: "110%",
+            height: "100%",
             objectFit: "cover",
-            objectPosition: "center",
+            display: "block",
           }}
         />
       </motion.div>
 
-      {/* Layered overlays */}
- {/* Layered overlays - عدل القيم دي */}
+      {/* شلنا الـ Gradient اللي فوق خالص - خلينا بس ظل خفيف تحت للنص */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            // بدل 0.55 خليها 0.2 .. وبدل 0.90 خليها 0.6 مثلاً
-            "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.6) 100%)",
-        }}
-      />
-      {/* Vignette */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
+          zIndex: 1,
         }}
       />
 
-      {/* Thin gold top border */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "2px",
-          background: `linear-gradient(90deg, transparent 0%, ${GOLD} 50%, transparent 100%)`,
-        }}
-      />
-
-      {/* Content - تم مسح الـ custom */}
+      {/* Content - مرفوع لفوق عشان يفتح مساحة للفيديو */}
       <motion.div
-        style={{ opacity, position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px" }}
+        style={{ 
+          opacity, 
+          position: "relative", 
+          zIndex: 10, 
+          textAlign: "center", 
+          padding: "0 24px",
+          marginTop: "-15vh" // رفعنا الكلام عشان المساحة السوداء اللي فوق تختفي وهمياً
+        }}
         initial="hidden"
         animate="visible"
         variants={stagger}
       >
-        {/* Year badge */}
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "10px",
-            letterSpacing: "0.4em",
-            color: GOLD,
-            marginBottom: "24px",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 600,
-          }}
-        >
+        <motion.p variants={fadeUp} style={{ fontSize: "10px", letterSpacing: "0.4em", color: GOLD, marginBottom: "20px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
           {car.year} — UNIDRIVE EXCLUSIVE
         </motion.p>
 
-        {/* Make */}
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "clamp(13px, 2vw, 16px)",
-            letterSpacing: "0.55em",
-            color: "rgba(255,255,255,0.6)",
-            marginBottom: "12px",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 500,
-          }}
-        >
+        <motion.p variants={fadeUp} style={{ fontSize: "clamp(12px, 2vw, 15px)", letterSpacing: "0.5em", color: "rgba(255,255,255,0.5)", marginBottom: "8px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
           {car.make}
         </motion.p>
 
-        {/* Model name */}
-        <motion.h1
-          variants={fadeUp}
-          style={{
-            fontSize: "clamp(52px, 12vw, 140px)",
-            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
-            fontWeight: 300,
-            letterSpacing: "0.05em",
-            lineHeight: 0.9,
-            color: "#ffffff",
-            marginBottom: "20px",
-            textShadow: "0 0 80px rgba(0,0,0,0.8)",
-          }}
-        >
+        <motion.h1 variants={fadeUp} style={{ fontSize: "clamp(48px, 11vw, 130px)", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, letterSpacing: "0.04em", lineHeight: 0.9, color: "#ffffff", marginBottom: "20px", textShadow: "0 10px 40px rgba(0,0,0,0.4)" }}>
           {car.name}
         </motion.h1>
 
-        {/* Divider line */}
-        <motion.div
-          variants={fadeUp}
-          style={{
-            width: "60px",
-            height: "1px",
-            background: GOLD,
-            margin: "0 auto 20px",
-          }}
-        />
+        <motion.div variants={fadeUp} style={{ width: "50px", height: "1px", background: GOLD, margin: "0 auto 32px" }} />
 
-        {/* Trim */}
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "11px",
-            letterSpacing: "0.35em",
-            color: GOLD_LIGHT,
-            marginBottom: "56px",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 600,
-          }}
-        >
-          {car.trim}
-        </motion.p>
-
-        {/* CTA buttons */}
-        <motion.div
-          variants={fadeUp}
-          style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}
-        >
+        <motion.div variants={fadeUp} style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
           <HeroButton label="DISCOVER" href="#introduction" primary />
           <HeroButton label="PRODUCT OVERVIEW" href="#gallery" />
         </motion.div>
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        style={{
-          position: "absolute",
-          bottom: "40px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "8px",
-          zIndex: 10,
-        }}
-      >
-        <span
-          style={{
-            fontSize: "9px",
-            letterSpacing: "0.3em",
-            color: "rgba(255,255,255,0.35)",
-            fontFamily: "'Cormorant Garamond', serif",
-          }}
-        >
-          SCROLL
-        </span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          style={{
-            width: "1px",
-            height: "32px",
-            background: `linear-gradient(to bottom, ${GOLD}, transparent)`,
-          }}
-        />
       </motion.div>
     </section>
   );
 }
 
-function HeroButton({
-  label,
-  href,
-  primary = false,
-}: {
-  label: string;
-  href: string;
-  primary?: boolean;
-}) {
+// ضيف الكود ده تحت الـ HeroSection عشان الـ Error يختفي
+function HeroButton({ label, href, primary = false }: { label: string; href: string; primary?: boolean }) {
   const [hovered, setHovered] = useState(false);
   return (
     <a
@@ -326,28 +206,20 @@ function HeroButton({
         display: "inline-flex",
         alignItems: "center",
         gap: "10px",
-        padding: "16px 36px",
+        padding: "14px 32px",
         fontSize: "10px",
-        letterSpacing: "0.3em",
+        letterSpacing: "0.25em",
         fontFamily: "'Cormorant Garamond', serif",
         fontWeight: 700,
         textDecoration: "none",
-        transition: "all 0.35s ease",
-        border: `1px solid ${primary ? GOLD : "rgba(255,255,255,0.3)"}`,
-        background: primary
-          ? hovered
-            ? GOLD
-            : "transparent"
-          : hovered
-          ? "rgba(255,255,255,0.08)"
-          : "transparent",
-        color: primary ? (hovered ? "#000" : GOLD) : hovered ? "#fff" : "rgba(255,255,255,0.7)",
+        transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        border: `1px solid ${primary ? GOLD : "rgba(255,255,255,0.25)"}`,
+        background: primary ? (hovered ? GOLD : "transparent") : (hovered ? "rgba(255,255,255,0.08)" : "transparent"),
+        color: primary ? (hovered ? "#000" : GOLD) : (hovered ? "#fff" : "rgba(255,255,255,0.7)"),
       }}
     >
       {label}
-      {primary && (
-        <span style={{ fontSize: "14px", lineHeight: 1 }}>→</span>
-      )}
+      {primary && <span style={{ fontSize: "14px" }}>→</span>}
     </a>
   );
 }
@@ -867,138 +739,143 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position: "relative",
-        cursor: "pointer",
-        border: `1px solid ${hovered ? `rgba(201,169,110,0.35)` : "rgba(255,255,255,0.07)"}`,
-        transition: "border-color 0.4s ease",
-        background: "#090909",
-        overflow: "hidden",
-      }}
+    // 1. غلفنا الكارت بالكامل بـ Link عشان أي مكان تدوس فيه يوديك لصفحة العربية
+    <Link 
+      href={`/cars/${car.id}`} 
+      style={{ textDecoration: "none", color: "inherit", display: "block" }}
     >
-      {/* Image */}
-      <div style={{ overflow: "hidden", aspectRatio: "16/9", position: "relative" }}>
-        <img
-          src={car.image}
-          alt={`${car.make} ${car.name}`}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block",
-            transform: hovered ? "scale(1.06)" : "scale(1)",
-            filter: hovered ? "brightness(0.95)" : "brightness(0.75) saturate(0.85)",
-            transition: "transform 0.7s ease, filter 0.5s ease",
-          }}
-        />
-        {/* Year overlay */}
-        <div
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          position: "relative",
+          cursor: "pointer",
+          border: `1px solid ${hovered ? `rgba(201,169,110,0.35)` : "rgba(255,255,255,0.07)"}`,
+          transition: "border-color 0.4s ease",
+          background: "#090909",
+          overflow: "hidden",
+        }}
+      >
+        {/* Image Section */}
+        <div style={{ overflow: "hidden", aspectRatio: "16/9", position: "relative" }}>
+          <img
+            src={car.image}
+            alt={`${car.make} ${car.name}`}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+              transform: hovered ? "scale(1.06)" : "scale(1)",
+              filter: hovered ? "brightness(0.95)" : "brightness(0.75) saturate(0.85)",
+              transition: "transform 0.7s ease, filter 0.5s ease",
+            }}
+          />
+          {/* Year overlay */}
+          <div
+            style={{
+              position: "absolute",
+              top: "14px",
+              right: "14px",
+              fontSize: "9px",
+              letterSpacing: "0.25em",
+              color: GOLD,
+              fontFamily: "'Cormorant Garamond', serif",
+              background: "rgba(0,0,0,0.6)",
+              padding: "4px 8px",
+            }}
+          >
+            {car.year}
+          </div>
+        </div>
+
+        {/* Info Section */}
+        <div style={{ padding: "28px 28px 32px" }}>
+          <p
+            style={{
+              fontSize: "9px",
+              letterSpacing: "0.35em",
+              color: GOLD,
+              marginBottom: "8px",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 700,
+            }}
+          >
+            {car.make}
+          </p>
+          <h3
+            style={{
+              fontSize: "clamp(22px, 3vw, 32px)",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 300,
+              color: "#fff",
+              letterSpacing: "0.06em",
+              marginBottom: "6px",
+              lineHeight: 1.1,
+            }}
+          >
+            {car.name}
+          </h3>
+          <p
+            style={{
+              fontSize: "10px",
+              letterSpacing: "0.2em",
+              color: "rgba(255,255,255,0.35)",
+              marginBottom: "24px",
+              fontFamily: "'Cormorant Garamond', serif",
+            }}
+          >
+            {car.trim}
+          </p>
+
+          {/* Discover Button Effect */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              fontSize: "9px",
+              letterSpacing: "0.3em",
+              color: hovered ? GOLD : "rgba(255,255,255,0.3)",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 700,
+              transition: "color 0.3s ease",
+            }}
+          >
+            DISCOVER
+            <motion.span
+              animate={{ x: hovered ? 6 : 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ fontSize: "14px" }}
+            >
+              →
+            </motion.span>
+          </div>
+        </div>
+
+        {/* Bottom gold accent line */}
+        <motion.div
+          animate={{ scaleX: hovered ? 1 : 0 }}
+          initial={{ scaleX: 0 }}
+          transition={{ duration: 0.4 }}
           style={{
             position: "absolute",
-            top: "14px",
-            right: "14px",
-            fontSize: "9px",
-            letterSpacing: "0.25em",
-            color: GOLD,
-            fontFamily: "'Cormorant Garamond', serif",
-            background: "rgba(0,0,0,0.6)",
-            padding: "4px 8px",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "2px",
+            background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)`,
+            transformOrigin: "left",
           }}
-        >
-          {car.year}
-        </div>
-      </div>
-
-      {/* Info */}
-      <div style={{ padding: "28px 28px 32px" }}>
-        <p
-          style={{
-            fontSize: "9px",
-            letterSpacing: "0.35em",
-            color: GOLD,
-            marginBottom: "8px",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 700,
-          }}
-        >
-          {car.make}
-        </p>
-        <h3
-          style={{
-            fontSize: "clamp(22px, 3vw, 32px)",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 300,
-            color: "#fff",
-            letterSpacing: "0.06em",
-            marginBottom: "6px",
-            lineHeight: 1.1,
-          }}
-        >
-          {car.name}
-        </h3>
-        <p
-          style={{
-            fontSize: "10px",
-            letterSpacing: "0.2em",
-            color: "rgba(255,255,255,0.35)",
-            marginBottom: "24px",
-            fontFamily: "'Cormorant Garamond', serif",
-          }}
-        >
-          {car.trim}
-        </p>
-
-        {/* Link */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            fontSize: "9px",
-            letterSpacing: "0.3em",
-            color: hovered ? GOLD : "rgba(255,255,255,0.3)",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 700,
-            transition: "color 0.3s ease",
-          }}
-        >
-          DISCOVER
-          <motion.span
-            animate={{ x: hovered ? 6 : 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ fontSize: "14px" }}
-          >
-            →
-          </motion.span>
-        </div>
-      </div>
-
-      {/* Bottom gold accent */}
-      <motion.div
-        animate={{ scaleX: hovered ? 1 : 0 }}
-        initial={{ scaleX: 0 }}
-        transition={{ duration: 0.4 }}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "2px",
-          background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)`,
-          transformOrigin: "left",
-        }}
-      />
-    </motion.div>
+        />
+      </motion.div>
+    </Link>
   );
 }
-
 // ─── Component: Footer ────────────────────────────────────────────────────────
 
 function PageFooter({ car }: { car: Car }) {
@@ -1062,29 +939,19 @@ function PageFooter({ car }: { car: Car }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
-interface PageProps {
-  // التعديل الأول: عرفنا Next.js إن الـ params بقت Promise
-  params: Promise<{ id: string }>;
-}
+type PageProps = { params: Promise<{ id: string }> };
+
 
 export default function CarDetailPage({ params }: PageProps) {
-  // التعديل التاني: فكينا الـ Promise باستخدام دالة use
-  const resolvedParams = use(params);
-  
-  // دلوقتي نقدر نقرا الـ id عادي جداً
+    const resolvedParams = use(params);
+
   const car = getCarById(resolvedParams.id);
   const allCars = getAllCars();
-  
   const [activeSection, setActiveSection] = useState<NavSection>("INTRODUCTION");
 
-  // لو العربية مش موجودة، يعرض صفحة 404
-  if (!car) {
-    return notFound();
-  }
+  if (!car) { return notFound(); }
 
-  // Observe which section is visible
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
     const sections: { id: string; label: NavSection }[] = [
@@ -1092,26 +959,21 @@ export default function CarDetailPage({ params }: PageProps) {
       { id: "gallery", label: "GALLERY" },
       { id: "alternatives", label: "ALTERNATIVES" },
     ];
-
     sections.forEach(({ id, label }) => {
       const el = document.getElementById(id);
       if (!el) return;
       const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(label);
-        },
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(label); },
         { threshold: 0.3 }
       );
       obs.observe(el);
       observers.push(obs);
     });
-
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   return (
     <>
-      {/* Google Font import */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap');
         *, *::before, *::after { box-sizing: border-box; }
@@ -1122,6 +984,38 @@ export default function CarDetailPage({ params }: PageProps) {
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: ${COPPER}; }
       `}</style>
+
+      {/* زرار عائم "Floating Button" للرجوع للـ Home يظهر في ركن الشاشة */}
+      <Link
+        href="/"
+        style={{
+          position: "fixed",
+          bottom: "40px",
+          left: "40px", // خليته على الشمال عشان ما يغطيش على أي محتوى مهم
+          zIndex: 100,
+          padding: "12px 24px",
+          fontSize: "10px",
+          letterSpacing: "0.2em",
+          color: GOLD,
+          background: "rgba(0,0,0,0.7)",
+          backdropFilter: "blur(10px)",
+          border: `1px solid ${GOLD}`,
+          textDecoration: "none",
+          fontFamily: "'Cormorant Garamond', serif",
+          fontWeight: 700,
+          transition: "all 0.4s ease",
+        }}
+        onMouseEnter={(e) => {
+          (e.target as HTMLElement).style.background = GOLD;
+          (e.target as HTMLElement).style.color = "#000";
+        }}
+        onMouseLeave={(e) => {
+          (e.target as HTMLElement).style.background = "rgba(0,0,0,0.7)";
+          (e.target as HTMLElement).style.color = GOLD;
+        }}
+      >
+        ← BACK TO UNIDRIVE
+      </Link>
 
       <main style={{ background: "#050505", minHeight: "100vh" }}>
         <HeroSection car={car} />

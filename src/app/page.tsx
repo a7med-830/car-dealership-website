@@ -422,7 +422,7 @@ const heroSlides = [
     tag: "ROLLS-ROYCE",
   },
   {
-    id: "Porsche Panamera", 
+    id: 28, 
     img: "/Images-home/3cba9a2c6693afff6d71cfa1f7d8a0f2.jpg",
     eyebrow: "EXCLUSIVE",
     title: "Porsche Panamera",
@@ -513,7 +513,7 @@ function Header() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const navLeft = ["MODELS", "CARS FOR SALE", "CONFIGURATOR"];
+  const navLeft = ["BRANDS", "CARS FOR SALE", "CONFIGURATOR"];
   const navRight = ["INVENTORY", "FIND A DEALER", "CONTACT"];
 
   return (
@@ -531,7 +531,7 @@ function Header() {
           {/* LEFT NAV */}
           <nav className="desktop-nav" style={{ display: "flex", gap: 36 }}>
             {navLeft.map(item => (
-              <Link key={item} href="#" className="nav-link" style={{
+              <Link key={item} href={ item === "BRANDS" ? "#scroll" : "#" } className="nav-link" style={{
                 fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
                 letterSpacing: "0.14em", color: "var(--text-light)",
                 textDecoration: "none", textTransform: "uppercase",
@@ -696,7 +696,7 @@ function HeroSlider() {
       </div>
 
       {/* SCROLL HINT */}
-      <div style={{
+      <div id = "scroll" style={{
         position: "absolute", bottom: "8%", left: "50%", transform: "translateX(-50%)",
         display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
         fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: "0.25em",
@@ -1059,12 +1059,10 @@ function Footer() {
 // ─── ROOT APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [loading, setLoading] = useState(true);
-
-  // Timer لإخفاء شاشة التحميل بعد 2.5 ثانية
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2500);
+    }, 1000); // 1000ms = 1 second
     return () => clearTimeout(timer);
   }, []);
 

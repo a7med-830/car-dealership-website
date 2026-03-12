@@ -55,24 +55,31 @@ export const allCars: Car[] = [
     },
     videoUrl: "/top 4 cars/Videos/R1.mp4",
   },
-  {
-    id: "Porsche Panamera",
-    make: "Porsche",
-    name: "Panamera",
-    trim: "UNIDRIVE VIVERE",
+  
+  
+  {id: "28", 
+    name: " Porsche ",
+    make: "Panamera",
     year: 2024,
-    price: "€ 680,000",
-    description:
-      "The Vivere edition transforms the already formidable Continental GT into something approaching the otherworldly. Carbon aero elements carve new silhouettes while the tuned W12 breathes fire through a bespoke titanium exhaust.",
-    image: "/Images-home/3cba9a2c6693afff6d71cfa1f7d8a0f2.jpg",
-    images: [],
-    features: ["Carbon Aero Package", "700 bhp Tune", "Bespoke Leather"],
+    price: "187,650 $",
+    description:"Where high-performance engineering meets the soul of a sports car. The Panamera Turbo E-Hybrid stands as a testament to Porsche's relentless pursuit of perfection. From its sharpened silhouette to the seamless integration of E-Hybrid technology, every detail is a canvas for individualization. Discover the art of driving, redefined by UNIDRIVE.",
+    image: "/top 4 cars/images/p/77b4ecacace0e00ca825fe3f710b4fa4.jpg",
+    images: [
+       "/top 4 cars/images/p/91bae0281fcb601cb6862e52d24f1b92.jpg",
+       "/top 4 cars/images/p/17544c7a9c7696f179eb060f6f37bb9e.jpg",
+       "/top 4 cars/images/p/e5a4f0465a94172e2129539c2200e208.jpg",  
+       "/top 4 cars/images/p/e9dfb7b838733afad4f9ac744e387b70.jpg",
+       "/top 4 cars/images/p/effaee768d1d2dd0ba49da4ce8f8e988.jpg"
+      ],
+    videoUrl: "/top 4 cars/Videos/P1.mp4",
+    trim: "Turbo E-Hybrid",
+    features: ["680 hp Combined Output", "Active Suspension", "Night Vision"],
     specs: {
-      Engine: "6.0L W12",
-      Power: "700 bhp",
-      Torque: "930 Nm",
-      "0–100 km/h": "3.6 s",
-    },
+      engine: "V8 Biturbo",
+      power: "680 HP",
+      zeroToSixty: "3.2s",
+      topSpeed: "315 km/h"
+    }
   },
   {
     id: "Mercedes‑Maybach S‑Class ",
