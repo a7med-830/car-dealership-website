@@ -1,21 +1,25 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import "./page-styles.css";
+import { allCars } from "@/lib/cars";
 
 // ─── ANIMATED BRAND LOGOS ────────────────────────────────────────────────────
 function AnimatedLogosBar() {
   const logos = [
-    { name: "Mercedes", file: "mercedes-benz-svgrepo-com.svg" },
-    { name: "Porsche", file: "porsche-svgrepo-com.svg" },
-    { name: "Rolls-Royce", file: "rolls-royce-svgrepo-com.svg" },
-    { name: "Ferrari", file: "ferrari-svgrepo-com.svg" },
     { name: "Aston Martin", file: "aston-martin-alt-svgrepo-com.svg" },
     { name: "Audi", file: "audi-svgrepo-com.svg" },
+    { name: "Rolls-Royce", file: "rolls-royce-svgrepo-com.svg" },
+    { name: "Mercedes", file: "mercedes-benz-svgrepo-com.svg" },
+    { name: "Ferrari", file: "ferrari-svgrepo-com.svg" },
+    { name: "Porsche", file: "porsche-svgrepo-com.svg" },
     { name: "Bentley", file: "bentley-svgrepo-com.svg" },
     { name: "BMW", file: "bmw-svgrepo-com.svg" },
     { name: "Cadillac", file: "cadillac-svgrepo-com.svg" },
     { name: "Lexus", file: "lexus-svgrepo-com.svg" },
+    { name: "Maserati", file: "maserati-svgrepo-com.svg" },
+    { name: "Genesis", file: "genesis-svgrepo-com.svg" },
     { name: "Maybach", file: "maybach-svgrepo-com.svg" },
   ];
 
@@ -189,7 +193,7 @@ const heroSlides = [
 const cars = [
   { id: 18, img: "/Images-home/339a5f9521cd849ed1b2a1ecd705752b.jpg", title: "Cadillac Escalade", tag: "ATELIER" },
   { id: 10, img: "/audi/a8/f.jpg", title: "Audi A8", tag: "BODY KIT" },
-  { id: 38, img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LS", tag: "WIDEBODY" },
+  { id: 38, img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LC", tag: "WIDEBODY" },
   { id: 4,  img: "/Images-home/7bd1840fef8b0744f217289ce3638892.jpg", title: "Maserati Quattroporte", tag: "FULL KIT" },
   { id: 34, img: "/Images-home/3e9b06168ed4cb828e16b2a348724f20.jpg", title: "Range Rover", tag: "ATELIER" },
 ];
@@ -477,42 +481,79 @@ function HeroSlider() {
 // ─── FIND YOUR DREAM MODEL ────────────────────────────────────────────────────
 function FindModel() {
   const ref = useReveal();
+  const router = useRouter();
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
+
+  // Get unique brands from allCars
+  const brands = Array.from(new Set(allCars.map(car => car.make))).sort();
+
+  // Filter models based on selected brand
+  const availableModels = selectedBrand
+    ? Array.from(new Set(
+        allCars
+          .filter(car => car.make === selectedBrand)
+          .map(car => car.model)
+      )).sort()
+    : [];
+
+  // Reset model when brand changes
+  useEffect(() => {
+    setSelectedModel("");
+  }, [selectedBrand]);
+
+  const handleSearch = () => {
+    if (!selectedBrand) {
+      alert("Please select a brand");
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.append("brand", selectedBrand);
+    if (selectedModel) {
+      params.append("model", selectedModel);
+    }
+
+    router.push(`/inventory?${params.toString()}`);
+  };
+
   return (
     <section style={{ background: "var(--dark2)", padding: "80px 40px" }}>
       <div ref={ref} className="reveal" style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.3em", color: "var(--gold)", marginBottom: 14 }}>
-          CONFIGURATION
-        </div>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(22px, 3.5vw, 40px)", letterSpacing: "0.08em", color: "var(--white)", marginBottom: 48, fontWeight: 500 }}>
           FIND YOUR DREAM MODEL
         </h2>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", alignItems: "stretch" }}>
           <div className="select-wrap" style={{ flex: "1 1 220px", minWidth: 180 }}>
-            <select className="custom-select">
+            <select 
+              className="custom-select"
+              value={selectedBrand}
+              onChange={(e) => setSelectedBrand(e.target.value)}
+            >
               <option value="">SELECT BRAND</option>
-              <option>BMW</option>
-              <option>CADILLAC</option>
-              <option>LEXUS</option>
-              <option>AUDI</option>
-              <option>TESLA</option>
-              <option>ROLLS-ROYCE</option>
-              <option>ASTON MARTIN</option>
-              <option>BENTLEY</option>
-              <option>MERCEDES</option>
-              <option>PORSCHE</option>
+              {brands.map(brand => (
+                <option key={brand} value={brand}>{brand}</option>
+              ))}
             </select>
           </div>
           <div className="select-wrap" style={{ flex: "1 1 220px", minWidth: 180 }}>
-            <select className="custom-select">
+            <select 
+              className="custom-select"
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              disabled={!selectedBrand}
+            >
               <option value="">SELECT MODEL</option>
-              <option>CULLINAN</option>
-              <option>PHANTOM</option>
-              <option>GHOST</option>
-              <option>URUS</option>
-              <option>HURACÁN</option>
+              {availableModels.map(model => (
+                <option key={model} value={model}>{model}</option>
+              ))}
             </select>
           </div>
-          <button className="btn-solid" style={{ flex: "0 0 auto", alignSelf: "stretch", padding: "0 40px" }}>
+          <button 
+            className="btn-solid"
+            onClick={handleSearch}
+            style={{ flex: "0 0 auto", alignSelf: "stretch", padding: "0 40px", opacity: selectedBrand ? 1 : 0.5, cursor: selectedBrand ? "pointer" : "not-allowed" }}
+          >
             SEARCH
           </button>
         </div>
