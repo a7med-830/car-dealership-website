@@ -1,262 +1,7 @@
 "use client";
-// استدعاء الداتا الحقيقية
-import { allCars } from "@/lib/carsData";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-const FontLoader = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --black: #000000;
-      --dark: #0a0a0a;
-      --dark2: #111111;
-      --dark3: #1a1a1a;
-      --border: #222222;
-      --border2: #2e2e2e;
-      --text-dim: #666666;
-      --text-mid: #999999;
-      --text-light: #cccccc;
-      --white: #ffffff;
-      --gold: #c9a96e;
-      --font-display: 'Cinzel', serif;
-      --font-body: 'Montserrat', sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--black);
-      color: var(--white);
-      font-family: var(--font-body);
-      overflow-x: hidden;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--black); }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-    /* Loading Screen Animations */
-    .loader-container {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
-    .loader-container.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .loader-text {
-      font-family: var(--font-display);
-      font-size: clamp(24px, 5vw, 48px);
-      letter-spacing: 0.3em;
-      color: var(--white);
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-      50% { opacity: 0.4; text-shadow: 0 0 0px rgba(255,255,255,0); }
-    }
-
-    /* Fade-in animation */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(32px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    @keyframes slideLeft {
-      from { opacity: 0; transform: translateX(40px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes kenBurns {
-      from { transform: scale(1); }
-      to   { transform: scale(1.06); }
-    }
-    @keyframes lineExpand {
-      from { width: 0; }
-      to   { width: 48px; }
-    }
-
-    .animate-fadeUp  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
-    .animate-fadeIn  { animation: fadeIn 1.2s ease forwards; }
-    .animate-slideLeft { animation: slideLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
-    .opacity-0 { opacity: 0; }
-
-    /* Hero slider */
-    .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s cubic-bezier(0.4,0,0.2,1); }
-    .hero-slide.active { opacity: 1; }
-    .hero-slide.active .hero-img { animation: kenBurns 10s ease forwards; }
-    .hero-img { width: 100%; height: 100%; object-fit: cover; transform-origin: center center; }
-
-    /* Card hover */
-    .card-img-wrap { overflow: hidden; }
-    .card-img-wrap img { transition: transform 0.8s cubic-bezier(0.16,1,0.3,1); }
-    .card-root:hover .card-img-wrap img { transform: scale(1.05); }
-    .card-root:hover .card-overlay { opacity: 1; }
-    .card-overlay { opacity: 0; transition: opacity 0.4s ease; }
-
-    /* Split hover */
-    .split-panel { overflow: hidden; }
-    .split-panel img { transition: transform 1s cubic-bezier(0.16,1,0.3,1), filter 0.6s ease; }
-    .split-panel:hover img { transform: scale(1.04); filter: brightness(0.65); }
-    .split-panel .split-label { transition: letter-spacing 0.4s ease, color 0.4s ease; }
-    .split-panel:hover .split-label { letter-spacing: 0.25em; color: var(--white); }
-
-    /* Nav link underline */
-    .nav-link { position: relative; }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0;
-      width: 0; height: 1px;
-      background: var(--white);
-      transition: width 0.3s ease;
-    }
-    .nav-link:hover::after { width: 100%; }
-
-    /* Button styles */
-    .btn-outline {
-      display: inline-block;
-      border: 1px solid rgba(255,255,255,0.35);
-      color: var(--white);
-      letter-spacing: 0.15em;
-      font-family: var(--font-body);
-      font-size: 10px;
-      font-weight: 500;
-      padding: 13px 32px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-      background: transparent;
-      text-decoration: none;
-    }
-    .btn-outline:hover {
-      background: var(--white);
-      color: var(--black);
-      border-color: var(--white);
-    }
-
-    .btn-solid {
-      display: inline-block;
-      background: var(--white);
-      color: var(--black);
-      letter-spacing: 0.15em;
-      font-family: var(--font-body);
-      font-size: 10px;
-      font-weight: 600;
-      padding: 13px 32px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
-      border: 1px solid var(--white);
-      text-decoration: none;
-    }
-    .btn-solid:hover {
-      background: transparent;
-      color: var(--white);
-    }
-
-    /* Dropdown */
-    .custom-select {
-      appearance: none;
-      background: var(--dark2);
-      border: 1px solid var(--border2);
-      color: var(--text-mid);
-      font-family: var(--font-body);
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      padding: 14px 40px 14px 18px;
-      text-transform: uppercase;
-      cursor: pointer;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-    .custom-select:focus { border-color: var(--text-dim); }
-    .select-wrap { position: relative; }
-    .select-wrap::after {
-      content: '';
-      position: absolute;
-      right: 16px; top: 50%;
-      transform: translateY(-50%);
-      width: 8px; height: 8px;
-      border-right: 1px solid var(--text-dim);
-      border-bottom: 1px solid var(--text-dim);
-      transform: translateY(-65%) rotate(45deg);
-      pointer-events: none;
-    }
-
-    /* News item */
-    .news-item { border-bottom: 1px solid var(--border); transition: border-color 0.3s; }
-    .news-item:hover { border-color: var(--text-dim); }
-    .news-item:hover .news-title { color: var(--white); }
-    .news-title { transition: color 0.3s ease; color: var(--text-light); }
-
-    /* Footer link */
-    .footer-link { color: var(--text-dim); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; display: block; transition: color 0.3s; margin-bottom: 12px; }
-    .footer-link:hover { color: var(--white); }
-
-    /* Social icon */
-    .social-icon { width: 38px; height: 38px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; transition: border-color 0.3s, background 0.3s; cursor: pointer; }
-    .social-icon:hover { border-color: var(--white); background: var(--white); }
-    .social-icon:hover svg { fill: var(--black); }
-    .social-icon svg { fill: var(--text-dim); transition: fill 0.3s; }
-
-    /* Section title accent */
-    .section-accent {
-      display: inline-block;
-      width: 0;
-      height: 1px;
-      background: var(--gold);
-      margin-right: 14px;
-      vertical-align: middle;
-      animation: lineExpand 0.8s ease 0.3s forwards;
-    }
-
-    /* Mobile menu */
-    .mobile-menu { transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
-    .mobile-menu.open { transform: translateX(0); }
-
-    /* Swiper dots */
-    .hero-dot { width: 28px; height: 2px; background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.3s, width 0.3s; }
-    .hero-dot.active { background: var(--white); width: 48px; }
-
-    /* Carousel custom nav */
-    .carousel-arrow { width: 44px; height: 44px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.3s, background 0.3s; }
-    .carousel-arrow:hover { border-color: var(--white); background: var(--white); }
-    .carousel-arrow:hover svg { stroke: var(--black); }
-    .carousel-arrow svg { stroke: var(--text-dim); transition: stroke 0.3s; }
-
-    /* Intersection observer helper */
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.35s; }
-    .reveal-delay-4 { transition-delay: 0.5s; }
-
-    @media (max-width: 768px) {
-      .desktop-nav { display: none; }
-      .mobile-toggle { display: flex; }
-    }
-    @media (min-width: 769px) {
-      .mobile-toggle { display: none; }
-      .mobile-menu-overlay { display: none; }
-    }
-  `}</style>
-);
+import "./page-styles.css";
 
 // ─── ANIMATED BRAND LOGOS ────────────────────────────────────────────────────
 function AnimatedLogosBar() {
@@ -415,7 +160,7 @@ const heroSlides = [
     tag: "Mercedes‑Maybach", 
   },
   {
-    id: "UNIDRIVE-rolls-phantom", 
+    id: "Mansory-rolls-phantom", 
     img: "/Images-home/1b68f3d98661e13530dc0bbda4e2cefe.jpg",
     eyebrow: "NEW ARRIVAL",
     title: "ULTRA LUXURY\nCULLINAN II",
@@ -424,7 +169,7 @@ const heroSlides = [
   },
   {
     id: 28, 
-    img: "/Images-home/3cba9a2c6693afff6d71cfa1f7d8a0f2.jpg",
+    img: "/Images-home/Porsche-Panamera-2024-Rear.jpg",
     eyebrow: "EXCLUSIVE",
     title: "Porsche Panamera",
     sub: "CARBON EDITION",
@@ -432,7 +177,7 @@ const heroSlides = [
   },
   {
     id: "BMW 8 Series", 
-    img: "/Images-home/a8569c342b364babc26e498dcf6c0dca.jpg",
+    img: "/Images-home/bmw-m8-black-2.png",
     eyebrow: "LIMITED",
     title: "BMW 8 Series",
     sub: "WIDEBODY PROGRAM",
@@ -442,11 +187,11 @@ const heroSlides = [
 
 // ─── CARS DATA ────────────────────────────────────────────────────────────────
 const cars = [
-  { img: "/Images-home/339a5f9521cd849ed1b2a1ecd705752b.jpg", title: "Cadillac Escalade", tag: "ATELIER" },
-  { img: "/Images-home/819b8c90922e933186acf8184e2d24d1.jpg", title: "Audi A8", tag: "BODY KIT" },
-  { img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LS", tag: "WIDEBODY" },
-  { img: "/Images-home/7bd1840fef8b0744f217289ce3638892.jpg", title: "Maserati Quattroporte", tag: "FULL KIT" },
-  { img: "/Images-home/3e9b06168ed4cb828e16b2a348724f20.jpg", title: "Range Rover", tag: "ATELIER" },
+  { id: 18, img: "/Images-home/339a5f9521cd849ed1b2a1ecd705752b.jpg", title: "Cadillac Escalade", tag: "ATELIER" },
+  { id: 10, img: "/audi/a8/f.jpg", title: "Audi A8", tag: "BODY KIT" },
+  { id: 38, img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LS", tag: "WIDEBODY" },
+  { id: 4,  img: "/Images-home/7bd1840fef8b0744f217289ce3638892.jpg", title: "Maserati Quattroporte", tag: "FULL KIT" },
+  { id: 34, img: "/Images-home/3e9b06168ed4cb828e16b2a348724f20.jpg", title: "Range Rover", tag: "ATELIER" },
 ];
 
 // ─── NEWS DATA ────────────────────────────────────────────────────────────────
@@ -820,13 +565,14 @@ function LatestCarousel() {
             }}>
               <div className="card-img-wrap" style={{ position: "relative", aspectRatio: "4/3", overflow: "hidden", marginBottom: 18 }}>
                 <img src={car.img} alt={car.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                <div className="card-overlay" style={{
+                <Link href={`/inventory/${car.id}`} className="card-overlay" style={{
                   position: "absolute", inset: 0,
                   background: "rgba(0,0,0,0.4)",
                   display: "flex", alignItems: "center", justifyContent: "center",
+                  textDecoration: "none",
                 }}>
                   <span className="btn-outline" style={{ fontSize: 9, padding: "10px 24px" }}>DISCOVER</span>
-                </div>
+                </Link>
                 <div style={{
                   position: "absolute", top: 14, left: 14,
                   fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: "0.2em",
@@ -1069,8 +815,6 @@ export default function App() {
 
   return (
     <>
-      <FontLoader />
-
       {/* Loading Screen Overlay */}
       <div className={`loader-container ${!loading ? 'hidden' : ''}`}>
          <div className="loader-text">UNIDRIVE</div>
