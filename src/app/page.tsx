@@ -275,12 +275,13 @@ function AnimatedLogosBar() {
   ];
 
   return (
-    <section style={{
+    <section id="brands" style={{
       background: "var(--dark1)",
       padding: "60px 40px",
       overflow: "hidden",
       borderTop: "1px solid var(--border)",
       borderBottom: "1px solid var(--border)",
+      scrollMarginTop: "50vh",
     }}>
       <style>{`
         @keyframes scrollLogoBar {
@@ -531,11 +532,16 @@ function Header() {
           {/* LEFT NAV */}
           <nav className="desktop-nav" style={{ display: "flex", gap: 36 }}>
             {navLeft.map(item => (
-              <Link key={item} href={ item === "BRANDS" ? "#scroll" : "#" } className="nav-link" style={{
+              <Link key={item} href={ item === "BRANDS" ? "#brands" : item === "CARS FOR SALE" ? "/inventory" : "#" } className="nav-link" style={{
                 fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
                 letterSpacing: "0.14em", color: "var(--text-light)",
                 textDecoration: "none", textTransform: "uppercase",
-              }}>{item}</Link>
+                transition: "color 0.3s ease",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = "var(--white)"}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = "var(--text-light)"}
+              >{item}</Link>
             ))}
           </nav>
 
@@ -588,18 +594,29 @@ function Header() {
           background: "none", border: "none", color: "var(--white)", cursor: "pointer",
         }}><CloseIcon /></button>
         
-        {[...navLeft, ...navRight].map(item => (
-          <Link 
-            key={item} 
-            href={item === "INVENTORY" ? "/inventory" : "#"} 
-            onClick={() => setMobileOpen(false)}
-            style={{
-              display: "block", fontFamily: "var(--font-body)", fontSize: 11,
-              letterSpacing: "0.16em", color: "var(--text-light)", textDecoration: "none",
-              textTransform: "uppercase", marginBottom: 28, borderBottom: "1px solid var(--border)",
-              paddingBottom: 28,
-          }}>{item}</Link>
-        ))}
+        {[...navLeft, ...navRight].map(item => {
+          let href = "#";
+          if (item === "BRANDS") href = "#brands";
+          if (item === "CARS FOR SALE") href = "/inventory";
+          if (item === "INVENTORY") href = "/inventory";
+          if (item === "FIND A DEALER" || item === "CONTACT") href = "#contact";
+          
+          return (
+            <Link 
+              key={item} 
+              href={href} 
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: "block", fontFamily: "var(--font-body)", fontSize: 11,
+                letterSpacing: "0.16em", color: "var(--text-light)", textDecoration: "none",
+                textTransform: "uppercase", marginBottom: 28, borderBottom: "1px solid var(--border)",
+                paddingBottom: 28, transition: "color 0.3s",
+              }}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = "var(--white)"}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = "var(--text-light)"}
+            >{item}</Link>
+          );
+        })}
       </div>
     </>
   );
@@ -899,61 +916,45 @@ function SplitCategories() {
   return (
     <section style={{ display: "flex", height: "clamp(360px, 50vw, 640px)" }}>
       {/* ALL CARS */}
-      <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden" }}>
-        <img src="/Images-home/ff74324e3edafd5db62bfae27ed91351.jpg"
-          alt="All Cars" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
-          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
-          <h3 className="split-label" style={{
-            fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
-            letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
-          }}>ALL CARS</h3>
-          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+      <Link href="/inventory" style={{ flex: 1, textDecoration: "none" }}>
+        <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden", height: "100%" }}>
+          <img src="/Images-home/ff74324e3edafd5db62bfae27ed91351.jpg"
+            alt="All Cars" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+            <h3 className="split-label" style={{
+              fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
+              letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
+            }}>ALL CARS</h3>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Divider */}
       <div style={{ width: 1, background: "var(--black)", flexShrink: 0 }} />
 
-      {/* RIMS */}
-      <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden" }}>
-        <img src="/Images-home/photo-1558618666-fcd25c85cd64.jpg"
-          alt="Rims" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
-          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
-          <h3 className="split-label" style={{
-            fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
-            letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
-          }}>RIMS</h3>
-          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+      {/* SERVICES */}
+      <Link href="/inventory" style={{ flex: 1, textDecoration: "none" }}>
+        <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden", height: "100%" }}>
+          <img src="/Images-home/photo-1558618666-fcd25c85cd64.jpg"
+            alt="Rims" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+            <h3 className="split-label" style={{
+              fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
+              letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
+            }}>SERVICES</h3>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+          </div>
         </div>
-      </div>
+      </Link>
     </section>
   );
 }
 
-// ─── BRAND STRIP ──────────────────────────────────────────────────────────────
-function BrandStrip() {
-  const brands = ["BMW", "CADILLAC", "LEXUS", "AUDI", "TESLA", "ROLLS-ROYCE", "ASTON MARTIN", "BENTLEY", "MERCEDES", "PORSCHE"];
-  return (
-    <section style={{ background: "var(--dark3)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "22px 40px", overflow: "hidden" }}>
-      <div style={{ display: "flex", gap: 52, justifyContent: "center", flexWrap: "wrap" }}>
-        {brands.map(b => (
-          <span key={b} style={{
-            fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.2em",
-            color: "var(--text-dim)", fontWeight: 500, cursor: "pointer",
-            transition: "color 0.3s",
-          }}
-            onMouseEnter={e => (e.target as HTMLElement).style.color = "var(--white)"}
-            onMouseLeave={e => (e.target as HTMLElement).style.color = "var(--text-dim)"}
-          >{b}</span>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 // ─── CTA BANNER ───────────────────────────────────────────────────────────────
 function CTABanner() {
@@ -971,12 +972,12 @@ function CTABanner() {
           BESPOKE EXPERIENCE
         </div>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(22px, 4vw, 52px)", letterSpacing: "0.06em", color: "var(--white)", fontWeight: 500 }}>
-          CONFIGURE YOUR DREAM
+          CHOOSE YOUR DREAM CAR
         </h2>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: "0.08em", color: "var(--text-mid)", maxWidth: 480, lineHeight: 1.9, fontWeight: 300 }}>
           Every detail crafted to your specification. Begin your personal journey into the world of automotive excellence.
         </p>
-        <a href="#" className="btn-outline">START CONFIGURATOR</a>
+        <a href="#" className="btn-outline">CONTACT US NOW</a>
       </div>
     </section>
   );
@@ -985,7 +986,7 @@ function CTABanner() {
 // ─── FOOTER ───────────────────────────────────────────────────────────────────
 function Footer() {
   const cols = [
-    { title: "MODELS", links: ["ALL CARS", "BODY KITS", "INTERIOR", "RIMS", "ACCESSORIES"] },
+    { title: "MODELS", links: ["ALL CARS", "BODY KITS", "INTERIOR", "SERVICES", "ACCESSORIES"] },
     { title: "COMPANY", links: ["ABOUT US", "ATELIER", "CONFIGURATOR", "CAREERS", "PRESS"] },
     { title: "SUPPORT", links: ["FIND A DEALER", "CONTACT", "FAQ", "SHIPPING", "WARRANTY"] },
     { title: "LEGAL", links: ["IMPRINT", "PRIVACY POLICY", "TERMS OF USE", "COOKIES"] },

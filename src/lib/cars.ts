@@ -28,7 +28,7 @@ export const allCars: Car[] = [
 
   // ── BMW ────────────────────────────────────────────────────────────────────
  {
-  id: 1, // تقدر تغير الـ ID حسب ترتيبك
+  id: 1,
   name: "M760i xDrive",
   make: "BMW",
   model: "7 Series M-Performance",
@@ -124,7 +124,7 @@ export const allCars: Car[] = [
   ]
 },
 
-  // ── CADILLAC ───────────────────────────────────────────────────────────────
+  // ── MASERATI ───────────────────────────────────────────────────────────────
   {
     id: 4,
     name: " Levante Trofeo",
@@ -177,7 +177,11 @@ export const allCars: Car[] = [
     drivetrain: "4WD",
     seats: 5,
     description: "The 2026 Maserati Grecale Cristallo is a rare 'Fuoriserie' masterpiece, finished in the exclusive Azzurro Aureo paint inspired by the snowy Alps. This Modena-based edition features a 325hp mild-hybrid engine, ice-white leather interiors, and 21-inch CRIO wheels, celebrating the peak of Italian luxury and alpine elegance.",  
-    features: ["Exclusive Azzurro Aureo Paint", "2.0L Turbo Mild-Hybrid Engine", "21-inch CRIO Diamond-Cut Wheels", "Ice-White Premium Leather Interior", "Sonus faber 14-Speaker Audio", "Adaptive Air Suspension", "Milano-Cortina 2026 Special Edition"],  },
+    features: ["Exclusive Azzurro Aureo Paint", "2.0L Turbo Mild-Hybrid Engine", "21-inch CRIO Diamond-Cut Wheels", "Ice-White Premium Leather Interior", "Sonus faber 14-Speaker Audio", "Adaptive Air Suspension", "Milano-Cortina 2026 Special Edition"],  
+  },
+    
+
+    // ── CADILLAC ───────────────────────────────────────────────────────────────
   {
     id: 6,
     name: "CT6 Premium Luxury",
@@ -204,7 +208,36 @@ export const allCars: Car[] = [
     drivetrain: "AWD",
     seats: 5,
     description: "The 2026 Cadillac CT6 is the pinnacle of American-inspired luxury sedans. Now featuring an industry-leading 33-inch 9K curved display and Magnetic Ride Control 4.0, it offers a seamless blend of sophisticated technology and effortless performance, making it the ultimate choice for those who seek executive-level comfort in a modern fastback design.",
-    features: ["33-inch 9K Curved LED Display", "Magnetic Ride Control 4.0", "Super Cruise™ Hands-Free Driving", "AKG Studio 19-Speaker Audio System", "Signature Vertical Matrix LED Lighting", "Nappa Leather Interior with Dark Ash Wood", "20-inch High-Gloss Alloy Wheels"]  },
+    features: ["33-inch 9K Curved LED Display", "Magnetic Ride Control 4.0", "Super Cruise™ Hands-Free Driving", "AKG Studio 19-Speaker Audio System", "Signature Vertical Matrix LED Lighting", "Nappa Leather Interior with Dark Ash Wood", "20-inch High-Gloss Alloy Wheels"]  
+  },
+  {
+    id: 18,
+    name: "Escalade V-Series",
+    make: "Cadillac",
+    model: "Escalade V-Series",
+    year: 2025,
+    price: 169000,
+    body: "SUV",
+    color: "Black Raven",
+    mileage: "New",
+    mpg: "13 city / 18 hwy",
+    image: "/Cadillac/image (11).jpg",
+    images: [
+      "/Cadillac/image (11).jpg",
+      "/Cadillac/image (12).jpg",
+      "/Cadillac/image (13).jpg",
+      "/Cadillac/image (14).jpg",
+    ],
+    badge: "V-Series",
+    trim: "Sport Platinum",
+    engine: "6.2L Supercharged V8 (682 hp)",
+    transmission: "10-Speed Automatic",
+    drivetrain: "4WD",
+    seats: 7,
+    description: "The 2025 Cadillac Escalade V-Series is the most powerful SUV ever from Cadillac. Powered by a hand-assembled 6.2L supercharged V8 producing 682 horsepower, this high-performance luxury SUV delivers breathtaking acceleration while maintaining the sophisticated comfort expected from the Escalade lineup.",
+    features: ["682 hp Supercharged V8 Engine", "Magnetic Ride Control", "Air Ride Adaptive Suspension", "Super Cruise Hands-Free Driving", "AKG Studio 19-Speaker Audio", "Panoramic LED Display", "Night Vision Technology", "Heavy-Duty Trailering Package"],
+  },
+
 
   // ── LEXUS ──────────────────────────────────────────────────────────────────
   {
@@ -530,34 +563,7 @@ export const allCars: Car[] = [
     description: "The Cullinan Black Badge is for those who push boundaries. The Black Badge treatment deepens the Cullinan's character — a darker, more assertive Rolls-Royce that conquers any terrain without surrendering a single ounce of luxury.",
     features: ["Black Badge Darkened Trim", "All-Terrain Capability", "Recreation Module", "Viewing Suite Tailgate Seating", "Panoramic Sunroof", "Self-Closing Doors", "4-Camera Surround View", "Night Vision"],
   },
-  // ── CADILLAC ───────────────────────────────────────────────────────────────
-  {
-    id: 18,
-    name: "Escalade V-Series",
-    make: "Cadillac",
-    model: "Escalade V-Series",
-    year: 2025,
-    price: 169000,
-    body: "SUV",
-    color: "Black Raven",
-    mileage: "New",
-    mpg: "13 city / 18 hwy",
-    image: "/Cadillac/escalade_v_21284_v9-1.avif",
-    images: [
-      "/Cadillac/image (11).jpg",
-      "/Cadillac/image (12).jpg",
-      "/Cadillac/image (13).jpg",
-      "/Cadillac/image (14).jpg",
-    ],
-    badge: "V-Series",
-    trim: "Sport Platinum",
-    engine: "6.2L Supercharged V8 (682 hp)",
-    transmission: "10-Speed Automatic",
-    drivetrain: "4WD",
-    seats: 7,
-    description: "The 2025 Cadillac Escalade V-Series is the most powerful SUV ever from Cadillac. Powered by a hand-assembled 6.2L supercharged V8 producing 682 horsepower, this high-performance luxury SUV delivers breathtaking acceleration while maintaining the sophisticated comfort expected from the Escalade lineup.",
-    features: ["682 hp Supercharged V8 Engine", "Magnetic Ride Control", "Air Ride Adaptive Suspension", "Super Cruise Hands-Free Driving", "AKG Studio 19-Speaker Audio", "Panoramic LED Display", "Night Vision Technology", "Heavy-Duty Trailering Package"],
-  },
+
 
   // ── ASTON MARTIN ───────────────────────────────────────────────────────────
   {
@@ -627,9 +633,8 @@ export const allCars: Car[] = [
     color: "Caribbean Blue Metallic",
     mileage: "New",
     mpg: "16 city / 23 hwy",
-    image: "public/Aston Martin/image (57).jpg",
+    image: "/Aston Martin/image (57).jpg",
     images: [
-     
       "/Aston Martin/image (57).jpg",
       "/Aston Martin/image (60).jpg",
       "/Aston Martin/image (59).jpg",
