@@ -309,7 +309,7 @@ function Header() {
             {navRight.map(item => (
               <Link 
                 key={item} 
-                href={item === "INVENTORY" ? "/inventory" : "#"} 
+                href={item === "INVENTORY" ? "/inventory" : item === "CONTACT" ? "/contact" : item === "FIND A DEALER" ? "/contact" : "#"} 
                 className="nav-link" 
                 style={{
                   fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
@@ -348,7 +348,7 @@ function Header() {
           if (item === "BRANDS") href = "#brands";
           if (item === "CARS FOR SALE") href = "/inventory";
           if (item === "INVENTORY") href = "/inventory";
-          if (item === "FIND A DEALER" || item === "CONTACT") href = "#contact";
+          if (item === "FIND A DEALER" || item === "CONTACT") href = "/contact";
           
           return (
             <Link 
@@ -764,7 +764,7 @@ function CTABanner() {
         <p style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: "0.08em", color: "var(--text-mid)", maxWidth: 480, lineHeight: 1.9, fontWeight: 300 }}>
           Every detail crafted to your specification. Begin your personal journey into the world of automotive excellence.
         </p>
-        <a href="#" className="btn-outline">CONTACT US NOW</a>
+        <a href="/contact" className="btn-outline">CONTACT US NOW</a>
       </div>
     </section>
   );

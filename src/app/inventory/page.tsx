@@ -40,7 +40,7 @@ function Navbar() {
           UNIDRIVE
         </Link>
         <div className="m-desktop" style={{ display: "flex", gap: 40, alignItems: "center" }}>
-          {[["INVENTORY", "/inventory"], ["ABOUT", "/#about"], ["CONTACT", "/#contact"]].map(([label, href]) => (
+          {[["INVENTORY", "/inventory"], ["ABOUT", "/#about"], ["CONTACT", "/contact"]].map(([label, href]) => (
             <Link key={label} href={href} className="m-nav-link"
               style={{ fontFamily: "var(--sans)", fontSize: 10, letterSpacing: "0.16em", color: label === "INVENTORY" ? "var(--white)" : "var(--mid)", fontWeight: label === "INVENTORY" ? 500 : 400 }}>
               {label}
