@@ -42,7 +42,6 @@ export const allCars: Car[] = [
   images: [
     "/bmw/m7/f.jpg",
     "/bmw/m7/s.jpg",
-    "/bmw/m8/f.jpg",
     "/bmw/m7/r.jpg",
     "/bmw/m7/i2.jpg",
   ],
@@ -71,12 +70,13 @@ export const allCars: Car[] = [
   color: "Red",
   mileage: "New",
   mpg: "Petrol",
-  image: "/bmw/m8/f.jpg",
+  image: "/bmw/m8/main.jpg",
   images: [
+  "/bmw/m8/main.jpg",
+  "/bmw/m8/r.jpg",
   "/bmw/m8/f.jpg",
   "/bmw/m8/s.jpg",
   "/bmw/m8/i.jpg",
-  "/bmw/m8/r.jpg",
   "/bmw/m8/b.jpg",
   ],
   badge: "Competition",

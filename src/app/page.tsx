@@ -191,11 +191,11 @@ const heroSlides = [
 
 // ─── CARS DATA ────────────────────────────────────────────────────────────────
 const cars = [
-  { id: 18, img: "/Images-home/339a5f9521cd849ed1b2a1ecd705752b.jpg", title: "Cadillac Escalade", tag: "ATELIER" },
-  { id: 10, img: "/audi/a8/f.jpg", title: "Audi A8", tag: "BODY KIT" },
-  { id: 38, img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LC", tag: "WIDEBODY" },
-  { id: 4,  img: "/Images-home/7bd1840fef8b0744f217289ce3638892.jpg", title: "Maserati Quattroporte", tag: "FULL KIT" },
-  { id: 34, img: "/Images-home/3e9b06168ed4cb828e16b2a348724f20.jpg", title: "Range Rover", tag: "ATELIER" },
+  { id: 18, img: "/Images-home/339a5f9521cd849ed1b2a1ecd705752b.jpg", title: "Cadillac Escalade", tag: "NEW" },
+  { id: 10, img: "/audi/a8/f.jpg", title: "Audi A8", tag: "NEW" },
+  { id: 8, img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LC", tag: "NEW" },
+  { id: 4,  img: "/Ferrari/Ferrari Purosangue/photo1.jpg", title: "Ferrari PUROSANGUE", tag: "NEW" },
+  { id: 34, img: "/Images-home/3e9b06168ed4cb828e16b2a348724f20.jpg", title: "Range Rover", tag: "NEW" },
 ];
 
 // ─── NEWS DATA ────────────────────────────────────────────────────────────────
@@ -723,7 +723,7 @@ function SplitCategories() {
       <div style={{ width: 1, background: "var(--black)", flexShrink: 0 }} />
 
       {/* SERVICES */}
-      <Link href="/inventory" style={{ flex: 1, textDecoration: "none" }}>
+      <Link href="/contact" style={{ flex: 1, textDecoration: "none" }}>
         <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden", height: "100%" }}>
           <img src="/Images-home/photo-1558618666-fcd25c85cd64.jpg"
             alt="Rims" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
