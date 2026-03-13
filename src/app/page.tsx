@@ -172,8 +172,8 @@ const heroSlides = [
     tag: "ROLLS-ROYCE",
   },
   {
-    id: 28, 
-    img: "/Images-home/Porsche-Panamera-2024-Rear.jpg",
+    id: "porsche-panamera", 
+    img: "/Images-home/3cba9a2c6693afff6d71cfa1f7d8a0f2.jpg",
     eyebrow: "EXCLUSIVE",
     title: "Porsche Panamera",
     sub: "CARBON EDITION",
@@ -265,6 +265,13 @@ function Header() {
 
   const navLeft = ["BRANDS", "CARS FOR SALE", "CONFIGURATOR"];
   const navRight = ["INVENTORY", "FIND A DEALER", "CONTACT"];
+
+
+  const getLink = (item: string) => {
+    if (item === "INVENTORY") return "/inventory";
+    if (item === "FIND A DEALER") return "/dealers"; 
+    return "#";
+  };
 
   return (
     <>
@@ -432,7 +439,7 @@ function HeroSlider() {
           color: "var(--text-mid)", marginBottom: 40, fontWeight: 400,
         }}>{slide.sub}</div>
 
-        {/* 👇 التعديل هنا: الزرار بقى مربوط بالـ id بتاع العربية 👇 */}
+        
         <div className="animate-fadeUp opacity-0" style={{ animationDelay: "0.55s" }}>
           <Link href={`/cars/${slide.id}`} className="btn-outline">
             DISCOVER NOW 

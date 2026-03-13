@@ -12,7 +12,8 @@ export interface Car {
   images: string[];
   features: string[];
   specs: Record<string, string>;
-  videoUrl?: string;
+  videoUrl?: string; 
+  videoFocus?: string;
 }
 
 export const allCars: Car[] = [
@@ -44,25 +45,25 @@ export const allCars: Car[] = [
       "Rear Theatre Configuration",
     ],
     specs: {
-      Engine: "6.75L Twin-Turbo V12",
-      Power: "571 bhp",
-      Torque: "900 Nm",
+      "Engine": "6.75L Twin-Turbo V12",
+      "Power": "571 bhp",
+      "Torque": "900 Nm",
       "0–100 km/h": "5.3 s",
       "Top Speed": "250 km/h",
-      Weight: "2,560 kg",
-      Transmission: "8-speed Automatic",
-      Drivetrain: "RWD",
+      "Weight": "2,560 kg",
+      "Transmission": "8-speed Automatic",
+      "Drivetrain": "RWD",
     },
     videoUrl: "/top 4 cars/Videos/R1.mp4",
   },
   
-  
-  {id: "28", 
-    name: " Porsche ",
-    make: "Panamera",
+  {
+    id: "porsche-panamera", // غيرت الـ ID لاسم أوضح بدل 28
+    make: "PORSCHE", 
+    name: "PANAMERA", 
     year: 2024,
-    price: "187,650 $",
-    description:"Where high-performance engineering meets the soul of a sports car. The Panamera Turbo E-Hybrid stands as a testament to Porsche's relentless pursuit of perfection. From its sharpened silhouette to the seamless integration of E-Hybrid technology, every detail is a canvas for individualization. Discover the art of driving, redefined by UNIDRIVE.",
+    price: "$ 187,650",
+    description: "Where high-performance engineering meets the soul of a sports car. The Panamera Turbo E-Hybrid stands as a testament to Porsche's relentless pursuit of perfection. From its sharpened silhouette to the seamless integration of E-Hybrid technology, every detail is a canvas for individualization. Discover the art of driving, redefined by UNIDRIVE.",
     image: "/top 4 cars/images/p/77b4ecacace0e00ca825fe3f710b4fa4.jpg",
     images: [
        "/top 4 cars/images/p/91bae0281fcb601cb6862e52d24f1b92.jpg",
@@ -75,12 +76,14 @@ export const allCars: Car[] = [
     trim: "Turbo E-Hybrid",
     features: ["680 hp Combined Output", "Active Suspension", "Night Vision"],
     specs: {
-      engine: "V8 Biturbo",
-      power: "680 HP",
-      zeroToSixty: "3.2s",
-      topSpeed: "315 km/h"
+      "Engine": "4.0L V8 Biturbo Hybrid", // تم توحيد أسماء المواصفات
+      "Power": "680 bhp",
+      "Torque": "850 Nm",
+      "0–100 km/h": "3.2 s",
+      "Top Speed": "315 km/h"
     }
   },
+
   {
     id: "Mercedes",
     make: "Mercedes‑Maybach",
@@ -101,11 +104,11 @@ export const allCars: Car[] = [
     videoUrl: "/top 4 cars/Videos/m1.mp4",
     features: ["Dry Carbon Monocoque", "1,100 bhp Hybrid", "Active Aero"],
     specs: {
-      Engine: "4.0L Twin-Turbo V8 + 3× Electric",
-      Power: "1,100 bhp",
-      Torque: "800 Nm",
-      "0–100 km/h": "2.4 s",
-    },
+      "Engine": "6.0L Bi-Turbo V12", 
+      "Power": "612 bhp",
+      "Torque": "900 Nm",
+      "0–100 km/h": "4.5 s"
+    }
   },
 {
     id: "cadillac",
@@ -135,7 +138,6 @@ export const allCars: Car[] = [
     },
   },
 ];
-
 export function getCarById(id: string): Car | undefined {
   return allCars.find((c) => c.id === id);
 }
