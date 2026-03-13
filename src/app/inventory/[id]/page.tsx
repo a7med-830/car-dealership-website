@@ -91,11 +91,23 @@ export default function CarDetailPage() {
   const currentThumbnails = car?.images?.slice(thumbnailIndex, thumbnailIndex + THUMBNAILS_PER_PAGE) ?? [];
 
   const handlePrevThumbnails = () => {
-    setThumbnailIndex(Math.max(0, thumbnailIndex - THUMBNAILS_PER_PAGE));
+    const allImages = car?.images ?? [];
+    const currentIndex = allImages.indexOf(activeImage);
+    const newIndex = currentIndex === 0 ? allImages.length - 1 : currentIndex - 1;
+    setActiveImage(allImages[newIndex] ?? "");
+    // Scroll thumbnail to show selected image
+    const newThumbnailIndex = Math.max(0, Math.floor(newIndex / THUMBNAILS_PER_PAGE) * THUMBNAILS_PER_PAGE);
+    setThumbnailIndex(Math.min(newThumbnailIndex, Math.max(0, totalImages - THUMBNAILS_PER_PAGE)));
   };
 
   const handleNextThumbnails = () => {
-    setThumbnailIndex(Math.min(totalImages - THUMBNAILS_PER_PAGE, thumbnailIndex + THUMBNAILS_PER_PAGE));
+    const allImages = car?.images ?? [];
+    const currentIndex = allImages.indexOf(activeImage);
+    const newIndex = currentIndex === allImages.length - 1 ? 0 : currentIndex + 1;
+    setActiveImage(allImages[newIndex] ?? "");
+    // Scroll thumbnail to show selected image
+    const newThumbnailIndex = Math.max(0, Math.floor(newIndex / THUMBNAILS_PER_PAGE) * THUMBNAILS_PER_PAGE);
+    setThumbnailIndex(Math.min(newThumbnailIndex, Math.max(0, totalImages - THUMBNAILS_PER_PAGE)));
   };
 
   const handleOverlayPrev = () => {
@@ -206,34 +218,31 @@ export default function CarDetailPage() {
       {/* ── THUMBNAIL STRIP ───────────────────────────────────────────────── */}
       <div style={{ display: "flex", alignItems: "center", gap: 0, background: "var(--dark1)", padding: "2px 0", position: "relative" }}>
         {/* Left Arrow */}
-        {totalImages > THUMBNAILS_PER_PAGE && (
-          <button
-            onClick={handlePrevThumbnails}
-            disabled={thumbnailIndex === 0}
-            style={{
-              padding: "0 16px",
-              background: "none",
-              border: "none",
-              cursor: thumbnailIndex === 0 ? "not-allowed" : "pointer",
-              color: thumbnailIndex === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.6)",
-              fontSize: 20,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-              minHeight: "100px",
-              transition: "color 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              if (thumbnailIndex > 0) (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.9)";
-            }}
-            onMouseLeave={(e) => {
-              if (thumbnailIndex > 0) (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
-            }}
-          >
-            ‹
-          </button>
-        )}
+        <button
+          onClick={handlePrevThumbnails}
+          style={{
+            padding: "0 16px",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "rgba(255,255,255,0.6)",
+            fontSize: 20,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            minHeight: "100px",
+            transition: "color 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.9)";
+          }}
+          onMouseLeave={(e) => {
+            (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
+          }}
+        >
+          ‹
+        </button>
 
         {/* Thumbnails */}
         <div style={{ display: "flex", gap: 2, flex: 1, overflow: "hidden" }}>
@@ -246,34 +255,31 @@ export default function CarDetailPage() {
         </div>
 
         {/* Right Arrow */}
-        {totalImages > THUMBNAILS_PER_PAGE && (
-          <button
-            onClick={handleNextThumbnails}
-            disabled={thumbnailIndex + THUMBNAILS_PER_PAGE >= totalImages}
-            style={{
-              padding: "0 16px",
-              background: "none",
-              border: "none",
-              cursor: thumbnailIndex + THUMBNAILS_PER_PAGE >= totalImages ? "not-allowed" : "pointer",
-              color: thumbnailIndex + THUMBNAILS_PER_PAGE >= totalImages ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.6)",
-              fontSize: 20,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-              minHeight: "100px",
-              transition: "color 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              if (thumbnailIndex + THUMBNAILS_PER_PAGE < totalImages) (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.9)";
-            }}
-            onMouseLeave={(e) => {
-              if (thumbnailIndex + THUMBNAILS_PER_PAGE < totalImages) (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
-            }}
-          >
-            ›
-          </button>
-        )}
+        <button
+          onClick={handleNextThumbnails}
+          style={{
+            padding: "0 16px",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "rgba(255,255,255,0.6)",
+            fontSize: 20,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            minHeight: "100px",
+            transition: "color 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.9)";
+          }}
+          onMouseLeave={(e) => {
+            (e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
+          }}
+        >
+          ›
+        </button>
       </div>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────────────────── */}

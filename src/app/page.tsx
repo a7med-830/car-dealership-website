@@ -1,286 +1,36 @@
 "use client";
-// استدعاء الداتا الحقيقية
-import { allCars } from "@/lib/carsData";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-const FontLoader = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --black: #000000;
-      --dark: #0a0a0a;
-      --dark2: #111111;
-      --dark3: #1a1a1a;
-      --border: #222222;
-      --border2: #2e2e2e;
-      --text-dim: #666666;
-      --text-mid: #999999;
-      --text-light: #cccccc;
-      --white: #ffffff;
-      --gold: #c9a96e;
-      --font-display: 'Cinzel', serif;
-      --font-body: 'Montserrat', sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--black);
-      color: var(--white);
-      font-family: var(--font-body);
-      overflow-x: hidden;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--black); }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-    /* Loading Screen Animations */
-    .loader-container {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
-    .loader-container.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .loader-text {
-      font-family: var(--font-display);
-      font-size: clamp(24px, 5vw, 48px);
-      letter-spacing: 0.3em;
-      color: var(--white);
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-      50% { opacity: 0.4; text-shadow: 0 0 0px rgba(255,255,255,0); }
-    }
-
-    /* Fade-in animation */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(32px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    @keyframes slideLeft {
-      from { opacity: 0; transform: translateX(40px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes kenBurns {
-      from { transform: scale(1); }
-      to   { transform: scale(1.06); }
-    }
-    @keyframes lineExpand {
-      from { width: 0; }
-      to   { width: 48px; }
-    }
-
-    .animate-fadeUp  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
-    .animate-fadeIn  { animation: fadeIn 1.2s ease forwards; }
-    .animate-slideLeft { animation: slideLeft 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
-    .opacity-0 { opacity: 0; }
-
-    /* Hero slider */
-    .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s cubic-bezier(0.4,0,0.2,1); }
-    .hero-slide.active { opacity: 1; }
-    .hero-slide.active .hero-img { animation: kenBurns 10s ease forwards; }
-    .hero-img { width: 100%; height: 100%; object-fit: cover; transform-origin: center center; }
-
-    /* Card hover */
-    .card-img-wrap { overflow: hidden; }
-    .card-img-wrap img { transition: transform 0.8s cubic-bezier(0.16,1,0.3,1); }
-    .card-root:hover .card-img-wrap img { transform: scale(1.05); }
-    .card-root:hover .card-overlay { opacity: 1; }
-    .card-overlay { opacity: 0; transition: opacity 0.4s ease; }
-
-    /* Split hover */
-    .split-panel { overflow: hidden; }
-    .split-panel img { transition: transform 1s cubic-bezier(0.16,1,0.3,1), filter 0.6s ease; }
-    .split-panel:hover img { transform: scale(1.04); filter: brightness(0.65); }
-    .split-panel .split-label { transition: letter-spacing 0.4s ease, color 0.4s ease; }
-    .split-panel:hover .split-label { letter-spacing: 0.25em; color: var(--white); }
-
-    /* Nav link underline */
-    .nav-link { position: relative; }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0;
-      width: 0; height: 1px;
-      background: var(--white);
-      transition: width 0.3s ease;
-    }
-    .nav-link:hover::after { width: 100%; }
-
-    /* Button styles */
-    .btn-outline {
-      display: inline-block;
-      border: 1px solid rgba(255,255,255,0.35);
-      color: var(--white);
-      letter-spacing: 0.15em;
-      font-family: var(--font-body);
-      font-size: 10px;
-      font-weight: 500;
-      padding: 13px 32px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-      background: transparent;
-      text-decoration: none;
-    }
-    .btn-outline:hover {
-      background: var(--white);
-      color: var(--black);
-      border-color: var(--white);
-    }
-
-    .btn-solid {
-      display: inline-block;
-      background: var(--white);
-      color: var(--black);
-      letter-spacing: 0.15em;
-      font-family: var(--font-body);
-      font-size: 10px;
-      font-weight: 600;
-      padding: 13px 32px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
-      border: 1px solid var(--white);
-      text-decoration: none;
-    }
-    .btn-solid:hover {
-      background: transparent;
-      color: var(--white);
-    }
-
-    /* Dropdown */
-    .custom-select {
-      appearance: none;
-      background: var(--dark2);
-      border: 1px solid var(--border2);
-      color: var(--text-mid);
-      font-family: var(--font-body);
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      padding: 14px 40px 14px 18px;
-      text-transform: uppercase;
-      cursor: pointer;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-    .custom-select:focus { border-color: var(--text-dim); }
-    .select-wrap { position: relative; }
-    .select-wrap::after {
-      content: '';
-      position: absolute;
-      right: 16px; top: 50%;
-      transform: translateY(-50%);
-      width: 8px; height: 8px;
-      border-right: 1px solid var(--text-dim);
-      border-bottom: 1px solid var(--text-dim);
-      transform: translateY(-65%) rotate(45deg);
-      pointer-events: none;
-    }
-
-    /* News item */
-    .news-item { border-bottom: 1px solid var(--border); transition: border-color 0.3s; }
-    .news-item:hover { border-color: var(--text-dim); }
-    .news-item:hover .news-title { color: var(--white); }
-    .news-title { transition: color 0.3s ease; color: var(--text-light); }
-
-    /* Footer link */
-    .footer-link { color: var(--text-dim); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; display: block; transition: color 0.3s; margin-bottom: 12px; }
-    .footer-link:hover { color: var(--white); }
-
-    /* Social icon */
-    .social-icon { width: 38px; height: 38px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; transition: border-color 0.3s, background 0.3s; cursor: pointer; }
-    .social-icon:hover { border-color: var(--white); background: var(--white); }
-    .social-icon:hover svg { fill: var(--black); }
-    .social-icon svg { fill: var(--text-dim); transition: fill 0.3s; }
-
-    /* Section title accent */
-    .section-accent {
-      display: inline-block;
-      width: 0;
-      height: 1px;
-      background: var(--gold);
-      margin-right: 14px;
-      vertical-align: middle;
-      animation: lineExpand 0.8s ease 0.3s forwards;
-    }
-
-    /* Mobile menu */
-    .mobile-menu { transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
-    .mobile-menu.open { transform: translateX(0); }
-
-    /* Swiper dots */
-    .hero-dot { width: 28px; height: 2px; background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.3s, width 0.3s; }
-    .hero-dot.active { background: var(--white); width: 48px; }
-
-    /* Carousel custom nav */
-    .carousel-arrow { width: 44px; height: 44px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.3s, background 0.3s; }
-    .carousel-arrow:hover { border-color: var(--white); background: var(--white); }
-    .carousel-arrow:hover svg { stroke: var(--black); }
-    .carousel-arrow svg { stroke: var(--text-dim); transition: stroke 0.3s; }
-
-    /* Intersection observer helper */
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.35s; }
-    .reveal-delay-4 { transition-delay: 0.5s; }
-
-    @media (max-width: 768px) {
-      .desktop-nav { display: none; }
-      .mobile-toggle { display: flex; }
-    }
-    @media (min-width: 769px) {
-      .mobile-toggle { display: none; }
-      .mobile-menu-overlay { display: none; }
-    }
-  `}</style>
-);
+import "./page-styles.css";
+import { allCars } from "@/lib/cars";
 
 // ─── ANIMATED BRAND LOGOS ────────────────────────────────────────────────────
 function AnimatedLogosBar() {
   const logos = [
-    { name: "Mercedes", file: "mercedes-benz-svgrepo-com.svg" },
-    { name: "Porsche", file: "porsche-svgrepo-com.svg" },
-    { name: "Rolls-Royce", file: "rolls-royce-svgrepo-com.svg" },
-    { name: "Ferrari", file: "ferrari-svgrepo-com.svg" },
     { name: "Aston Martin", file: "aston-martin-alt-svgrepo-com.svg" },
     { name: "Audi", file: "audi-svgrepo-com.svg" },
+    { name: "Rolls-Royce", file: "rolls-royce-svgrepo-com.svg" },
+    { name: "Mercedes", file: "mercedes-benz-svgrepo-com.svg" },
+    { name: "Ferrari", file: "ferrari-svgrepo-com.svg" },
+    { name: "Porsche", file: "porsche-svgrepo-com.svg" },
     { name: "Bentley", file: "bentley-svgrepo-com.svg" },
     { name: "BMW", file: "bmw-svgrepo-com.svg" },
     { name: "Cadillac", file: "cadillac-svgrepo-com.svg" },
     { name: "Lexus", file: "lexus-svgrepo-com.svg" },
+    { name: "Maserati", file: "maserati-svgrepo-com.svg" },
+    { name: "Genesis", file: "genesis-svgrepo-com.svg" },
     { name: "Maybach", file: "maybach-svgrepo-com.svg" },
   ];
 
   return (
-    <section style={{
+    <section id="brands" style={{
       background: "var(--dark1)",
       padding: "60px 40px",
       overflow: "hidden",
       borderTop: "1px solid var(--border)",
       borderBottom: "1px solid var(--border)",
+      scrollMarginTop: "50vh",
     }}>
       <style>{`
         @keyframes scrollLogoBar {
@@ -414,7 +164,7 @@ const heroSlides = [
     tag: "Mercedes‑Maybach", 
   },
   {
-    id: "UNIDRIVE-rolls-phantom", 
+    id: "Mansory-rolls-phantom", 
     img: "/Images-home/1b68f3d98661e13530dc0bbda4e2cefe.jpg",
     eyebrow: "NEW ARRIVAL",
     title: "ULTRA LUXURY\nCULLINAN II",
@@ -441,11 +191,11 @@ const heroSlides = [
 
 // ─── CARS DATA ────────────────────────────────────────────────────────────────
 const cars = [
-  { img: "/Images-home/339a5f9521cd849ed1b2a1ecd705752b.jpg", title: "Cadillac Escalade", tag: "ATELIER" },
-  { img: "/Images-home/819b8c90922e933186acf8184e2d24d1.jpg", title: "Audi A8", tag: "BODY KIT" },
-  { img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LS", tag: "WIDEBODY" },
-  { img: "/Images-home/7bd1840fef8b0744f217289ce3638892.jpg", title: "Maserati Quattroporte", tag: "FULL KIT" },
-  { img: "/Images-home/3e9b06168ed4cb828e16b2a348724f20.jpg", title: "Range Rover", tag: "ATELIER" },
+  { id: 18, img: "/Images-home/339a5f9521cd849ed1b2a1ecd705752b.jpg", title: "Cadillac Escalade", tag: "NEW" },
+  { id: 10, img: "/audi/a8/f.jpg", title: "Audi A8", tag: "NEW" },
+  { id: 8, img: "/Images-home/d62bc60c4881c50ccf46c4bbd01cdb42.jpg", title: "Lexus LC", tag: "NEW" },
+  { id: 4,  img: "/Ferrari/Ferrari Purosangue/photo1.jpg", title: "Ferrari PUROSANGUE", tag: "NEW" },
+  { id: 34, img: "/Images-home/3e9b06168ed4cb828e16b2a348724f20.jpg", title: "Range Rover", tag: "NEW" },
 ];
 
 // ─── NEWS DATA ────────────────────────────────────────────────────────────────
@@ -513,7 +263,7 @@ function Header() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const navLeft = ["MODELS", "CARS FOR SALE", "CONFIGURATOR"];
+  const navLeft = ["BRANDS", "CARS FOR SALE", "CONFIGURATOR"];
   const navRight = ["INVENTORY", "FIND A DEALER", "CONTACT"];
 
 
@@ -538,11 +288,16 @@ function Header() {
           {/* LEFT NAV */}
           <nav className="desktop-nav" style={{ display: "flex", gap: 36 }}>
             {navLeft.map(item => (
-              <Link key={item} href={getLink(item)} className="nav-link" style={{
+              <Link key={item} href={ item === "BRANDS" ? "#brands" : item === "CARS FOR SALE" ? "/inventory" : "#" } className="nav-link" style={{
                 fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
                 letterSpacing: "0.14em", color: "var(--text-light)",
                 textDecoration: "none", textTransform: "uppercase",
-              }}>{item}</Link>
+                transition: "color 0.3s ease",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = "var(--white)"}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = "var(--text-light)"}
+              >{item}</Link>
             ))}
           </nav>
 
@@ -561,7 +316,7 @@ function Header() {
             {navRight.map(item => (
               <Link 
                 key={item} 
-                href={getLink(item)} 
+                href={item === "INVENTORY" ? "/inventory" : item === "CONTACT" ? "/contact" : item === "FIND A DEALER" ? "/contact" : "#"} 
                 className="nav-link" 
                 style={{
                   fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
@@ -595,18 +350,29 @@ function Header() {
           background: "none", border: "none", color: "var(--white)", cursor: "pointer",
         }}><CloseIcon /></button>
         
-        {[...navLeft, ...navRight].map(item => (
-          <Link 
-            key={item} 
-            href={getLink(item)} 
-            onClick={() => setMobileOpen(false)}
-            style={{
-              display: "block", fontFamily: "var(--font-body)", fontSize: 11,
-              letterSpacing: "0.16em", color: "var(--text-light)", textDecoration: "none",
-              textTransform: "uppercase", marginBottom: 28, borderBottom: "1px solid var(--border)",
-              paddingBottom: 28,
-          }}>{item}</Link>
-        ))}
+        {[...navLeft, ...navRight].map(item => {
+          let href = "#";
+          if (item === "BRANDS") href = "#brands";
+          if (item === "CARS FOR SALE") href = "/inventory";
+          if (item === "INVENTORY") href = "/inventory";
+          if (item === "FIND A DEALER" || item === "CONTACT") href = "/contact";
+          
+          return (
+            <Link 
+              key={item} 
+              href={href} 
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: "block", fontFamily: "var(--font-body)", fontSize: 11,
+                letterSpacing: "0.16em", color: "var(--text-light)", textDecoration: "none",
+                textTransform: "uppercase", marginBottom: 28, borderBottom: "1px solid var(--border)",
+                paddingBottom: 28, transition: "color 0.3s",
+              }}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = "var(--white)"}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = "var(--text-light)"}
+            >{item}</Link>
+          );
+        })}
       </div>
     </>
   );
@@ -703,7 +469,7 @@ function HeroSlider() {
       </div>
 
       {/* SCROLL HINT */}
-      <div style={{
+      <div id = "scroll" style={{
         position: "absolute", bottom: "8%", left: "50%", transform: "translateX(-50%)",
         display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
         fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: "0.25em",
@@ -722,42 +488,79 @@ function HeroSlider() {
 // ─── FIND YOUR DREAM MODEL ────────────────────────────────────────────────────
 function FindModel() {
   const ref = useReveal();
+  const router = useRouter();
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
+
+  // Get unique brands from allCars
+  const brands = Array.from(new Set(allCars.map(car => car.make))).sort();
+
+  // Filter models based on selected brand
+  const availableModels = selectedBrand
+    ? Array.from(new Set(
+        allCars
+          .filter(car => car.make === selectedBrand)
+          .map(car => car.model)
+      )).sort()
+    : [];
+
+  // Reset model when brand changes
+  useEffect(() => {
+    setSelectedModel("");
+  }, [selectedBrand]);
+
+  const handleSearch = () => {
+    if (!selectedBrand) {
+      alert("Please select a brand");
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.append("brand", selectedBrand);
+    if (selectedModel) {
+      params.append("model", selectedModel);
+    }
+
+    router.push(`/inventory?${params.toString()}`);
+  };
+
   return (
     <section style={{ background: "var(--dark2)", padding: "80px 40px" }}>
       <div ref={ref} className="reveal" style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.3em", color: "var(--gold)", marginBottom: 14 }}>
-          CONFIGURATION
-        </div>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(22px, 3.5vw, 40px)", letterSpacing: "0.08em", color: "var(--white)", marginBottom: 48, fontWeight: 500 }}>
           FIND YOUR DREAM MODEL
         </h2>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", alignItems: "stretch" }}>
           <div className="select-wrap" style={{ flex: "1 1 220px", minWidth: 180 }}>
-            <select className="custom-select">
+            <select 
+              className="custom-select"
+              value={selectedBrand}
+              onChange={(e) => setSelectedBrand(e.target.value)}
+            >
               <option value="">SELECT BRAND</option>
-              <option>BMW</option>
-              <option>CADILLAC</option>
-              <option>LEXUS</option>
-              <option>AUDI</option>
-              <option>TESLA</option>
-              <option>ROLLS-ROYCE</option>
-              <option>ASTON MARTIN</option>
-              <option>BENTLEY</option>
-              <option>MERCEDES</option>
-              <option>PORSCHE</option>
+              {brands.map(brand => (
+                <option key={brand} value={brand}>{brand}</option>
+              ))}
             </select>
           </div>
           <div className="select-wrap" style={{ flex: "1 1 220px", minWidth: 180 }}>
-            <select className="custom-select">
+            <select 
+              className="custom-select"
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              disabled={!selectedBrand}
+            >
               <option value="">SELECT MODEL</option>
-              <option>CULLINAN</option>
-              <option>PHANTOM</option>
-              <option>GHOST</option>
-              <option>URUS</option>
-              <option>HURACÁN</option>
+              {availableModels.map(model => (
+                <option key={model} value={model}>{model}</option>
+              ))}
             </select>
           </div>
-          <button className="btn-solid" style={{ flex: "0 0 auto", alignSelf: "stretch", padding: "0 40px" }}>
+          <button 
+            className="btn-solid"
+            onClick={handleSearch}
+            style={{ flex: "0 0 auto", alignSelf: "stretch", padding: "0 40px", opacity: selectedBrand ? 1 : 0.5, cursor: selectedBrand ? "pointer" : "not-allowed" }}
+          >
             SEARCH
           </button>
         </div>
@@ -810,13 +613,14 @@ function LatestCarousel() {
             }}>
               <div className="card-img-wrap" style={{ position: "relative", aspectRatio: "4/3", overflow: "hidden", marginBottom: 18 }}>
                 <img src={car.img} alt={car.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                <div className="card-overlay" style={{
+                <Link href={`/inventory/${car.id}`} className="card-overlay" style={{
                   position: "absolute", inset: 0,
                   background: "rgba(0,0,0,0.4)",
                   display: "flex", alignItems: "center", justifyContent: "center",
+                  textDecoration: "none",
                 }}>
                   <span className="btn-outline" style={{ fontSize: 9, padding: "10px 24px" }}>DISCOVER</span>
-                </div>
+                </Link>
                 <div style={{
                   position: "absolute", top: 14, left: 14,
                   fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: "0.2em",
@@ -906,61 +710,45 @@ function SplitCategories() {
   return (
     <section style={{ display: "flex", height: "clamp(360px, 50vw, 640px)" }}>
       {/* ALL CARS */}
-      <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden" }}>
-        <img src="/Images-home/ff74324e3edafd5db62bfae27ed91351.jpg"
-          alt="All Cars" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
-          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
-          <h3 className="split-label" style={{
-            fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
-            letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
-          }}>ALL CARS</h3>
-          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+      <Link href="/inventory" style={{ flex: 1, textDecoration: "none" }}>
+        <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden", height: "100%" }}>
+          <img src="/Images-home/ff74324e3edafd5db62bfae27ed91351.jpg"
+            alt="All Cars" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+            <h3 className="split-label" style={{
+              fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
+              letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
+            }}>ALL CARS</h3>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Divider */}
       <div style={{ width: 1, background: "var(--black)", flexShrink: 0 }} />
 
-      {/* RIMS */}
-      <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden" }}>
-        <img src="/Images-home/photo-1558618666-fcd25c85cd64.jpg"
-          alt="Rims" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
-          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
-          <h3 className="split-label" style={{
-            fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
-            letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
-          }}>RIMS</h3>
-          <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+      {/* SERVICES */}
+      <Link href="/contact" style={{ flex: 1, textDecoration: "none" }}>
+        <div className="split-panel" style={{ flex: 1, position: "relative", cursor: "pointer", overflow: "hidden", height: "100%" }}>
+          <img src="/Images-home/photo-1558618666-fcd25c85cd64.jpg"
+            alt="Rims" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+            <h3 className="split-label" style={{
+              fontFamily: "var(--font-display)", fontSize: "clamp(18px, 3vw, 32px)",
+              letterSpacing: "0.18em", color: "rgba(255,255,255,0.85)", fontWeight: 500,
+            }}>SERVICES</h3>
+            <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.4)" }} />
+          </div>
         </div>
-      </div>
+      </Link>
     </section>
   );
 }
 
-// ─── BRAND STRIP ──────────────────────────────────────────────────────────────
-function BrandStrip() {
-  const brands = ["BMW", "CADILLAC", "LEXUS", "AUDI", "TESLA", "ROLLS-ROYCE", "ASTON MARTIN", "BENTLEY", "MERCEDES", "PORSCHE"];
-  return (
-    <section style={{ background: "var(--dark3)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "22px 40px", overflow: "hidden" }}>
-      <div style={{ display: "flex", gap: 52, justifyContent: "center", flexWrap: "wrap" }}>
-        {brands.map(b => (
-          <span key={b} style={{
-            fontFamily: "var(--font-body)", fontSize: 9, letterSpacing: "0.2em",
-            color: "var(--text-dim)", fontWeight: 500, cursor: "pointer",
-            transition: "color 0.3s",
-          }}
-            onMouseEnter={e => (e.target as HTMLElement).style.color = "var(--white)"}
-            onMouseLeave={e => (e.target as HTMLElement).style.color = "var(--text-dim)"}
-          >{b}</span>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 // ─── CTA BANNER ───────────────────────────────────────────────────────────────
 function CTABanner() {
@@ -978,12 +766,12 @@ function CTABanner() {
           BESPOKE EXPERIENCE
         </div>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(22px, 4vw, 52px)", letterSpacing: "0.06em", color: "var(--white)", fontWeight: 500 }}>
-          CONFIGURE YOUR DREAM
+          CHOOSE YOUR DREAM CAR
         </h2>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: "0.08em", color: "var(--text-mid)", maxWidth: 480, lineHeight: 1.9, fontWeight: 300 }}>
           Every detail crafted to your specification. Begin your personal journey into the world of automotive excellence.
         </p>
-        <a href="#" className="btn-outline">START CONFIGURATOR</a>
+        <a href="/contact" className="btn-outline">CONTACT US NOW</a>
       </div>
     </section>
   );
@@ -992,7 +780,7 @@ function CTABanner() {
 // ─── FOOTER ───────────────────────────────────────────────────────────────────
 function Footer() {
   const cols = [
-    { title: "MODELS", links: ["ALL CARS", "BODY KITS", "INTERIOR", "RIMS", "ACCESSORIES"] },
+    { title: "MODELS", links: ["ALL CARS", "BODY KITS", "INTERIOR", "SERVICES", "ACCESSORIES"] },
     { title: "COMPANY", links: ["ABOUT US", "ATELIER", "CONFIGURATOR", "CAREERS", "PRESS"] },
     { title: "SUPPORT", links: ["FIND A DEALER", "CONTACT", "FAQ", "SHIPPING", "WARRANTY"] },
     { title: "LEGAL", links: ["IMPRINT", "PRIVACY POLICY", "TERMS OF USE", "COOKIES"] },
@@ -1075,8 +863,6 @@ export default function App() {
 
   return (
     <>
-      <FontLoader />
-
       {/* Loading Screen Overlay */}
       <div className={`loader-container ${!loading ? 'hidden' : ''}`}>
          <div className="loader-text">UNIDRIVE</div>
