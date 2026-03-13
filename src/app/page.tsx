@@ -407,7 +407,7 @@ function useReveal() {
 
 const heroSlides = [
   {
-    id: "Mercedes‑Maybach S‑Class ", 
+    id: "maybach", 
     img: "/Images-home/6ca3bb49af970e54f445948e1ce21c9d.jpg",
     title: "Mercedes‑Maybach S‑Class ",
     sub: "SOFT KIT — ATELIER",
@@ -422,7 +422,7 @@ const heroSlides = [
     tag: "ROLLS-ROYCE",
   },
   {
-    id: 28, 
+    id: "porsche-panamera", 
     img: "/Images-home/3cba9a2c6693afff6d71cfa1f7d8a0f2.jpg",
     eyebrow: "EXCLUSIVE",
     title: "Porsche Panamera",
@@ -430,12 +430,12 @@ const heroSlides = [
     tag: "Porsche Panamera",
   },
   {
-    id: "BMW 8 Series", 
-    img: "/Images-home/a8569c342b364babc26e498dcf6c0dca.jpg",
+    id: "cadillac", 
+    img: "https://i.pinimg.com/736x/45/bb/9f/45bb9fcca58eea50d5cd671e2281b208.jpg",
     eyebrow: "LIMITED",
-    title: "BMW 8 Series",
+    title: "cadillac escalade",
     sub: "WIDEBODY PROGRAM",
-    tag: "BMW",
+    tag: "cadillac",
   },
 ];
 
@@ -516,6 +516,13 @@ function Header() {
   const navLeft = ["MODELS", "CARS FOR SALE", "CONFIGURATOR"];
   const navRight = ["INVENTORY", "FIND A DEALER", "CONTACT"];
 
+
+  const getLink = (item: string) => {
+    if (item === "INVENTORY") return "/inventory";
+    if (item === "FIND A DEALER") return "/dealers"; 
+    return "#";
+  };
+
   return (
     <>
       <header style={{
@@ -531,7 +538,7 @@ function Header() {
           {/* LEFT NAV */}
           <nav className="desktop-nav" style={{ display: "flex", gap: 36 }}>
             {navLeft.map(item => (
-              <Link key={item} href="#" className="nav-link" style={{
+              <Link key={item} href={getLink(item)} className="nav-link" style={{
                 fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
                 letterSpacing: "0.14em", color: "var(--text-light)",
                 textDecoration: "none", textTransform: "uppercase",
@@ -554,7 +561,7 @@ function Header() {
             {navRight.map(item => (
               <Link 
                 key={item} 
-                href={item === "INVENTORY" ? "/inventory" : "#"} 
+                href={getLink(item)} 
                 className="nav-link" 
                 style={{
                   fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 500,
@@ -591,7 +598,7 @@ function Header() {
         {[...navLeft, ...navRight].map(item => (
           <Link 
             key={item} 
-            href={item === "INVENTORY" ? "/inventory" : "#"} 
+            href={getLink(item)} 
             onClick={() => setMobileOpen(false)}
             style={{
               display: "block", fontFamily: "var(--font-body)", fontSize: 11,
@@ -666,7 +673,7 @@ function HeroSlider() {
           color: "var(--text-mid)", marginBottom: 40, fontWeight: 400,
         }}>{slide.sub}</div>
 
-        {/* 👇 التعديل هنا: الزرار بقى مربوط بالـ id بتاع العربية 👇 */}
+        
         <div className="animate-fadeUp opacity-0" style={{ animationDelay: "0.55s" }}>
           <Link href={`/cars/${slide.id}`} className="btn-outline">
             DISCOVER NOW 
