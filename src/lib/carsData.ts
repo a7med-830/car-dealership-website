@@ -82,7 +82,7 @@ export const allCars: Car[] = [
     }
   },
   {
-    id: "Mercedes‑Maybach S‑Class ",
+    id: "Mercedes",
     make: "Mercedes‑Maybach",
     name: "S‑Class ",
     trim: "UNIDRIVE STALLONE",
@@ -91,7 +91,14 @@ export const allCars: Car[] = [
     description:
       "The prancing horse, reimagined without compromise. Full dry-carbon exterior, re-mapped hybrid drivetrain pushing 1,100 bhp. The Stallone is Italian fury wrapped in German precision.",
     image: "/Images-home/6ca3bb49af970e54f445948e1ce21c9d.jpg",
-    images: [],
+    images: [
+        "/top 4 cars/images/m/1m.jpg",
+        "/top 4 cars/images/m/2m.jpg",
+        "/top 4 cars/images/m/3m.jpg",
+        "/top 4 cars/images/m/4m.jpg",
+        "/top 4 cars/images/m/5m.jpg",
+    ],
+    videoUrl: "/top 4 cars/Videos/m1.mp4",
     features: ["Dry Carbon Monocoque", "1,100 bhp Hybrid", "Active Aero"],
     specs: {
       Engine: "4.0L Twin-Turbo V8 + 3× Electric",
@@ -100,23 +107,31 @@ export const allCars: Car[] = [
       "0–100 km/h": "2.4 s",
     },
   },
-  {
-    id: "BMW 8 Series",
-    make: "BMW",
-    name: "8 Series",
-    trim: "",
+{
+    id: "cadillac",
+    make: "Cadillac",
+    name: "Escalade",
+    trim: "V-Series Bespoke", 
     year: 2025,
-    price: "€ 540,000",
+    price: "€ 425,000", 
     description:
-      "The world's most aggressive SUV, sharpened further. The Venatus package redefines presence — widened carbon arches, 850 bhp, and an interior of pure hand-crafted excess.",
-    image: "/Images-home/a8569c342b364babc26e498dcf6c0dca.jpg",
-    images: [],
-    features: ["Widebody Carbon Kit", "850 bhp Tune", "Sport Exhaust"],
+      "The ultimate expression of American luxury, elevated to unprecedented heights. This bespoke Escalade commands attention with its imposing widebody stance, exposed carbon fiber accents, and a roaring supercharged V8. Step inside a meticulously handcrafted cabin where absolute comfort meets raw, uncompromising power.",
+    image: "/top 4 cars/images/c/11c.jpg",
+    images: [
+      "/top 4 cars/images/c/2c.jpg",
+      "/top 4 cars/images/c/3c.jpg",
+      "/top 4 cars/images/c/4C.jpg",
+      "/top 4 cars/images/c/5c.jpg",
+      "/top 4 cars/images/c/6c.jpg"
+    ],
+    videoUrl: "/top 4 cars/Videos/C.mp4",
+  
+    features: ["Widebody Carbon Kit", "820 bhp Performance Tune", "Forged Monoblock Rims"],
     specs: {
-      Engine: "4.0L Twin-Turbo V8",
-      Power: "850 bhp",
-      Torque: "1,050 Nm",
-      "0–100 km/h": "3.1 s",
+      Engine: "6.2L Supercharged V8", 
+      Power: "820 bhp", 
+      Torque: "1,150 Nm", 
+      "0–100 km/h": "3.9 s", 
     },
   },
 ];

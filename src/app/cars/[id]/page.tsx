@@ -70,7 +70,7 @@ function SubNav({ active }: { active: NavSection }) {
           justifyContent: "space-between", 
         }}
       >
-        {/* زرار العودة للـ Home */}
+
         <Link href="/" style={{
           fontSize: "18px",
           letterSpacing: "0.3em",
@@ -147,7 +147,7 @@ function HeroSection({ car }: { car: Car }) {
         />
       </motion.div>
 
-      {/* شلنا الـ Gradient اللي فوق خالص - خلينا بس ظل خفيف تحت للنص */}
+     
       <div
         style={{
           position: "absolute",
@@ -157,7 +157,7 @@ function HeroSection({ car }: { car: Car }) {
         }}
       />
 
-      {/* Content - مرفوع لفوق عشان يفتح مساحة للفيديو */}
+     
       <motion.div
         style={{ 
           opacity, 
@@ -165,7 +165,7 @@ function HeroSection({ car }: { car: Car }) {
           zIndex: 10, 
           textAlign: "center", 
           padding: "0 24px",
-          marginTop: "-15vh" // رفعنا الكلام عشان المساحة السوداء اللي فوق تختفي وهمياً
+          marginTop: "-15vh" 
         }}
         initial="hidden"
         animate="visible"

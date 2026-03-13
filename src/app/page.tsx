@@ -157,7 +157,7 @@ function useReveal() {
 
 const heroSlides = [
   {
-    id: "Mercedes‑Maybach S‑Class ", 
+    id: "Mercedes", 
     img: "/Images-home/6ca3bb49af970e54f445948e1ce21c9d.jpg",
     title: "Mercedes‑Maybach S‑Class ",
     sub: "SOFT KIT — ATELIER",
@@ -180,12 +180,12 @@ const heroSlides = [
     tag: "Porsche Panamera",
   },
   {
-    id: "BMW 8 Series", 
-    img: "/Images-home/bmw-m8-black-2.png",
+    id: "cadillac", 
+    img: "/Images-home/cad.jpg",
     eyebrow: "LIMITED",
-    title: "BMW 8 Series",
+    title: "Cadillac Escalade",
     sub: "WIDEBODY PROGRAM",
-    tag: "BMW",
+    tag: "Cadillac",
   },
 ];
 
