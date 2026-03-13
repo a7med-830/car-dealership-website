@@ -82,6 +82,7 @@ function SubNav({ active }: { active: NavSection }) {
           justifyContent: "space-between",
         }}
       >
+
         <Link href="/" style={{
           fontSize: "18px",
           letterSpacing: "0.3em",
@@ -166,6 +167,7 @@ function HeroSection({ car }: { car: Car }) {
       }}
     />
 
+     
       <div
         style={{
           position: "absolute",
@@ -183,14 +185,15 @@ function HeroSection({ car }: { car: Car }) {
         }}
       />
 
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "2px",
-          background: `linear-gradient(90deg, transparent 0%, ${GOLD} 50%, transparent 100%)`,
+     
+      <motion.div
+        style={{ 
+          opacity, 
+          position: "relative", 
+          zIndex: 10, 
+          textAlign: "center", 
+          padding: "0 24px",
+          marginTop: "-15vh" 
         }}
       />
 

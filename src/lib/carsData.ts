@@ -85,23 +85,24 @@ export const allCars: Car[] = [
   },
 
   {
-    id: "maybach",
-    make: "MERCEDES-MAYBACH",
-    name: "S-CLASS",
-    trim: "UNIDRIVE EXCLUSIVE", 
+    id: "Mercedes",
+    make: "Mercedes‑Maybach",
+    name: "S‑Class ",
+    trim: "UNIDRIVE STALLONE",
     year: 2026,
     price: "€ 920,000",
-    description: "The absolute pinnacle of chauffeur-driven luxury. The Mercedes-Maybach S-Class stretches the boundaries of first-class travel, offering a whisper-quiet cabin adorned with the finest materials, expansive legroom, and an imposing stance that commands absolute respect.", // ديسكريبشن جديد يليق بالمايباخ
-    image: "/top 4 cars/images/mayb/1.jpg",
+    description:
+      "The prancing horse, reimagined without compromise. Full dry-carbon exterior, re-mapped hybrid drivetrain pushing 1,100 bhp. The Stallone is Italian fury wrapped in German precision.",
+    image: "/Images-home/6ca3bb49af970e54f445948e1ce21c9d.jpg",
     images: [
-      "/top 4 cars/images/mayb/4fc887d3a653bd7b16bc477a8f31dce2.jpg",
-      "/top 4 cars/images/mayb/17dbce4819c265d2710611293c9123a9.jpg",
-      "/top 4 cars/images/mayb/c4aec7d41783a9d9492f6e13afe13815.jpg",
-      "/top 4 cars/images/mayb/c4d2ce33dc76e6d6674431821ac5935b.jpg",
-      "/top 4 cars/images/mayb/e75d7c355d8b94afcb78499245263f32.jpg"
+        "/top 4 cars/images/m/1m.jpg",
+        "/top 4 cars/images/m/2m.jpg",
+        "/top 4 cars/images/m/3m.jpg",
+        "/top 4 cars/images/m/4m.jpg",
+        "/top 4 cars/images/m/5m.jpg",
     ],
-    videoUrl: "/top 4 cars/Videos/M2.mp4",
-    features: ["Forged Signature Wheels", "First-Class Rear Suite", "Two-Tone Bespoke Paint"], 
+    videoUrl: "/top 4 cars/Videos/m1.mp4",
+    features: ["Dry Carbon Monocoque", "1,100 bhp Hybrid", "Active Aero"],
     specs: {
       "Engine": "6.0L Bi-Turbo V12", 
       "Power": "612 bhp",
@@ -109,32 +110,31 @@ export const allCars: Car[] = [
       "0–100 km/h": "4.5 s"
     }
   },
-
-  {
+{
     id: "cadillac",
-    make: "CADILLAC",
-    name: "ESCALADE",
+    make: "Cadillac",
+    name: "Escalade",
     trim: "V-Series Bespoke", 
     year: 2025,
     price: "€ 425,000", 
     description:
       "The ultimate expression of American luxury, elevated to unprecedented heights. This bespoke Escalade commands attention with its imposing widebody stance, exposed carbon fiber accents, and a roaring supercharged V8. Step inside a meticulously handcrafted cabin where absolute comfort meets raw, uncompromising power.",
-    image: "/top 4 cars/images/cadillac/A.jpg",
+    image: "/top 4 cars/images/c/11c.jpg",
     images: [
-      "/top 4 cars/images/cadillac/F.jpg",
-      "/top 4 cars/images/cadillac/B.jpg",
-      "/top 4 cars/images/cadillac/C.jpg",
-      "/top 4 cars/images/cadillac/D.jpg",
-      "/top 4 cars/images/cadillac/E.jpg"
+      "/top 4 cars/images/c/2c.jpg",
+      "/top 4 cars/images/c/3c.jpg",
+      "/top 4 cars/images/c/4C.jpg",
+      "/top 4 cars/images/c/5c.jpg",
+      "/top 4 cars/images/c/6c.jpg"
     ],
     videoUrl: "/top 4 cars/Videos/C.mp4",
-    videoFocus: "center 20%",
-    features: ["Widebody Carbon Kit", "820 bhp Performance Tune", "Forged Monoblock Rims"], 
+  
+    features: ["Widebody Carbon Kit", "820 bhp Performance Tune", "Forged Monoblock Rims"],
     specs: {
-      "Engine": "6.2L Supercharged V8", 
-      "Power": "820 bhp", 
-      "Torque": "1,150 Nm", 
-      "0–100 km/h": "3.9 s"
+      Engine: "6.2L Supercharged V8", 
+      Power: "820 bhp", 
+      Torque: "1,150 Nm", 
+      "0–100 km/h": "3.9 s", 
     },
   },
 ];

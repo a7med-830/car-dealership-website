@@ -157,7 +157,7 @@ function useReveal() {
 
 const heroSlides = [
   {
-    id: "maybach", 
+    id: "Mercedes", 
     img: "/Images-home/6ca3bb49af970e54f445948e1ce21c9d.jpg",
     title: "Mercedes‑Maybach S‑Class ",
     sub: "SOFT KIT — ATELIER",
@@ -181,11 +181,11 @@ const heroSlides = [
   },
   {
     id: "cadillac", 
-    img: "https://i.pinimg.com/736x/45/bb/9f/45bb9fcca58eea50d5cd671e2281b208.jpg",
+    img: "/Images-home/cad.jpg",
     eyebrow: "LIMITED",
-    title: "cadillac escalade",
+    title: "Cadillac Escalade",
     sub: "WIDEBODY PROGRAM",
-    tag: "cadillac",
+    tag: "Cadillac",
   },
 ];
 
