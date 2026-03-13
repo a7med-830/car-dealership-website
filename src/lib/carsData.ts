@@ -12,7 +12,8 @@ export interface Car {
   images: string[];
   features: string[];
   specs: Record<string, string>;
-  videoUrl?: string;
+  videoUrl?: string; 
+  videoFocus?: string;
 }
 
 export const allCars: Car[] = [
@@ -44,25 +45,25 @@ export const allCars: Car[] = [
       "Rear Theatre Configuration",
     ],
     specs: {
-      Engine: "6.75L Twin-Turbo V12",
-      Power: "571 bhp",
-      Torque: "900 Nm",
+      "Engine": "6.75L Twin-Turbo V12",
+      "Power": "571 bhp",
+      "Torque": "900 Nm",
       "0–100 km/h": "5.3 s",
       "Top Speed": "250 km/h",
-      Weight: "2,560 kg",
-      Transmission: "8-speed Automatic",
-      Drivetrain: "RWD",
+      "Weight": "2,560 kg",
+      "Transmission": "8-speed Automatic",
+      "Drivetrain": "RWD",
     },
     videoUrl: "/top 4 cars/Videos/R1.mp4",
   },
   
-  
-  {id: "28", 
-    name: " Porsche ",
-    make: "Panamera",
+  {
+    id: "porsche-panamera", // غيرت الـ ID لاسم أوضح بدل 28
+    make: "PORSCHE", 
+    name: "PANAMERA", 
     year: 2024,
-    price: "187,650 $",
-    description:"Where high-performance engineering meets the soul of a sports car. The Panamera Turbo E-Hybrid stands as a testament to Porsche's relentless pursuit of perfection. From its sharpened silhouette to the seamless integration of E-Hybrid technology, every detail is a canvas for individualization. Discover the art of driving, redefined by UNIDRIVE.",
+    price: "$ 187,650",
+    description: "Where high-performance engineering meets the soul of a sports car. The Panamera Turbo E-Hybrid stands as a testament to Porsche's relentless pursuit of perfection. From its sharpened silhouette to the seamless integration of E-Hybrid technology, every detail is a canvas for individualization. Discover the art of driving, redefined by UNIDRIVE.",
     image: "/top 4 cars/images/p/77b4ecacace0e00ca825fe3f710b4fa4.jpg",
     images: [
        "/top 4 cars/images/p/91bae0281fcb601cb6862e52d24f1b92.jpg",
@@ -75,52 +76,68 @@ export const allCars: Car[] = [
     trim: "Turbo E-Hybrid",
     features: ["680 hp Combined Output", "Active Suspension", "Night Vision"],
     specs: {
-      engine: "V8 Biturbo",
-      power: "680 HP",
-      zeroToSixty: "3.2s",
-      topSpeed: "315 km/h"
+      "Engine": "4.0L V8 Biturbo Hybrid", // تم توحيد أسماء المواصفات
+      "Power": "680 bhp",
+      "Torque": "850 Nm",
+      "0–100 km/h": "3.2 s",
+      "Top Speed": "315 km/h"
     }
   },
+
   {
-    id: "Mercedes‑Maybach S‑Class ",
-    make: "Mercedes‑Maybach",
-    name: "S‑Class ",
-    trim: "UNIDRIVE STALLONE",
+    id: "maybach",
+    make: "MERCEDES-MAYBACH",
+    name: "S-CLASS",
+    trim: "UNIDRIVE EXCLUSIVE", 
     year: 2026,
     price: "€ 920,000",
-    description:
-      "The prancing horse, reimagined without compromise. Full dry-carbon exterior, re-mapped hybrid drivetrain pushing 1,100 bhp. The Stallone is Italian fury wrapped in German precision.",
-    image: "/Images-home/6ca3bb49af970e54f445948e1ce21c9d.jpg",
-    images: [],
-    features: ["Dry Carbon Monocoque", "1,100 bhp Hybrid", "Active Aero"],
+    description: "The absolute pinnacle of chauffeur-driven luxury. The Mercedes-Maybach S-Class stretches the boundaries of first-class travel, offering a whisper-quiet cabin adorned with the finest materials, expansive legroom, and an imposing stance that commands absolute respect.", // ديسكريبشن جديد يليق بالمايباخ
+    image: "/top 4 cars/images/mayb/1.jpg",
+    images: [
+      "/top 4 cars/images/mayb/4fc887d3a653bd7b16bc477a8f31dce2.jpg",
+      "/top 4 cars/images/mayb/17dbce4819c265d2710611293c9123a9.jpg",
+      "/top 4 cars/images/mayb/c4aec7d41783a9d9492f6e13afe13815.jpg",
+      "/top 4 cars/images/mayb/c4d2ce33dc76e6d6674431821ac5935b.jpg",
+      "/top 4 cars/images/mayb/e75d7c355d8b94afcb78499245263f32.jpg"
+    ],
+    videoUrl: "/top 4 cars/Videos/M2.mp4",
+    features: ["Forged Signature Wheels", "First-Class Rear Suite", "Two-Tone Bespoke Paint"], 
     specs: {
-      Engine: "4.0L Twin-Turbo V8 + 3× Electric",
-      Power: "1,100 bhp",
-      Torque: "800 Nm",
-      "0–100 km/h": "2.4 s",
-    },
+      "Engine": "6.0L Bi-Turbo V12", 
+      "Power": "612 bhp",
+      "Torque": "900 Nm",
+      "0–100 km/h": "4.5 s"
+    }
   },
+
   {
-    id: "BMW 8 Series",
-    make: "BMW",
-    name: "8 Series",
-    trim: "",
+    id: "cadillac",
+    make: "CADILLAC",
+    name: "ESCALADE",
+    trim: "V-Series Bespoke", 
     year: 2025,
-    price: "€ 540,000",
+    price: "€ 425,000", 
     description:
-      "The world's most aggressive SUV, sharpened further. The Venatus package redefines presence — widened carbon arches, 850 bhp, and an interior of pure hand-crafted excess.",
-    image: "/Images-home/a8569c342b364babc26e498dcf6c0dca.jpg",
-    images: [],
-    features: ["Widebody Carbon Kit", "850 bhp Tune", "Sport Exhaust"],
+      "The ultimate expression of American luxury, elevated to unprecedented heights. This bespoke Escalade commands attention with its imposing widebody stance, exposed carbon fiber accents, and a roaring supercharged V8. Step inside a meticulously handcrafted cabin where absolute comfort meets raw, uncompromising power.",
+    image: "/top 4 cars/images/cadillac/A.jpg",
+    images: [
+      "/top 4 cars/images/cadillac/F.jpg",
+      "/top 4 cars/images/cadillac/B.jpg",
+      "/top 4 cars/images/cadillac/C.jpg",
+      "/top 4 cars/images/cadillac/D.jpg",
+      "/top 4 cars/images/cadillac/E.jpg"
+    ],
+    videoUrl: "/top 4 cars/Videos/C.mp4",
+    videoFocus: "center 20%",
+    features: ["Widebody Carbon Kit", "820 bhp Performance Tune", "Forged Monoblock Rims"], 
     specs: {
-      Engine: "4.0L Twin-Turbo V8",
-      Power: "850 bhp",
-      Torque: "1,050 Nm",
-      "0–100 km/h": "3.1 s",
+      "Engine": "6.2L Supercharged V8", 
+      "Power": "820 bhp", 
+      "Torque": "1,150 Nm", 
+      "0–100 km/h": "3.9 s"
     },
   },
 ];
-
 export function getCarById(id: string): Car | undefined {
   return allCars.find((c) => c.id === id);
 }
