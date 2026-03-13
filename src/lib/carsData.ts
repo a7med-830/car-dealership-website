@@ -76,7 +76,7 @@ export const allCars: Car[] = [
     trim: "Turbo E-Hybrid",
     features: ["680 hp Combined Output", "Active Suspension", "Night Vision"],
     specs: {
-      "Engine": "4.0L V8 Biturbo Hybrid", // تم توحيد أسماء المواصفات
+      "Engine": "4.0L V8 Biturbo Hybrid", 
       "Power": "680 bhp",
       "Torque": "850 Nm",
       "0–100 km/h": "3.2 s",
@@ -101,7 +101,7 @@ export const allCars: Car[] = [
         "/top 4 cars/images/m/4m.jpg",
         "/top 4 cars/images/m/5m.jpg",
     ],
-    videoUrl: "/top 4 cars/Videos/m1.mp4",
+    videoUrl: "/top 4 cars/Videos/m3.mp4",
     features: ["Dry Carbon Monocoque", "1,100 bhp Hybrid", "Active Aero"],
     specs: {
       "Engine": "6.0L Bi-Turbo V12", 

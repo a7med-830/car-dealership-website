@@ -1,7 +1,7 @@
 // src/app/cars/[id]/page.tsx
 "use client";
 import { useEffect, useRef, useState, use } from "react";
-import { motion, useScroll, useTransform, AnimatePresence, Variants } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -12,8 +12,6 @@ import { Car, getCarById, getAllCars } from "@/lib/carsData";
 const GOLD = "#C9A96E";
 const GOLD_LIGHT = "#E2C99A";
 const COPPER = "#B87333";
-const FONT_DISPLAY = "'Cinzel', serif";
-const FONT_BODY = "'Montserrat', sans-serif";
 
 // ─── Sub-nav Items ────────────────────────────────────────────────────────────
 
@@ -22,12 +20,13 @@ type NavSection = (typeof NAV_ITEMS)[number];
 
 // ─── Animations ───────────────────────────────────────────────────────────────
 
+import { Variants } from "framer-motion";
 const stagger: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.15, 
     },
   },
 };
@@ -47,29 +46,18 @@ function SectionAnchor({ id }: { id: string }) {
   return <div id={id} style={{ scrollMarginTop: "80px" }} />;
 }
 
+// ─── Component: SubNav ────────────────────────────────────────────────────────
+
 function SubNav({ active }: { active: NavSection }) {
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > window.innerHeight * 0.7);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <nav
       style={{
         position: "sticky",
         top: 0,
         zIndex: 50,
-      
-        background: isScrolled ? "rgba(5, 5, 5, 0.95)" : "rgba(0, 0, 0, 0.4)",
+        background: "rgba(5,5,5,0.92)",
         backdropFilter: "blur(20px)",
-        borderBottom: isScrolled ? `1px solid rgba(201,169,110,0.3)` : `1px solid transparent`,
-        transition: "all 0.5s ease", 
+        borderBottom: `1px solid rgba(201,169,110,0.15)`,
       }}
     >
       <div
@@ -79,17 +67,17 @@ function SubNav({ active }: { active: NavSection }) {
           padding: "0 48px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "space-between", 
         }}
       >
-
+        {/* زرار العودة للـ Home */}
         <Link href="/" style={{
           fontSize: "18px",
           letterSpacing: "0.3em",
           fontWeight: 700,
           color: GOLD,
           textDecoration: "none",
-          fontFamily: FONT_DISPLAY,
+          fontFamily: "'Cormorant Garamond', serif",
         }}>
           UNIDRIVE
         </Link>
@@ -104,21 +92,11 @@ function SubNav({ active }: { active: NavSection }) {
                 fontSize: "10px",
                 letterSpacing: "0.25em",
                 fontWeight: 600,
-                color: active === item ? GOLD : "rgba(255,255,255,0.5)",
+                color: active === item ? GOLD : "rgba(255,255,255,0.45)",
                 borderBottom: active === item ? `2px solid ${GOLD}` : "2px solid transparent",
                 textDecoration: "none",
                 transition: "color 0.3s, border-color 0.3s",
-                fontFamily: FONT_BODY,
-              }}
-              onMouseEnter={(e) => {
-                if (active !== item) {
-                  (e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,0.9)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (active !== item) {
-                  (e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,0.5)";
-                }
+                fontFamily: "'Cormorant Garamond', 'Didot', serif",
               }}
             >
               {item}
@@ -131,11 +109,10 @@ function SubNav({ active }: { active: NavSection }) {
 }
 
 // ─── Component: HeroSection ───────────────────────────────────────────────────
-
 function HeroSection({ car }: { car: Car }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]); // قللنا الـ parallax شوية عشان نحافظ على كادر الفيديو فوق
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
@@ -143,49 +120,44 @@ function HeroSection({ car }: { car: Car }) {
       ref={ref}
       style={{
         position: "relative",
-        height: "80dvh", 
-        minHeight: "600px",
+        height: "100dvh",
+        width: "100%",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        background: "#000", 
       }}
     >
-    <motion.video
-      key={car.videoUrl}
-      src={car.videoUrl}
-      autoPlay
-      muted
-      loop
-      playsInline
-      style={{
-        width: "100%",
-        height: "105%",
-        objectFit: "cover",
-        objectPosition: car.videoFocus || "center", 
-        filter: "contrast(1.05) brightness(0.95)",
-      }}
-    />
+    
+      <motion.div style={{ position: "absolute", inset: 0, y }}>
+        <video
+          key={car.videoUrl} 
+          src={car.videoUrl}
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+          }}
+        />
+      </motion.div>
 
-     
+    
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.30) 50%, rgba(0,0,0,0.40) 100%)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.3) 100%)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
+          zIndex: 1,
         }}
       />
 
-     
+   
       <motion.div
         style={{ 
           opacity, 
@@ -195,89 +167,25 @@ function HeroSection({ car }: { car: Car }) {
           padding: "0 24px",
           marginTop: "-15vh" 
         }}
-      />
-
-      <motion.div
-        style={{ opacity, position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px" }}
         initial="hidden"
         animate="visible"
         variants={stagger}
       >
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "10px",
-            letterSpacing: "0.4em",
-            color: GOLD,
-            marginBottom: "24px",
-            fontFamily: FONT_BODY,
-            fontWeight: 600,
-          }}
-        >
+        <motion.p variants={fadeUp} style={{ fontSize: "10px", letterSpacing: "0.4em", color: GOLD, marginBottom: "20px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
           {car.year} — UNIDRIVE EXCLUSIVE
         </motion.p>
 
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "clamp(13px, 2vw, 16px)",
-            letterSpacing: "0.55em",
-            color: "rgba(255,255,255,0.7)",
-            marginBottom: "12px",
-            fontFamily: FONT_DISPLAY,
-            fontWeight: 500,
-            textTransform: "uppercase",
-          }}
-        >
+        <motion.p variants={fadeUp} style={{ fontSize: "clamp(12px, 2vw, 15px)", letterSpacing: "0.5em", color: "rgba(255,255,255,0.5)", marginBottom: "8px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
           {car.make}
         </motion.p>
 
-        <motion.h1
-          variants={fadeUp}
-          style={{
-            fontSize: "clamp(52px, 12vw, 140px)",
-            fontFamily: FONT_DISPLAY,
-            fontWeight: 400,
-            letterSpacing: "0.08em",
-            lineHeight: 0.9,
-            color: "#ffffff",
-            marginBottom: "20px",
-            textShadow: "0 0 40px rgba(0,0,0,0.5)",
-            textTransform: "uppercase",
-          }}
-        >
+        <motion.h1 variants={fadeUp} style={{ fontSize: "clamp(48px, 11vw, 130px)", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, letterSpacing: "0.04em", lineHeight: 0.9, color: "#ffffff", marginBottom: "20px", textShadow: "0 10px 40px rgba(0,0,0,0.4)" }}>
           {car.name}
         </motion.h1>
 
-        <motion.div
-          variants={fadeUp}
-          style={{
-            width: "60px",
-            height: "1px",
-            background: GOLD,
-            margin: "0 auto 20px",
-          }}
-        />
+        <motion.div variants={fadeUp} style={{ width: "50px", height: "1px", background: GOLD, margin: "0 auto 32px" }} />
 
-        <motion.p
-          variants={fadeUp}
-          style={{
-            fontSize: "11px",
-            letterSpacing: "0.35em",
-            color: GOLD_LIGHT,
-            marginBottom: "56px",
-            fontFamily: FONT_BODY,
-            fontWeight: 500,
-            textTransform: "uppercase",
-          }}
-        >
-          {car.trim}
-        </motion.p>
-
-        <motion.div
-          variants={fadeUp}
-          style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}
-        >
+        <motion.div variants={fadeUp} style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
           <HeroButton label="DISCOVER" href="#introduction" primary />
           <HeroButton label="PRODUCT OVERVIEW" href="#gallery" />
         </motion.div>
@@ -286,6 +194,7 @@ function HeroSection({ car }: { car: Car }) {
   );
 }
 
+// ضيف الكود ده تحت الـ HeroSection عشان الـ Error يختفي
 function HeroButton({ label, href, primary = false }: { label: string; href: string; primary?: boolean }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -300,8 +209,8 @@ function HeroButton({ label, href, primary = false }: { label: string; href: str
         padding: "14px 32px",
         fontSize: "10px",
         letterSpacing: "0.25em",
-        fontFamily: FONT_BODY,
-        fontWeight: 600,
+        fontFamily: "'Cormorant Garamond', serif",
+        fontWeight: 700,
         textDecoration: "none",
         transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         border: `1px solid ${primary ? GOLD : "rgba(255,255,255,0.25)"}`,
@@ -321,6 +230,7 @@ function IntroductionSection({ car }: { car: Car }) {
   return (
     <section id="introduction" style={{ background: "#050505", padding: "120px 0" }}>
       <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 48px" }}>
+        {/* Section label */}
         <motion.p
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -331,8 +241,8 @@ function IntroductionSection({ car }: { car: Car }) {
             letterSpacing: "0.45em",
             color: GOLD,
             marginBottom: "64px",
-            fontFamily: FONT_BODY,
-            fontWeight: 600,
+            fontFamily: "'Cormorant Garamond', serif",
+            fontWeight: 700,
             display: "flex",
             alignItems: "center",
             gap: "16px",
@@ -342,6 +252,7 @@ function IntroductionSection({ car }: { car: Car }) {
           01 — INTRODUCTION
         </motion.p>
 
+        {/* Editorial description */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -351,18 +262,19 @@ function IntroductionSection({ car }: { car: Car }) {
         >
           <p
             style={{
-              fontSize: "clamp(24px, 3.5vw, 36px)",
-              fontFamily: FONT_DISPLAY,
-              fontWeight: 400,
-              lineHeight: 1.6,
-              color: "rgba(255,255,255,0.85)",
-              letterSpacing: "0.03em",
+              fontSize: "clamp(24px, 3.5vw, 42px)",
+              fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+              fontWeight: 300,
+              lineHeight: 1.5,
+              color: "rgba(255,255,255,0.88)",
+              letterSpacing: "0.01em",
             }}
           >
             {car.description}
           </p>
         </motion.div>
 
+        {/* Split: Image + Features */}
         <div
           style={{
             display: "grid",
@@ -372,6 +284,7 @@ function IntroductionSection({ car }: { car: Car }) {
           }}
           className="split-grid"
         >
+          {/* Image */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -383,6 +296,7 @@ function IntroductionSection({ car }: { car: Car }) {
               aspectRatio: "4/3",
             }}
           >
+            {/* Gold corner accents */}
             <div style={{ position: "absolute", top: "-1px", left: "-1px", width: "40px", height: "40px", borderTop: `1px solid ${GOLD}`, borderLeft: `1px solid ${GOLD}`, zIndex: 2 }} />
             <div style={{ position: "absolute", bottom: "-1px", right: "-1px", width: "40px", height: "40px", borderBottom: `1px solid ${GOLD}`, borderRight: `1px solid ${GOLD}`, zIndex: 2 }} />
             <img
@@ -399,6 +313,7 @@ function IntroductionSection({ car }: { car: Car }) {
               onMouseEnter={(e) => ((e.target as HTMLImageElement).style.transform = "scale(1.04)")}
               onMouseLeave={(e) => ((e.target as HTMLImageElement).style.transform = "scale(1)")}
             />
+            {/* Price tag overlay */}
             <div
               style={{
                 position: "absolute",
@@ -406,33 +321,35 @@ function IntroductionSection({ car }: { car: Car }) {
                 left: "24px",
                 background: "rgba(0,0,0,0.75)",
                 backdropFilter: "blur(10px)",
-                padding: "16px 24px",
+                padding: "12px 20px",
                 border: `1px solid rgba(201,169,110,0.3)`,
               }}
             >
-              <p style={{ fontSize: "9px", letterSpacing: "0.3em", color: GOLD, marginBottom: "4px", fontFamily: FONT_BODY }}>
+              <p style={{ fontSize: "9px", letterSpacing: "0.3em", color: GOLD, marginBottom: "2px", fontFamily: "'Cormorant Garamond', serif" }}>
                 STARTING FROM
               </p>
-              <p style={{ fontSize: "20px", color: "#fff", fontFamily: FONT_DISPLAY, fontWeight: 500, letterSpacing: "0.05em" }}>
+              <p style={{ fontSize: "18px", color: "#fff", fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, letterSpacing: "0.05em" }}>
                 {car.price}
               </p>
             </div>
           </motion.div>
 
+          {/* Features + Specs */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           >
+            {/* Features */}
             <p
               style={{
                 fontSize: "9px",
                 letterSpacing: "0.4em",
                 color: GOLD,
                 marginBottom: "28px",
-                fontFamily: FONT_BODY,
-                fontWeight: 600,
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 700,
               }}
             >
               EXCLUSIVE FEATURES
@@ -449,22 +366,22 @@ function IntroductionSection({ car }: { car: Car }) {
                     display: "flex",
                     alignItems: "center",
                     gap: "16px",
-                    padding: "16px 0",
+                    padding: "14px 0",
                     borderBottom: "1px solid rgba(255,255,255,0.06)",
-                    fontSize: "12px",
-                    letterSpacing: "0.1em",
+                    fontSize: "13px",
+                    letterSpacing: "0.08em",
                     color: "rgba(255,255,255,0.7)",
-                    fontFamily: FONT_BODY,
-                    fontWeight: 400,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 500,
                   }}
                 >
                   <span
                     style={{
-                      width: "4px",
-                      height: "4px",
+                      width: "5px",
+                      height: "5px",
                       background: GOLD,
+                      borderRadius: "50%",
                       flexShrink: 0,
-                      transform: "rotate(45deg)"
                     }}
                   />
                   {feat}
@@ -472,14 +389,15 @@ function IntroductionSection({ car }: { car: Car }) {
               ))}
             </ul>
 
+            {/* Specs grid */}
             <p
               style={{
                 fontSize: "9px",
                 letterSpacing: "0.4em",
                 color: GOLD,
                 marginBottom: "24px",
-                fontFamily: FONT_BODY,
-                fontWeight: 600,
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 700,
               }}
             >
               TECHNICAL DATA
@@ -497,13 +415,13 @@ function IntroductionSection({ car }: { car: Car }) {
                   key={k}
                   style={{
                     background: "#050505",
-                    padding: "20px",
+                    padding: "16px 20px",
                   }}
                 >
-                  <p style={{ fontSize: "9px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.4)", marginBottom: "8px", fontFamily: FONT_BODY }}>
+                  <p style={{ fontSize: "9px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.35)", marginBottom: "4px", fontFamily: "'Cormorant Garamond', serif" }}>
                     {k.toUpperCase()}
                   </p>
-                  <p style={{ fontSize: "15px", color: "#fff", fontFamily: FONT_DISPLAY, fontWeight: 500, letterSpacing: "0.05em" }}>
+                  <p style={{ fontSize: "14px", color: "#fff", fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
                     {v}
                   </p>
                 </div>
@@ -529,6 +447,7 @@ function GallerySection({ car }: { car: Car }) {
   
   if (!car.images?.length) return null;
 
+  // Assign column spans for masonry-like effect
   const layout = [
     { colSpan: 2, rowSpan: 2 },
     { colSpan: 1, rowSpan: 1 },
@@ -555,6 +474,7 @@ function GallerySection({ car }: { car: Car }) {
   return (
     <section id="gallery" style={{ background: "#080808", padding: "120px 0" }}>
       <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 48px" }}>
+        {/* Header with navigation */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "64px" }}>
           <motion.p
             initial={{ opacity: 0, x: -20 }}
@@ -564,8 +484,8 @@ function GallerySection({ car }: { car: Car }) {
               fontSize: "9px",
               letterSpacing: "0.45em",
               color: GOLD,
-              fontFamily: FONT_BODY,
-              fontWeight: 600,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 700,
               display: "flex",
               alignItems: "center",
               gap: "16px",
@@ -575,6 +495,7 @@ function GallerySection({ car }: { car: Car }) {
             02 — GALLERY
           </motion.p>
 
+          {/* Navigation arrows */}
           {totalPages > 1 && (
             <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
               <button
@@ -587,7 +508,7 @@ function GallerySection({ car }: { car: Car }) {
                   cursor: galleryPage === 0 ? "not-allowed" : "pointer",
                   color: galleryPage === 0 ? "rgba(255,255,255,0.2)" : GOLD,
                   fontSize: "14px",
-                  fontFamily: FONT_BODY,
+                  fontFamily: "'Cormorant Garamond', serif",
                   transition: "all 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
@@ -605,7 +526,7 @@ function GallerySection({ car }: { car: Car }) {
               >
                 ‹
               </button>
-              <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.4)", minWidth: "30px", textAlign: "center", fontFamily: FONT_BODY }}>
+              <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.4)", minWidth: "30px", textAlign: "center" }}>
                 {galleryPage + 1} / {totalPages}
               </span>
               <button
@@ -618,7 +539,7 @@ function GallerySection({ car }: { car: Car }) {
                   cursor: galleryPage === totalPages - 1 ? "not-allowed" : "pointer",
                   color: galleryPage === totalPages - 1 ? "rgba(255,255,255,0.2)" : GOLD,
                   fontSize: "14px",
-                  fontFamily: FONT_BODY,
+                  fontFamily: "'Cormorant Garamond', serif",
                   transition: "all 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
@@ -640,6 +561,7 @@ function GallerySection({ car }: { car: Car }) {
           )}
         </div>
 
+        {/* Grid */}
         <div
           style={{
             display: "grid",
@@ -689,6 +611,7 @@ function GallerySection({ car }: { car: Car }) {
                     el.style.filter = "brightness(0.88) contrast(1.05) saturate(0.9)";
                   }}
                 />
+                {/* Index label */}
                 <div
                   style={{
                     position: "absolute",
@@ -697,7 +620,7 @@ function GallerySection({ car }: { car: Car }) {
                     fontSize: "9px",
                     letterSpacing: "0.2em",
                     color: "rgba(255,255,255,0.3)",
-                    fontFamily: FONT_BODY,
+                    fontFamily: "'Cormorant Garamond', serif",
                     pointerEvents: "none",
                   }}
                 >
@@ -726,6 +649,7 @@ function AlternativesSection({ currentId, cars }: { currentId: string; cars: Car
   return (
     <section id="alternatives" style={{ background: "#040404", padding: "120px 0" }}>
       <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 48px" }}>
+        {/* Label */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -747,8 +671,8 @@ function AlternativesSection({ currentId, cars }: { currentId: string; cars: Car
                 letterSpacing: "0.45em",
                 color: GOLD,
                 marginBottom: "16px",
-                fontFamily: FONT_BODY,
-                fontWeight: 600,
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 700,
                 display: "flex",
                 alignItems: "center",
                 gap: "16px",
@@ -759,11 +683,11 @@ function AlternativesSection({ currentId, cars }: { currentId: string; cars: Car
             </p>
             <h2
               style={{
-                fontSize: "clamp(28px, 4vw, 48px)",
-                fontFamily: FONT_DISPLAY,
-                fontWeight: 400,
+                fontSize: "clamp(32px, 5vw, 60px)",
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 300,
                 color: "#fff",
-                letterSpacing: "0.08em",
+                letterSpacing: "0.04em",
                 lineHeight: 1.1,
               }}
             >
@@ -775,7 +699,7 @@ function AlternativesSection({ currentId, cars }: { currentId: string; cars: Car
               fontSize: "11px",
               letterSpacing: "0.15em",
               color: "rgba(255,255,255,0.4)",
-              fontFamily: FONT_BODY,
+              fontFamily: "'Cormorant Garamond', serif",
               maxWidth: "280px",
               lineHeight: 1.8,
             }}
@@ -784,6 +708,7 @@ function AlternativesSection({ currentId, cars }: { currentId: string; cars: Car
           </p>
         </motion.div>
 
+        {/* Cards */}
         <div
           style={{
             display: "grid",
@@ -814,6 +739,7 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
   const [hovered, setHovered] = useState(false);
 
   return (
+    // 1. غلفنا الكارت بالكامل بـ Link عشان أي مكان تدوس فيه يوديك لصفحة العربية
     <Link 
       href={`/cars/${car.id}`} 
       style={{ textDecoration: "none", color: "inherit", display: "block" }}
@@ -834,6 +760,7 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
           overflow: "hidden",
         }}
       >
+        {/* Image Section */}
         <div style={{ overflow: "hidden", aspectRatio: "16/9", position: "relative" }}>
           <img
             src={car.image}
@@ -848,6 +775,7 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
               transition: "transform 0.7s ease, filter 0.5s ease",
             }}
           />
+          {/* Year overlay */}
           <div
             style={{
               position: "absolute",
@@ -856,7 +784,7 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
               fontSize: "9px",
               letterSpacing: "0.25em",
               color: GOLD,
-              fontFamily: FONT_BODY,
+              fontFamily: "'Cormorant Garamond', serif",
               background: "rgba(0,0,0,0.6)",
               padding: "4px 8px",
             }}
@@ -865,6 +793,7 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
           </div>
         </div>
 
+        {/* Info Section */}
         <div style={{ padding: "28px 28px 32px" }}>
           <p
             style={{
@@ -872,17 +801,17 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
               letterSpacing: "0.35em",
               color: GOLD,
               marginBottom: "8px",
-              fontFamily: FONT_BODY,
-              fontWeight: 600,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 700,
             }}
           >
             {car.make}
           </p>
           <h3
             style={{
-              fontSize: "clamp(20px, 2.5vw, 28px)",
-              fontFamily: FONT_DISPLAY,
-              fontWeight: 400,
+              fontSize: "clamp(22px, 3vw, 32px)",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 300,
               color: "#fff",
               letterSpacing: "0.06em",
               marginBottom: "6px",
@@ -897,12 +826,13 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
               letterSpacing: "0.2em",
               color: "rgba(255,255,255,0.35)",
               marginBottom: "24px",
-              fontFamily: FONT_BODY,
+              fontFamily: "'Cormorant Garamond', serif",
             }}
           >
             {car.trim}
           </p>
 
+          {/* Discover Button Effect */}
           <div
             style={{
               display: "flex",
@@ -911,8 +841,8 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
               fontSize: "9px",
               letterSpacing: "0.3em",
               color: hovered ? GOLD : "rgba(255,255,255,0.3)",
-              fontFamily: FONT_BODY,
-              fontWeight: 600,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 700,
               transition: "color 0.3s ease",
             }}
           >
@@ -927,6 +857,7 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
           </div>
         </div>
 
+        {/* Bottom gold accent line */}
         <motion.div
           animate={{ scaleX: hovered ? 1 : 0 }}
           initial={{ scaleX: 0 }}
@@ -945,7 +876,6 @@ function AlternativeCard({ car, index }: { car: Car; index: number }) {
     </Link>
   );
 }
-
 // ─── Component: Footer ────────────────────────────────────────────────────────
 
 function PageFooter({ car }: { car: Car }) {
@@ -972,10 +902,10 @@ function PageFooter({ car }: { car: Car }) {
           <p
             style={{
               fontSize: "18px",
-              fontFamily: FONT_DISPLAY,
+              fontFamily: "'Cormorant Garamond', serif",
               letterSpacing: "0.3em",
               color: GOLD,
-              fontWeight: 700,
+              fontWeight: 600,
             }}
           >
             UNIDRIVE
@@ -986,7 +916,7 @@ function PageFooter({ car }: { car: Car }) {
               letterSpacing: "0.25em",
               color: "rgba(255,255,255,0.2)",
               marginTop: "4px",
-              fontFamily: FONT_BODY,
+              fontFamily: "'Cormorant Garamond', serif",
             }}
           >
             THE ART OF AUTOMOTIVE EXCELLENCE
@@ -997,7 +927,7 @@ function PageFooter({ car }: { car: Car }) {
             fontSize: "9px",
             letterSpacing: "0.2em",
             color: "rgba(255,255,255,0.18)",
-            fontFamily: FONT_BODY,
+            fontFamily: "'Cormorant Garamond', serif",
           }}
         >
           © {new Date().getFullYear()} — {car.make} {car.name} — ALL RIGHTS RESERVED
@@ -1009,10 +939,12 @@ function PageFooter({ car }: { car: Car }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+
 type PageProps = { params: Promise<{ id: string }> };
 
+
 export default function CarDetailPage({ params }: PageProps) {
-  const resolvedParams = use(params);
+    const resolvedParams = use(params);
 
   const car = getCarById(resolvedParams.id);
   const allCars = getAllCars();
@@ -1043,8 +975,7 @@ export default function CarDetailPage({ params }: PageProps) {
   return (
     <>
       <style>{`
-        /* استدعاء خطوط الماركات العالمية (Cinzel للعناوين، Montserrat للنصوص) */
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap');
         *, *::before, *::after { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { margin: 0; background: #050505; color: #fff; -webkit-font-smoothing: antialiased; }
@@ -1054,13 +985,13 @@ export default function CarDetailPage({ params }: PageProps) {
         ::-webkit-scrollbar-thumb { background: ${COPPER}; }
       `}</style>
 
-      {/* زرار عائم "Floating Button" للرجوع للـ Home */}
+      {/* زرار عائم "Floating Button" للرجوع للـ Home يظهر في ركن الشاشة */}
       <Link
         href="/"
         style={{
           position: "fixed",
           bottom: "40px",
-          left: "40px",
+          left: "40px", // خليته على الشمال عشان ما يغطيش على أي محتوى مهم
           zIndex: 100,
           padding: "12px 24px",
           fontSize: "10px",
@@ -1070,8 +1001,8 @@ export default function CarDetailPage({ params }: PageProps) {
           backdropFilter: "blur(10px)",
           border: `1px solid ${GOLD}`,
           textDecoration: "none",
-          fontFamily: FONT_BODY,
-          fontWeight: 600,
+          fontFamily: "'Cormorant Garamond', serif",
+          fontWeight: 700,
           transition: "all 0.4s ease",
         }}
         onMouseEnter={(e) => {
