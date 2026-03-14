@@ -92,7 +92,7 @@ export const allCars: Car[] = [
     year: 2026,
     price: "€ 920,000",
     description:
-      "The prancing horse, reimagined without compromise. Full dry-carbon exterior, re-mapped hybrid drivetrain pushing 1,100 bhp. The Stallone is Italian fury wrapped in German precision.",
+      "The Mercedes-Maybach S-Class represents the absolute pinnacle of luxury sedans. A fully reimagined flagship with bespoke customization, cutting-edge technology, and a commanding presence on the road. The Stallone edition showcases dark styling cues and exclusive engineering.",
     image: "/Images-home/6ca3bb49af970e54f445948e1ce21c9d.jpg",
     images: [
         "/top 4 cars/images/m/1m.jpg",
@@ -116,7 +116,7 @@ export const allCars: Car[] = [
     name: "Escalade",
     trim: "V-Series Bespoke", 
     year: 2025,
-    price: "€ 425,000", 
+    price: "$ 169,000", 
     description:
       "The ultimate expression of American luxury, elevated to unprecedented heights. This bespoke Escalade commands attention with its imposing widebody stance, exposed carbon fiber accents, and a roaring supercharged V8. Step inside a meticulously handcrafted cabin where absolute comfort meets raw, uncompromising power.",
     image: "/top 4 cars/images/c/11c.jpg",
