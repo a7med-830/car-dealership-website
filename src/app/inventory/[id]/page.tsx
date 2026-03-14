@@ -19,7 +19,7 @@ function Navbar() {
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
       background: scrolled ? "rgba(0,0,0,0.96)" : "rgba(0,0,0,0.7)",
       borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.08)" : "transparent"}`,
-      backdropFilter: "blur(16px)", padding: "0 48px",
+      backdropFilter: "blur(16px)", padding: "0 clamp(16px, 5vw, 48px)",
       transition: "background 0.4s, border-color 0.4s",
     }}>
       <div style={{ maxWidth: 1440, margin: "0 auto", height: 68, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -48,9 +48,9 @@ function Footer() {
     { h: "SUPPORT",  links: ["CONTACT", "FAQ", "WARRANTY"] },
   ];
   return (
-    <footer style={{ background: "var(--dark1)", borderTop: "1px solid var(--border)", padding: "56px 48px 36px" }}>
+    <footer className="footer-container" style={{ background: "var(--dark1)", borderTop: "1px solid var(--border)" }}>
       <div style={{ maxWidth: 1440, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48, marginBottom: 48 }}>
+        <div className="footer-grid" style={{ marginBottom: 48 }}>
           <div>
             <div style={{ fontFamily: "var(--serif)", fontSize: 20, letterSpacing: "0.22em", marginBottom: 6 }}>UNIDRIVE</div>
             <div style={{ fontSize: 8, letterSpacing: "0.28em", color: "var(--dim)", marginBottom: 16 }}>INDIVIDUALIZATION</div>
@@ -283,7 +283,7 @@ export default function CarDetailPage() {
       </div>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1440, margin: "0 auto", padding: "64px 48px" }}>
+      <div className="details-content" style={{ maxWidth: 1440, margin: "0 auto" }}>
 
         {/* Breadcrumb */}
         <div style={{ fontSize: 9, letterSpacing: "0.16em", color: "var(--dim)", marginBottom: 48 }}>
@@ -295,7 +295,7 @@ export default function CarDetailPage() {
         </div>
 
         {/* ── TWO COLUMNS ─────────────────────────────────────────────────── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 64, marginBottom: 80 }}>
+        <div className="details-grid" style={{ marginBottom: 80 }}>
 
           {/* LEFT: Specs + Features */}
           <div>
@@ -318,7 +318,7 @@ export default function CarDetailPage() {
               <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, letterSpacing: "0.08em", fontWeight: 400, marginBottom: 24, borderBottom: "1px solid var(--border)", paddingBottom: 12 }}>
                 SPECIFICATIONS
               </h2>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
+              <div className="specs-grid">
                 {[
                   { label: "ENGINE",       value: car.engine },
                   { label: "TRANSMISSION", value: car.transmission },
@@ -329,7 +329,7 @@ export default function CarDetailPage() {
                   { label: "EXTERIOR",     value: car.color },
                   { label: "BODY",         value: car.body },
                 ].map((s, i) => (
-                  <div key={s.label} style={{ padding: "16px 0", borderBottom: "1px solid var(--border)", borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none", paddingRight: i % 2 === 0 ? 24 : 0, paddingLeft: i % 2 === 1 ? 24 : 0 }}>
+                  <div key={s.label} className={`spec-item ${i % 2 === 0 ? "spec-left" : "spec-right"}`}>
                     <p style={{ fontSize: 8, letterSpacing: "0.22em", color: "var(--dim)", marginBottom: 6 }}>{s.label}</p>
                     <p style={{ fontSize: 12, color: "var(--light)", letterSpacing: "0.04em", fontWeight: 400 }}>{s.value}</p>
                   </div>

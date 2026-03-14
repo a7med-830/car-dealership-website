@@ -252,12 +252,164 @@ body {
 .reveal-delay-3 { transition-delay: 0.35s; }
 .reveal-delay-4 { transition-delay: 0.5s; }
 
-@media (max-width: 768px) {
-  .desktop-nav { display: none; }
-  .mobile-toggle { display: flex; }
+/* Car Details Page Responsive Layouts */
+.details-content {
+  padding: 64px 48px;
 }
 
-@media (min-width: 769px) {
-  .mobile-toggle { display: none; }
-  .mobile-menu-overlay { display: none; }
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 64px;
+}
+
+.footer-container {
+  padding: 56px 48px 36px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.spec-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.spec-left {
+  border-right: 1px solid var(--border);
+  padding-right: 24px;
+}
+
+.spec-right {
+  padding-left: 24px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* RESPONSIVE DESIGN - TABLET & MOBILE OPTIMIZATIONS */
+/* ════════════════════════════════════════════════════════════════════════ */
+
+/* Tablet (< 1024px) */
+@media (max-width: 1023px) {
+  .logos-container { gap: 40px; }
+  .logo-item { min-width: 100px; gap: 8px; }
+  .logo-img-wrap { height: 40px; }
+  .logo-name { font-size: 8px; }
+}
+
+/* Navbar Specific */
+@media (max-width: 1030px) {
+  .desktop-nav { display: none !important; }
+  .mobile-toggle { display: flex !important; }
+}
+
+/* Tablet & Mobile (< 768px) */
+@media (max-width: 768px) {
+  body { font-size: 14px; }
+  section { padding: 60px 20px !important; }
+  
+  .details-content {
+    padding: 40px 24px !important;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  
+  .footer-container {
+    padding: 40px 24px 24px !important;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 32px !important;
+  }
+  
+  .m-btn, .m-btn-fill {
+    padding: 12px 18px !important;
+    font-size: 8px !important;
+  }
+  
+  .logos-container { gap: 24px; }
+  .logo-item { min-width: 75px; gap: 6px; }
+  .logo-img-wrap { height: 32px; }
+  .logo-name { font-size: 7px; }
+  
+  .btn-outline, .btn-solid { font-size: 9px; padding: 10px 16px; }
+  .custom-select { font-size: 10px; padding: 12px 28px 12px 12px; }
+  
+  .carousel-arrow { width: 36px; height: 36px; }
+  .social-icon { width: 32px; height: 32px; }
+}
+
+/* Mobile (< 480px) */
+@media (max-width: 479px) {
+  section { padding: 40px 16px !important; }
+  
+  .details-content {
+    padding: 32px 16px !important;
+  }
+  
+  .footer-container {
+    padding: 32px 16px 16px !important;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  
+  .m-btn {
+    padding: 10px 16px !important;
+    font-size: 8px !important;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  
+  .btn-details {
+    width: auto !important;
+  }
+
+  .card-price-block {
+    padding-left: 8px;
+  }
+  
+  .m-btn-fill {
+    padding: 10px 16px !important;
+    font-size: 8px !important;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  
+  .spec-left {
+    padding-right: 8px !important;
+  }
+  
+  .spec-right {
+    padding-left: 8px !important;
+  }
+  
+  .logos-container { gap: 16px; }
+  .logo-item { min-width: 65px; gap: 4px; }
+  .logo-img-wrap { height: 28px; }
+  .logo-name { font-size: 6px; }
+  
+  .btn-outline, .btn-solid { font-size: 8px; padding: 12px 24px; text-align: center; }
+  .custom-select { font-size: 9px; padding: 11px 28px 11px 10px; }
+}
+
+@media (min-width: 1031px) {
+  .mobile-toggle { display: none !important; }
+  .mobile-menu-overlay { display: none !important; }
 }

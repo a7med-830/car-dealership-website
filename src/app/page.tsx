@@ -26,7 +26,7 @@ function AnimatedLogosBar() {
   return (
     <section id="brands" style={{
       background: "var(--dark1)",
-      padding: "60px 40px",
+      padding: "clamp(40px, 8vw, 60px) clamp(16px, 5vw, 40px)",
       overflow: "hidden",
       borderTop: "1px solid var(--border)",
       borderBottom: "1px solid var(--border)",
@@ -281,7 +281,7 @@ function Header() {
         borderBottom: scrolled ? "1px solid #1a1a1a" : "1px solid transparent",
         backdropFilter: scrolled ? "blur(12px)" : "none",
         transition: "background 0.5s ease, border-color 0.5s ease, backdrop-filter 0.5s ease",
-        padding: "0 40px",
+        padding: "0 clamp(16px, 5vw, 40px)",
       }}>
         <div style={{ maxWidth: 1440, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
 
@@ -525,7 +525,7 @@ function FindModel() {
   };
 
   return (
-    <section style={{ background: "var(--dark2)", padding: "80px 40px" }}>
+    <section style={{ background: "var(--dark2)", padding: "clamp(60px, 8vw, 100px) clamp(16px, 5vw, 40px)" }}>
       <div ref={ref} className="reveal" style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(22px, 3.5vw, 40px)", letterSpacing: "0.08em", color: "var(--white)", marginBottom: 48, fontWeight: 500 }}>
           FIND YOUR DREAM MODEL
@@ -585,7 +585,7 @@ function LatestCarousel() {
   const maxOffset = Math.max(0, cars.length - visCount);
 
   return (
-    <section style={{ background: "var(--black)", padding: "100px 40px" }}>
+    <section style={{ background: "var(--black)", padding: "clamp(80px, 12vw, 100px) clamp(16px, 5vw, 40px)" }}>
       {/* Header row */}
       <div ref={ref} className="reveal" style={{ maxWidth: 1360, margin: "0 auto 56px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}>
         <div>
@@ -655,7 +655,7 @@ function LatestCarousel() {
 function NewsSection() {
   const ref = useReveal();
   return (
-    <section style={{ background: "var(--dark2)", padding: "100px 40px" }}>
+    <section style={{ background: "var(--dark2)", padding: "clamp(80px, 12vw, 100px) clamp(16px, 5vw, 40px)" }}>
       <div style={{ maxWidth: 1360, margin: "0 auto" }}>
         <div ref={ref} className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 52, flexWrap: "wrap", gap: 16 }}>
           <div>
@@ -808,10 +808,10 @@ function Footer() {
   );
 
   return (
-    <footer style={{ background: "var(--dark2)", borderTop: "1px solid var(--border)", padding: "72px 40px 40px" }}>
+    <footer className="footer-container" style={{ background: "var(--dark2)", borderTop: "1px solid var(--border)" }}>
       <div style={{ maxWidth: 1360, margin: "0 auto" }}>
         {/* Top: Logo + columns */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 40, marginBottom: 64 }}>
+        <div className="footer-grid" style={{ marginBottom: 64 }}>
           {/* Brand */}
           <div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 20, letterSpacing: "0.22em", color: "var(--white)", fontWeight: 600, marginBottom: 8 }}>

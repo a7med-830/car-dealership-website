@@ -33,7 +33,7 @@ function Navbar() {
       background: scrolled ? "rgba(0,0,0,0.96)" : "rgba(0,0,0,0.7)",
       borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.08)" : "transparent"}`,
       backdropFilter: "blur(16px)",
-      padding: "0 48px",
+      padding: "0 clamp(16px, 5vw, 48px)",
       transition: "background 0.4s, border-color 0.4s",
     }}>
       <div style={{ maxWidth: 1440, margin: "0 auto", height: 68, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -64,9 +64,9 @@ function Footer() {
     { h: "SUPPORT",   links: ["CONTACT", "DEALER FINDER", "FAQ", "WARRANTY"] },
   ];
   return (
-    <footer style={{ background: "var(--dark1)", borderTop: "1px solid var(--border)", padding: "64px 48px 40px" }}>
+    <footer className="footer-container" style={{ background: "var(--dark1)", borderTop: "1px solid var(--border)" }}>
       <div style={{ maxWidth: 1440, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48, marginBottom: 56 }}>
+        <div className="footer-grid" style={{ marginBottom: 56 }}>
           <div>
             <div style={{ fontFamily: "var(--serif)", fontSize: 22, letterSpacing: "0.22em", color: "var(--white)", marginBottom: 6 }}>UNIDRIVE</div>
             <div style={{ fontSize: 8, letterSpacing: "0.30em", color: "var(--dim)", marginBottom: 20 }}>INDIVIDUALIZATION</div>
@@ -319,12 +319,12 @@ function InventoryContent() {
                   </div>
 
                   {/* Price + CTA row */}
-                  <div style={{ padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
+                  <div className="card-actions" style={{ padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div className="card-price-block">
                       <p style={{ fontFamily: "var(--serif)", fontSize: 18, letterSpacing: "0.04em", color: "var(--white)" }}>${car.price.toLocaleString()}</p>
                       <p style={{ fontSize: 8, color: "var(--dim)", letterSpacing: "0.12em", marginTop: 2 }}>MSRP</p>
                     </div>
-                    <span className="m-btn" style={{ fontSize: 8, padding: "9px 18px" }}>DETAILS</span>
+                    <span className="m-btn btn-details" style={{ fontSize: 8, padding: "9px 18px" }}>DETAILS</span>
                   </div>
                 </Link>
               ))}

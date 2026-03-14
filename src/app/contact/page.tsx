@@ -43,7 +43,7 @@ function Navbar() {
       background: scrolled ? "rgba(0,0,0,0.96)" : "rgba(0,0,0,0.7)",
       borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.08)" : "transparent"}`,
       backdropFilter: "blur(16px)",
-      padding: "0 48px",
+      padding: "0 clamp(16px, 5vw, 48px)",
       transition: "background 0.4s, border-color 0.4s",
     }}>
       <div style={{ maxWidth: 1440, margin: "0 auto", height: 68, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -74,9 +74,9 @@ function Footer() {
     { h: "SUPPORT",   links: ["CONTACT", "DEALER FINDER", "FAQ", "WARRANTY"] },
   ];
   return (
-    <footer style={{ background: "var(--dark1)", borderTop: "1px solid var(--border)", padding: "64px 48px 40px" }}>
+    <footer className="footer-container" style={{ background: "var(--dark1)", borderTop: "1px solid var(--border)" }}>
       <div style={{ maxWidth: 1440, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 48, marginBottom: 56 }}>
+        <div className="footer-grid" style={{ marginBottom: 56 }}>
           <div style={{ gridColumn: "1 / -1", maxWidth: 280 }}>
             <div style={{ fontFamily: "var(--serif)", fontSize: 22, letterSpacing: "0.22em", color: "var(--white)", marginBottom: 6 }}>UNIDRIVE</div>
             <div style={{ fontSize: 8, letterSpacing: "0.30em", color: "var(--dim)", marginBottom: 20 }}>INDIVIDUALIZATION</div>
@@ -217,17 +217,23 @@ export default function ContactPage() {
       </div>
 
       {/* ── MAIN LAYOUT ───────────────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1440, margin: "0 auto", padding: "80px 48px 120px", display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "8vw", alignItems: "start" }} className="contact-grid">
+      <div style={{ maxWidth: 1440, margin: "0 auto", padding: "clamp(60px, 8vw, 80px) clamp(16px, 5vw, 48px) clamp(80px, 12vw, 120px)", display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "clamp(24px, 8vw, 8vw)", alignItems: "start" }} className="contact-grid">
         <style>{`
           @media (max-width: 900px) {
             .contact-grid {
               grid-template-columns: 1fr !important;
+              padding: clamp(40px, 6vw, 60px) clamp(16px, 5vw, 30px) clamp(60px, 10vw, 100px) !important;
+            }
+          }
+          @media (max-width: 600px) {
+            .contact-grid {
+              gap: 16px !important;
             }
           }
         `}</style>
         
         {/* ── INFO PANEL ────────────────────────────────────────────────────── */}
-        <div style={{ background: "var(--dark1)", border: "1px solid var(--border)", padding: "48px 40px", display: "flex", flexDirection: "column", gap: 40 }}>
+        <div style={{ background: "var(--dark1)", border: "1px solid var(--border)", padding: "clamp(28px, 6vw, 48px) clamp(20px, 5vw, 40px)", display: "flex", flexDirection: "column", gap: "clamp(24px, 5vw, 40px)" }}>
           <div style={{ fontFamily: "var(--serif)", fontSize: 24, letterSpacing: "0.1em", color: "var(--white)" }}>
             UNIDRIVE HEADQUARTERS
           </div>
