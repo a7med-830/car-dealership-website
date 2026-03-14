@@ -9,6 +9,7 @@ import { allCars } from "@/lib/cars";
 const BRANDS       = [...new Set(allCars.map(c => c.make))].sort();
 const BODY_STYLES  = ["Sedan", "SUV", "Coupe", "Truck", "Wagon"];
 const COLORS       = ["Black", "White", "Silver", "Blue", "Gray", "Red"];
+const FUEL_TYPES   = ["Petrol", "Electric", "Hybrid"];
 const YEARS        = [2025, 2024, 2023];
 const PRICE_RANGES = [
   { label: "Under $40k",     min: 0,     max: 40000 },
@@ -125,15 +126,16 @@ function Check({ label, count, checked, onChange }: { label: string; count: numb
 function InventoryContent() {
   const searchParams = useSearchParams();
 
-  const [searchText,     setSearchText]     = useState("");
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedBodies, setSelectedBodies] = useState<string[]>([]);
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
-  const [selectedYears,  setSelectedYears]  = useState<number[]>([]);
-  const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
-  const [sortBy,         setSortBy]         = useState("price_asc");
-  const [filteredCars,   setFilteredCars]   = useState(allCars);
-  const [mobileOpen,     setMobileOpen]     = useState(false);
+  const [searchText,      setSearchText]      = useState("");
+  const [selectedBrands,  setSelectedBrands]  = useState<string[]>([]);
+  const [selectedBodies,  setSelectedBodies]  = useState<string[]>([]);
+  const [selectedColors,  setSelectedColors]  = useState<string[]>([]);
+  const [selectedYears,   setSelectedYears]   = useState<number[]>([]);
+  const [selectedPrices,  setSelectedPrices]  = useState<string[]>([]);
+  const [selectedFuels,   setSelectedFuels]   = useState<string[]>([]);
+  const [sortBy,          setSortBy]          = useState("price_asc");
+  const [filteredCars,    setFilteredCars]    = useState(allCars);
+  const [mobileOpen,      setMobileOpen]      = useState(false);
 
   useEffect(() => {
     const b = searchParams.get("brand");
@@ -141,7 +143,7 @@ function InventoryContent() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const activeFilters = [...selectedBrands, ...selectedBodies, ...selectedColors, ...selectedYears.map(String), ...selectedPrices];
+  const activeFilters = [...selectedBrands, ...selectedBodies, ...selectedColors, ...selectedYears.map(String), ...selectedPrices, ...selectedFuels];
 
   const applyFilters = useCallback(() => {
     let r = [...allCars];
@@ -151,17 +153,19 @@ function InventoryContent() {
     if (selectedColors.length) r = r.filter(c => selectedColors.includes(c.color));
     if (selectedYears.length)  r = r.filter(c => selectedYears.includes(c.year));
     if (selectedPrices.length) r = r.filter(c => selectedPrices.some(l => { const p = PRICE_RANGES.find(p => p.label === l); return p ? c.price >= p.min && c.price < p.max : false; }));
+    if (selectedFuels.length) r = r.filter(c => selectedFuels.includes(c.fuelType));
     r.sort((a, b) => sortBy === "price_asc" ? a.price - b.price : sortBy === "price_desc" ? b.price - a.price : sortBy === "year_desc" ? b.year - a.year : a.year - b.year);
     setFilteredCars(r);
-  }, [searchText, selectedBrands, selectedBodies, selectedColors, selectedYears, selectedPrices, sortBy]);
+  }, [searchText, selectedBrands, selectedBodies, selectedColors, selectedYears, selectedPrices, selectedFuels, sortBy]);
 
   useEffect(() => { applyFilters(); }, [applyFilters]);
 
   function toggle<T>(arr: T[], v: T): T[] { return arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v]; }
   const count = (key: keyof typeof allCars[0], v: string | number) => allCars.filter(c => c[key] === v).length;
   const countP = (l: string) => { const p = PRICE_RANGES.find(p => p.label === l); return p ? allCars.filter(c => c.price >= p.min && c.price < p.max).length : 0; };
-  function clearAll() { setSearchText(""); setSelectedBrands([]); setSelectedBodies([]); setSelectedColors([]); setSelectedYears([]); setSelectedPrices([]); }
-  function remove(l: string) { setSelectedBrands(p => p.filter(x => x !== l)); setSelectedBodies(p => p.filter(x => x !== l)); setSelectedColors(p => p.filter(x => x !== l)); setSelectedYears(p => p.filter(x => String(x) !== l)); setSelectedPrices(p => p.filter(x => x !== l)); }
+  const countF = (f: string) => allCars.filter(c => c.fuelType === f).length;
+  function clearAll() { setSearchText(""); setSelectedBrands([]); setSelectedBodies([]); setSelectedColors([]); setSelectedYears([]); setSelectedPrices([]); setSelectedFuels([]); }
+  function remove(l: string) { setSelectedBrands(p => p.filter(x => x !== l)); setSelectedBodies(p => p.filter(x => x !== l)); setSelectedColors(p => p.filter(x => x !== l)); setSelectedYears(p => p.filter(x => String(x) !== l)); setSelectedPrices(p => p.filter(x => x !== l)); setSelectedFuels(p => p.filter(x => x !== l)); }
 
   const sidebar = (
     <>
@@ -177,6 +181,9 @@ function InventoryContent() {
       </FilterSection>
       <FilterSection title="Body Style">
         {BODY_STYLES.map(b => <Check key={b} label={b} count={count("body", b)} checked={selectedBodies.includes(b)} onChange={() => setSelectedBodies(toggle(selectedBodies, b))} />)}
+      </FilterSection>
+      <FilterSection title="Fuel Type">
+        {FUEL_TYPES.map(f => <Check key={f} label={f} count={countF(f)} checked={selectedFuels.includes(f)} onChange={() => setSelectedFuels(toggle(selectedFuels, f))} />)}
       </FilterSection>
       <FilterSection title="Year">
         {YEARS.map(y => <Check key={y} label={String(y)} count={count("year", y)} checked={selectedYears.includes(y)} onChange={() => setSelectedYears(toggle(selectedYears, y))} />)}

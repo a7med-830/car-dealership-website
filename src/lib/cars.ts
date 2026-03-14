@@ -12,6 +12,7 @@ export type Car = {
   color: string;
   mileage: string;
   mpg: string;
+  fuelType: "Petrol" | "Electric" | "Hybrid";
   image: string;
   images: string[];
   badge: string;
@@ -38,6 +39,7 @@ export const allCars: Car[] = [
   color: "Frozen Deep Grey",
   mileage: "New",
   mpg: "Petrol",
+  fuelType: "Petrol",
   image: "/bmw/m7/f.jpg",
   images: [
     "/bmw/m7/f.jpg",
@@ -70,6 +72,7 @@ export const allCars: Car[] = [
   color: "Red",
   mileage: "New",
   mpg: "Petrol",
+  fuelType: "Petrol",
   image: "/bmw/m8/main.jpg",
   images: [
   "/bmw/m8/main.jpg",
@@ -104,6 +107,7 @@ export const allCars: Car[] = [
   color: "Metalic Blue",
   mileage: "New",
   mpg: "46 MPGe / 14 city / 20 hwy",
+  fuelType: "Hybrid",
   image: "/bmw/xm/f.jpg",
   images: [
     "/bmw/xm/f.jpg",
@@ -138,6 +142,7 @@ export const allCars: Car[] = [
     color: "Red",
     mileage: "New",
     mpg: "Gasoline",
+    fuelType: "Petrol",
     image: "/maserati/maserati_levante_trofeo_dynamic_18.jpg",
     images: [
       "/maserati/image (26).jpg",
@@ -165,6 +170,7 @@ export const allCars: Car[] = [
     color: "Icy Pearl Blue",
     mileage: "New",
     mpg: "25 Combined MPG (9.4 L/100km)",
+    fuelType: "Petrol",
     image: "/maserati/2025-maserati-grecale-trofeo-blu-intenso-pr-135-6762ca385f599.JBG.avif",
     images: [
       "/maserati/image (29).jpg",
@@ -195,6 +201,7 @@ export const allCars: Car[] = [
     color: " Midnight Sky Metallic",
     mileage: "new",
     mpg: "21 city / 29 hwy",
+    fuelType: "Petrol",
     image: "/Cadillac/2024-cadillac-ct6-china-1.jpg",
     images: [
       "/Cadillac/2024-cadillac-ct6-china-1.jpg",
@@ -223,6 +230,7 @@ export const allCars: Car[] = [
     color: "Black Raven",
     mileage: "New",
     mpg: "13 city / 18 hwy",
+    fuelType: "Petrol",
     image: "/Cadillac/image (11).jpg",
     images: [
       "/Cadillac/image (11).jpg",
@@ -253,6 +261,7 @@ export const allCars: Car[] = [
     color: "White",
     mileage: "New",
     mpg: "19 city / 28 hwy",
+    fuelType: "Petrol",
     image: "/lexus/Screenshot_9-3-2026_638_.jpg",
     images: [
       "/lexus/image (3).jpg",
@@ -280,6 +289,7 @@ export const allCars: Car[] = [
     color: "Ultrasonic Blue Mica 2.0",
     mileage: "New",
     mpg: "18 Combined",
+    fuelType: "Petrol",
     image: "/lexus/Lexus-LC-500-Convertible-review-rollers-4.webp",
     images: [
       "/lexus/image (7).jpg",
@@ -306,6 +316,7 @@ export const allCars: Car[] = [
     color: "Atomic Silver",
     mileage: "Brand New",
     mpg: "19 Combined",
+    fuelType: "Petrol",
     image: "/lexus/image (16).jpg",
     images: [
       "/lexus/image (16).jpg",
@@ -336,6 +347,7 @@ export const allCars: Car[] = [
   color: "District Green Metallic",
   mileage: "New",
   mpg: "19 city / 28 hwy",
+  fuelType: "Petrol",
   image: "/audi/a8/f.jpg",
   images: [
     "/audi/a8/f.jpg",
@@ -368,6 +380,7 @@ export const allCars: Car[] = [
   color: "Tactical Green Metallic",
   mileage: "New",
   mpg: "85 MPGe",
+  fuelType: "Electric",
   image: "/audi/e/f.jpg",
   images: [
     "/audi/e/f.jpg",
@@ -400,6 +413,7 @@ export const allCars: Car[] = [
   color: "Mythos Black Metallic",
   mileage: "New",
   mpg: "17 city / 23 hwy",
+  fuelType: "Hybrid",
   image: "/audi/q8/f.jpg",
   images: [
     "/audi/q8/f.jpg",
@@ -434,6 +448,7 @@ export const allCars: Car[] = [
     color: "White",
     mileage: "New",
     mpg: "Electric",
+    fuelType: "Electric",
     image: "/tesla/modelx/2026-tesla-model-s (4).jpg",
     images: [
       "/tesla/modelx/2026-tesla-model-s (1).jpg",
@@ -462,6 +477,7 @@ export const allCars: Car[] = [
     color: "white",
     mileage: "New",
     mpg: "Electric",
+    fuelType: "Electric",
     image: "/tesla/modelx/2025_tesla_model-x_4dr-suv_plaid_fq_oem_1_1280x855.jpg",
     images: [
       "/tesla/modelx/2025_tesla_model-x_4dr-suv_plaid_fq_oem_1_1280x855.jpg",
