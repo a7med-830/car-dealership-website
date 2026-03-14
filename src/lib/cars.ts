@@ -539,6 +539,7 @@ export const allCars: Car[] = [
     color: "Black",
     mileage: "New",
     mpg: "14 city / 19 hwy",
+    fuelType: "Petrol",
     image: "/rolls/image (37).jpg",
     images: [
       "/rolls/image (40).jpg",
@@ -566,6 +567,7 @@ export const allCars: Car[] = [
     color: "White",
     mileage: "New",
     mpg: "13 city / 20 hwy",
+    fuelType: "Petrol",
     image: "/rolls/image (45).jpg",
     images: [
       "/rolls/image (46).jpg",
@@ -597,6 +599,7 @@ export const allCars: Car[] = [
     color: "Blue",
     mileage: "New",
     mpg: "17 city / 24 hwy",
+    fuelType: "Petrol",
     image: "/Aston Martin/image (48).jpg",
     images: [
       "/Aston Martin/image (48).jpg",
@@ -625,6 +628,7 @@ export const allCars: Car[] = [
     color: "Synapse Orange",
     mileage: "New",
     mpg: "16 city / 21 hwy",
+    fuelType: "Petrol",
     image: "/Aston Martin/image (56).jpg",
     images: [
       "/Aston Martin/image (56).jpg",
@@ -653,6 +657,7 @@ export const allCars: Car[] = [
     color: "Caribbean Blue Metallic",
     mileage: "New",
     mpg: "16 city / 23 hwy",
+    fuelType: "Petrol",
     image: "/Aston Martin/image (57).jpg",
     images: [
       "/Aston Martin/image (57).jpg",
@@ -682,6 +687,7 @@ export const allCars: Car[] = [
     color: "Navy&Blue",
     mileage: "1,200",
     mpg: "11 city / 17 hwy",
+    fuelType: "Petrol",
     image: "/bentley/mulsanne/m.jpg",
     images: [
       "/bentley/mulsanne/f.jpg",
@@ -709,6 +715,7 @@ export const allCars: Car[] = [
     color: "Pistachio",
     mileage: "New",
     mpg: "15 city / 22 hwy",
+    fuelType: "Petrol",
     image: "/bentley/spur/g.jpg",
     images: [
       "/bentley/spur/g.jpg",
@@ -737,6 +744,7 @@ export const allCars: Car[] = [
     color: "White",
     mileage: "New",
     mpg: "17 city / 23 hwy",
+    fuelType: "Petrol",
     image: "/bentley/Bentayga/m.jpg",
     images: [
       "/bentley/Bentayga/f.jpg",
@@ -767,6 +775,7 @@ export const allCars: Car[] = [
     color: "Silver",
     mileage: "New",
     mpg: "14 city / 20 hwy",
+    fuelType: "Petrol",
     image: "/Mercedes/Mercedes‑Maybach S‑Class/download-free-car-images (5).jpg",
     images: [
       "/Mercedes/Mercedes‑Maybach S‑Class/download-free-car-images (5).jpg",
@@ -795,6 +804,7 @@ export const allCars: Car[] = [
     color: "Black",
     mileage: "New",
     mpg: "15 city / 20 hwy",
+    fuelType: "Petrol",
     image: "/Mercedes/Mercedes‑Maybach GLS/download-free-car-images (5).jpg",
     images: [
       "/Mercedes/Mercedes‑Maybach GLS/download-free-car-images (5).jpg",
@@ -823,6 +833,7 @@ export const allCars: Car[] = [
     color: "Red",
     mileage: "New",
     mpg: "17 city / 24 hwy",
+    fuelType: "Petrol",
     image: "/Mercedes/Mercedes‑AMG SL/download-free-car-images (18).jpg",
     images: [
       "/Mercedes/Mercedes‑AMG SL/download-free-car-images (18).jpg",
@@ -853,6 +864,7 @@ export const allCars: Car[] = [
     color: "Gray",
     mileage: "New",
     mpg: "22 city / 30 hwy",
+    fuelType: "Hybrid",
     image: "/Porsche/Porsche Panamera/download-free-car-images (11).jpg",
     images: [
       "/Porsche/Porsche Panamera/download-free-car-images (11).jpg",
@@ -882,6 +894,7 @@ export const allCars: Car[] = [
     color: "White",
     mileage: "New",
     mpg: "Electric",
+    fuelType: "Electric",
     image: "/Porsche/Porsche Taycan Turbo S/download-free-car-images (26).jpg",
     images: [
       "/Porsche/Porsche Taycan Turbo S/download-free-car-images (26).jpg",
@@ -910,6 +923,7 @@ export const allCars: Car[] = [
     color: "Black",
     mileage: "New",
     mpg: "14 city / 19 hwy",
+    fuelType: "Petrol",
     image: "/Porsche/Porsche Cayenne Turbo GT/download-free-car-images (29).jpg",
     images: [
       "/Porsche/Porsche Cayenne Turbo GT/download-free-car-images (29).jpg",
@@ -940,6 +954,7 @@ export const allCars: Car[] = [
     color: "Metropolitan Gray",
     mileage: "New",
     mpg: "19 city / 27 hwy",
+    fuelType: "Petrol",
     image: "/genesis/image (67).jpg",
     images: [
       "/genesis/image (61).jpg",
@@ -969,6 +984,7 @@ export const allCars: Car[] = [
     color: "Dusk Blue",
     mileage: "New",
     mpg: "18 city / 24 hwy",
+    fuelType: "Petrol",
     image: "/Genesis (Hyundai’s luxury brand)/Genesis GV80/download-free-car-images 1 (1).jpg",
     images: [
       "/Genesis (Hyundai’s luxury brand)/Genesis GV80/download-free-car-images 1 (1).jpg",
@@ -997,6 +1013,7 @@ export const allCars: Car[] = [
     color: "Passion Red",
     mileage: "New",
     mpg: "20 city / 28 hwy",
+    fuelType: "Petrol",
     image: "/Genesis (Hyundai’s luxury brand)/Genesis G80/download-free-car-images 11 (1).jpg",
     images: [
       "/Genesis (Hyundai’s luxury brand)/Genesis G80/download-free-car-images 11 (1).jpg",
@@ -1027,6 +1044,7 @@ export const allCars: Car[] = [
     color: "Santorini Black",
     mileage: "New",
     mpg: "16 city / 21 hwy",
+    fuelType: "Petrol",
     image: "/Land  Rover/Range Rover/download-free-car-images1 (1).jpg",
     images: [
       "/Land  Rover/Range Rover/download-free-car-images1 (1).jpg",
@@ -1055,6 +1073,7 @@ export const allCars: Car[] = [
     color: "Ebony",
     mileage: "New",
     mpg: "16 city / 21 hwy",
+    fuelType: "Petrol",
     image: "/Land  Rover/Range Rover SV/download-free-car-images 1 (1).jpg",
     images: [
       "/Land  Rover/Range Rover SV/download-free-car-images 1 (1).jpg",
@@ -1083,6 +1102,7 @@ export const allCars: Car[] = [
     color: "Fuji White",
     mileage: "New",
     mpg: "17 city / 22 hwy",
+    fuelType: "Hybrid",
     image: "/Land  Rover/Range Rover Sport/Land_Rover-Range_Rover_Sport-2023  1.jpg",
     images: [
       "/Land  Rover/Range Rover Sport/Land_Rover-Range_Rover_Sport-2023  1.jpg",
@@ -1113,6 +1133,7 @@ export const allCars: Car[] = [
     color: "Rosso Corsa",
     mileage: "New",
     mpg: "11 city / 16 hwy",
+    fuelType: "Petrol",
     image: "/Ferrari/Ferrari Purosangue/photo1.jpg",
     images: [
       "/Ferrari/Ferrari Purosangue/photo1.jpg",
@@ -1146,6 +1167,7 @@ export const allCars: Car[] = [
     color: "Arancio Borealis",
     mileage: "New",
     mpg: "Pending (PHEV Efficiency)",
+    fuelType: "Hybrid",
     image: "/Urus/m.jpg",
     images: [
       "/Urus/f.jpg",
